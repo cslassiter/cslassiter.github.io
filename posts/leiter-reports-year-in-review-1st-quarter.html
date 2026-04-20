@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leiter Reports year in review, 1st quarter — Charles Lassiter</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-body img { max-width: 100%; height: auto; display: block; margin: 1.5rem auto; border-radius: 3px; }
+    .post-body p { margin-bottom: 1rem; }
+    .post-body ol, .post-body ul { margin: 1rem 0 1rem 1.5rem; }
+    .post-body li { margin-bottom: 0.4rem; }
+    .post-img { text-align: center; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+  <div class="site-header">
+    <div class="container">
+      <h1>Charles Lassiter</h1>
+      <p class="tagline">Professor of Philosophy · Gonzaga University</p>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../research.html">Research</a>
+        <a href="../teaching.html">Teaching</a>
+        <a href="../cv.html">CV</a>
+        <a href="../blog.html" class="active">Blog</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <main>
+      <p class="blog-date">1/19/2020</p>
+      <h2>Leiter Reports year in review, 1st quarter</h2>
+      <div class="post-body">
+</p>
+			<p class="blog-comments">
+					<a href="//www.charleslassiter.net/blog/leiter-reports-year-in-review-1st-quarter#comments" class="blog-link">
+		0 Comments
+	</a>
+
+			</p>
+		</div>
+	
+		<div class="blog-separator">&nbsp;</div>
+	
+		<div class="blog-content">
+				<p><font color="#2a2a2a">Brian Leiter ("BL") posted his 2019 "Year in Review" on Leiter Reports ("LR"). I looked for criteria about how he picks them and didn't see anything. My guess is that he picks posts that he found compelling throughout the year.&nbsp; So I says to myself I says, "I wonder how that compares with his blogging for the entire year." I'd been working on a project scraping all 300 or so pages of LR and thought I'd start out smaller: scraping his posts for 2019. (The entire LR scraping project will come along sooner or later. I'm off sabbatical now and have substantially less time.)</p>
+<p>I used the <a href="https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/" target="_blank">rvest package</a>&nbsp;created by the great Hadley Wickham. If you're already good with the <a href="https://www.tidyverse.org/" target="_blank">tidyverse</a>, then web-scraping with rvest is a pretty easy learning curve. Just make sure you read the tutorial on using the <a href="https://selectorgadget.com/" target="_blank">SelectorGadget</a>! And thank goodness WordPress is so easy to scrape: pages are individuated by the base URL (http:\\... etc.) and then a sequence of numbers.&nbsp;</p>
+<p>The method here is pretty simple. I scraped LR for tags and dates. There are three questions I'm interested in answering:</p>
+<p>1. what are blogging patterns like? i.e. how frequently does BL post on LR and how much each day?<br />2. what tags get used most frequently?<br />3. what's the frequency for co-occurring tags?</p>
+<p>In this post and the next three, I'll answer these three questions. Then I'll attempt a wrap-up.</p>
+<p><strong>1. Frequency</strong><br />To me, this is probably the least interesting question, but it's one that can be answered easily.</p>
+<p><strong>UPDATE</strong>: This was not as easy as I suspected (but it was still a useful exercise). Scraping LR gave me the dates that BL posted but it doesn't fill in the dates he doesn't post. Here's <a href="https://gist.github.com/ateucher/e2e5bd0b592f3efd6d56" target="_blank">a good set of instructions </a>for how to fill those in.</p>
+<p>Here's a line graph showing the volume of blogging from 1 January 2019 to 31 March 2019.</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/vol-1st-q_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">BL is a prolific blogger. He took off from blogging only five days in the 1st quarter! At most, he's posted 6 times in a day and on average he posted 2.7 times a day.&nbsp;</font></div>  <p><font color="#2a2a2a"><strong>2. Tags</strong><br />A quick methodological&nbsp;note: I often shortened the tag to something that captured the spirit of the tag but was much more readable on a plot. E.g. "The less they know, the less they know it" was shortened to "know-nothings." Also, all guest bloggers were collapsed into "guest" (but BL hasn't had many guest bloggers on in the last few years, so that's not a worry for right now). What tags got used the most during the 1st quarter? Here's the histogram.</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/tags-1st-q_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">'NA' indicates those days when BL didn't use a tag. So what's to see? BL's go-to tags are about philosophy in the news and stuff of cultural interest. He doesn't use LR for law school updates very much. In fact, the majority of the tagging is about issues related to the profession. BL posts quite a bit more about professional issues that what he colorfully calls the "Twitter Red Guard" and "The New Infantilism." Nonetheless, he has a special place on his blog (and in his heart?) for Justin Weinberg and a handful of other folks (as we'll see in the next few posts).</p>
+<p>However! The "Phil in the News" and "The Academy" tags are often paired with "Justin Weinberg" and "The New Infantilism." So at least some of the professional-issue tags are also about the subculture in our discipline that prefers&nbsp;<em>Daily Nous</em>&nbsp;to LR. What can help clear this up is a plot looking at tag co-occurrence.</p>
+<p><strong>3. Tag co-occurrence</strong>&nbsp;<br />This plot shows how often pairs of tags so up together. (<a href="http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization" target="_blank">This is a super helpful set of directions</a> for computing the co-occurrence matrix.)&nbsp;&nbsp;</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/cooccur-1st-q_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">So what does this tell us? Notice first that the plot isn't symmetrical: what's above the yellow diagonal isn't the mirror of what's below. So for any co-occurrence of two topics, you could have two different values. Look at "Academic Freedom" and "Justin Weinberg" for an example. <strong>To interpret the plot</strong>: wherever the co-occurrence, it's relative to the total number of occurrences of Topic 1 along that row.</p>
+<p>Take "Academic Freedom" and "Justin Weinberg" to start. The plot tells us the co-occurrence of these tags relative to all occurrences of each. To find their frequency relative to "Academic Freedom", find the intersection of both but with "Academic Freedom" appearing as the row value. T</font><span style="color:rgb(42, 42, 42)">heir co-occurrence relative to all instances of "Academic Freedom" is rather low (~.07).</span><font color="#2a2a2a"> <em>But</em>&nbsp;the co-occurrence of "Academic Freedom" and "Justin Weinberg" relative to all instances of "Justin Weinberg" is rather large (it's about .67).&nbsp;So Justin is one concern about academic freedom on BL's blog, but he's far from being the only one. But whenever BL is talking about Justin, it's often about academic freedom.</p>
+<p>Why do it this way? It doesn't make sense to relativize everything to the topic with the greatest number of tags. It just swamps everything. "Fascism&nbsp;Alerts" and "Cultural Interest" co-occurred 10 times, but that's a blip against the total number of times "Phil in the News" showed up (which is 454). I tried relativizing to whichever of the Topic 1 and Topic 2 was larger. This makes a symmetrical plot but it papers over important info. If A and B have a co-occurrence value of .5, it's not clear whether that's relative to all instances of A or B.&nbsp;</p>
+<p></font><font color="#2a2a2a">So what does the plot tell us? One thing that stands out is the rather light-colored column for "Phil in the News". This tells us that "Phil in the News" is a rather promiscuous tag, relative to how often other tags are used. This is confirmed by the relative dark shading of "Phil in the News" for Topic 1: no single tag stands out relative to the total number of tokens of "Phil in the News."&nbsp;</p>
+<p>A few other bright-colored spots: </font><ul><li><font color="#2a2a2a">notice that&nbsp;</font><font color="#2a2a2a">"PGR" (Philosophical Gourmet Report) &amp; "Job Search Advice" relative to "PGR"</font><span style="color:rgb(42, 42, 42)">&nbsp;is a bright yellow.&nbsp;So whenever BL is talking about the job search advice, it's in connection with PGR. </span></li><li><span style="color:rgb(42, 42, 42)">But given all posts about the PGR, BL might be talking about different things: job search advice, but also philosophy in the news, issues in the profession, and the nature of philosophy. This last thing is kinda interesting: given the total number of PGR tags, you get "What is Philosophy?" roughly 20% of the time (PGR as Topic 1&nbsp;and "What is Philosophy?" as Topic 2). Looking at the histogram above, the PGR didn't get tagged much in the 1st quarter of 2019, but it's an interesting insight that it's tied to tags about the nature of philosophy as much as it is.</span><span style="color:rgb(42, 42, 42)">&nbsp;</span></li><li><span style="color:rgb(42, 42, 42)">given all instances of "academic freedom"&nbsp;(which has the 4th greatest number of tag-tokens), you'll find "Fascism Alerts" with it roughly 1/4 of the time and "The New Infantilism" a little less than that.&nbsp;</span></li><li><span style="color:rgb(42, 42, 42)">BL doesn't often use the "Justin Weinberg" tag (see histogram) but when he does, you better believe it's coming with "The New Infantilism".&nbsp; </span></li><li><span style="color:rgb(42, 42, 42)">And "wankers" is rare, but it's almost always news.&nbsp;</span>&nbsp;</li></ul></div>  <p><font color="#2a2a2a">Let's compare these last two plots to the posts BL picked out in his year in review. The method here is exactly the same as before. The only difference is in the scraping code: I went to the collection of links for the 1st quarter of the year in review, grabbed those links, and then scraped the tags.&nbsp;</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/tags-1st-q-compare_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">Some stuff to see here: "Phil in the News" is top again, but that's not surprising given how promiscuous the tag is. "PGR" and "Job search advice" occur a lot more often in BL's picks than in the 1st quarter overall.&nbsp;</p>
+<p>Let's look at the co-occurrence plot.&nbsp;&nbsp;</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/co-occur-1st-q-bl_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">And there's the previous one for easy reference:</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/cooccur-1st-q_orig.jpeg" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">Co-occurrence of "New Infantilism" and "Academic Freedom" relative to all instances of the former is greater in BL's picks than in the 1st quarter overall; samesies replacing "New Infantilism" with "The Academy". </font><font color="#2a2a2a">And "What is Philosophy" co-occurring with "PGR" relative to all instances of "What is Philosophy" is also overrepresented in BL's picks.<br /></font></div>
+
+		</div>
+	
+	
+			<div class="blog-social  ">
+		<div
+      </div>
+      <p style="margin-top:2rem;"><a href="../blog.html">&larr; Back to Blog</a></p>
+    </main>
+    <footer>
+      &copy; 2026 Charles Lassiter
+    </footer>
+  </div>
+</body>
+</html>

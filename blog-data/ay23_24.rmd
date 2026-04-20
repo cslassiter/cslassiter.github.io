@@ -1,0 +1,258 @@
+---
+title: "ay23-24"
+output: html_document
+date: "2024-03-12"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+primary <- c("#D1495B", "#EDAE49", "#00798C","#003D5B", "#30638E","#56B4E9", "#7F67B6", "#A4A8D1", "#380606")
+```
+
+
+#cleaning
+```{r}
+survey|>
+  filter(!is.na(Q1))|>
+  select(9, 18:36)|>
+  mutate(Q1 = str_remove_all(Q1, "~"),
+         Q1 = str_remove_all(Q1, "\\+"),
+         Q1 = as.numeric(Q1),
+         Q2 = str_replace_all(Q2, "Science, Logic, and Mathematics", "SLM"))|>
+  separate_wider_delim(cols = Q2, delim = ",", names_sep = "_sep", too_few = "align_start")|>
+  select(-6, -7)->survey_clean
+```
+
+#intro numbers
+```{r}
+survey_clean|>
+  summary()
+  
+survey_clean|>
+  arrange(Q1)|>
+  view()
+```
+
+
+#overviews
+```{r}
+#overview: counts
+survey_clean|>
+  count(Q3)|>
+  na.omit()|>
+  mutate(Q3 = factor(Q3, levels = c("Certificate", "Bachelors", "Masters", "Doctorate")))|>
+  rename(`Degree type` = Q3,
+         Count = n)|>
+  arrange(`Degree type`)|>
+  gt::gt(caption = "Responses by program terminal degree")
+
+survey_clean|>
+  count(Q2_sep1)|>
+  view()
+
+
+```
+
+#details--plot titles indicate what's being tracked
+```{r}
+survey_clean|>
+  select(Q1, Q3)|>
+  filter(Q3 != "Certificate")|>
+  na.omit()|>
+  arrange(Q3, Q1)|>
+  group_by(Q3)|>
+  mutate(rn = row_number())|>
+  ungroup()|>
+  ggplot(aes(rn, Q1))+
+  geom_bar(stat = "identity")+
+  geom_smooth(linewidth = 2, se = FALSE)+
+  facet_wrap(~Q3, scales = "free_x")+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications by program status")+
+  theme(axis.text.x = element_blank())+
+  xlab("")+
+  ylab("counts")->vol_status_23
+
+ggsave(plot = vol_status_23, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\vol_status_23_b.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+survey_clean|>
+  filter(str_detect(Q3.1, "R[0-9]"))|>
+  select(Q1, Q3.1)|>
+  arrange(Q1)|>
+  mutate(rn = row_number())|>
+  rename(status = Q3.1,
+         counts = Q1)|>
+  ggplot(aes(rn, counts, fill = status))+
+  geom_bar(stat = "identity")+
+  scale_fill_manual(values = primary)+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications to PhD-granting programs")+
+  theme(axis.text.x = element_blank())+
+  xlab("")+
+  ylab("counts")->vol_status_phd_23
+
+ggsave(plot = vol_status_phd_23, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\vol_status_phd_23_a.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+survey_clean|>
+  filter(Q4 == "Assistant professor/tenure-track")|>
+  select(Q1, Q3)|>
+  na.omit()|>
+  arrange(Q1)|>
+  mutate(rn = row_number())|>
+  rename(status = Q3,
+         counts = Q1)|>
+  ggplot(aes(rn, counts, fill = status))+
+  geom_bar(stat = "identity")+
+  scale_fill_manual(values = primary)+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications for TT jobs")+
+  theme(axis.text.x = element_blank())+
+  xlab("")+
+  ylab("counts")->vol_TT_23
+
+ggsave(plot = vol_TT_23, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\vol_TT_23.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+survey_clean|>
+  select(Q1, Q2_sep1, Q3)|>
+  na.omit()|>
+  arrange(-Q1)|>
+  group_by(Q2_sep1, Q3)|>
+  summarise(avg = mean(Q1),
+            max = max(Q1),
+            min = min(Q1))|>
+  ungroup()|>
+  mutate(Q2_sep1 = as_factor(Q2_sep1),
+         aos_avg = mean(avg))|>
+  ggplot(aes(Q3, avg, color = Q2_sep1))+
+  geom_point(alpha = .8, size = 8)+
+    geom_errorbar(aes(ymin = min, ymax = max),alpha = .7, linewidth = 5)+
+  geom_hline(aes(yintercept = aos_avg), linetype = "solid", alpha = .3, linewidth = 5)+
+  coord_flip()+
+  facet_wrap(~ Q2_sep1)+
+  theme_minimal(base_size = 60)+
+  xlab("AOS")+
+  ylab("counts")+
+  ggtitle("Volume of applications by AOS and program status")+
+  theme(legend.position="none")+
+  scale_color_manual(values = primary)->aos_max_min_avg
+
+ggsave(plot = aos_max_min_avg, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\aos_max_min_avg_b.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+survey_clean|>
+  filter(!is.na(Q7))|>
+  arrange(Q1)|>
+  mutate(rn = row_number())|>
+  rename(counts = Q1)|>
+  mutate(Q7 = str_replace_all(Q7, "There were about as many applicants as I was expecting", "Expected"),
+         Q7 = str_replace_all(Q7, "There were fewer applicants than I was expecting", "Fewer"),
+         Q7 = str_replace_all(Q7, "There were more applicants than I was expecting", "More"))|>view()
+  ggplot(aes(rn, counts, fill = Q7))+
+  geom_bar(stat = "identity")+
+  scale_fill_manual(values = primary)+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications for TT jobs")+
+  theme(axis.text.x = element_blank())+
+  xlab("")+
+  ylab("counts")->num_imp_23
+
+ggsave(plot = num_imp_23, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\num_imp_23.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+#tables
+```{r}
+survey_clean|>
+  select(Q1, Q2_sep1, Q3)|>
+  na.omit()|>
+  group_by(Q3)|>
+  reframe(std = sd(Q1), average = mean(Q1))|>
+  ungroup()|>
+  rename(status = Q3,
+         `standard deviation` = std)|>
+  mutate(across(where(is.double), round))|>
+  gt::gt(caption = "Averages and dispersion") -> overview_p23
+
+gt::gtsave(overview_p23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\overview_p23.png", expand = 10)
+
+survey_clean|>
+  select(Q1, Q3)|>
+  na.omit()|>
+  arrange(-Q1)|>
+  group_by(Q3)|>
+ summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1),most = max(Q1) )|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(status = Q3,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption = "Overview of applicantions by program status")->all_over_23
+
+gt::gtsave(all_over_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\all_over_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 == "Assistant professor/tenure-track")|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "TT position applications")->tt_23
+
+gt::gtsave(tt_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\tt_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 == "Postdoc" | str_detect(Q4, "Fixed"))|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "Postdoc and fixed-term position applications")->pd_fixed_23
+
+gt::gtsave(pd_fixed_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\pd_fixed_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 != "Postdoc" & Q4 != "Assistant professor/tenure-track" & str_detect(Q4, "Fixed", negate = TRUE))|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "Open and tenured position applications")->open_23
+
+gt::gtsave(open_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\open_23.png", expand = 10)
+
+  
+  survey_clean|>
+  filter(!is.na(Q7))|>
+  count(Q7)|>
+  rename(response = Q7,
+         count = n)|>
+  arrange(-count)|>
+  gt::gt(caption = "Impressions of applicant volume")->imp_app_23
+  
+  gt::gtsave(imp_app_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\imp_app_23.png", expand = 10)
+  
+  survey_clean|>
+  filter(!is.na(Q6))|>
+  count(Q6, Q3)|>view()
+  rename(response = Q6,
+         count = n)|>
+  arrange(-count)|>view()
+  gt::gt(caption = "Time allotment for job")->time_job_23
+  
+  gt::gtsave(time_job_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\time_job_23.png", expand = 10)
+
+
+```

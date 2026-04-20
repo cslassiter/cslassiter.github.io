@@ -1,0 +1,235 @@
+#Blog post for August 29, 2024
+#checking for number of jobs in a post
+
+jobs <- read_csv("Philjobs_24_secondary.csv")
+ids <-jobs%>%
+  select(Id)%>%
+  mutate(Id = as.character(Id))%>%
+  pull(Id)
+base_url <- "https://philjobs.org/job/show/"
+pages <- paste0(base_url, ids)
+
+map_df(pages, function(i) {
+  #cat(i)
+  pg <- read_html(i)
+  data.frame(text = html_text(html_nodes(pg,"#content")))
+}) -> ad_text
+
+ad_text_clean <- ad_text%>%
+  mutate(text = str_squish(text))%>%
+  mutate(text = str_remove_all(text, "___.+"))
+
+combined_ads <- cbind(jobs, ad_text_clean)
+
+final_ads <- combined_ads%>%
+  mutate(more = 0,
+         more = ifelse(str_detect(text, "three positions") | str_detect(text, "three openings"), 3, more),
+         more = ifelse(str_detect(text, "two positions") | str_detect(text, "two openings"), 2, more),
+         Id = paste(Id, more, sep = "_"))
+
+#selecting secondary cycle
+#cutting `postdoc & TT`
+secondary_2024 <- final_ads%>%
+  select(`Job type`, `Contract type`, yr, mth)%>%
+  mutate(job_description = paste(`Job type`, `Contract type`, sep = ",\n "))%>%
+  arrange(yr, mth)%>%
+  filter(job_description != "Postdoc or similar, Tenure-track or similar")%>%
+  filter(yr >= 2023 & mth < 7 )
+
+secondary_all <- final_ads%>%
+  select(`Job type`, `Contract type`, yr, mth)%>%
+  mutate(job_description = paste(`Job type`, `Contract type`, sep = ", "))%>%
+  arrange(yr, mth)%>%
+  filter(job_description != "Postdoc or similar, Tenure-track or similar")%>%
+  filter(mth < 7 )
+
+
+#plotting
+```{r}
+#2024 all job types
+secondary_2024%>%
+  group_by(`Job type`)%>%
+  summarize(counts = n())%>%
+  arrange(counts)%>%
+  mutate(`Job type` = as_factor(`Job type`))%>%
+  ggplot(aes(`Job type`, counts, fill = `Job type`, label = counts))+
+  geom_bar(stat = "identity")+
+  geom_text(nudge_y = 4, size = 15)+
+  coord_flip()+
+  theme_minimal(base_size = 60)+
+  scale_fill_manual(values = cb_colors)+
+  ggtitle("2024, secondary cycle, all job types")+
+  theme(text = element_text(family = "Source Sans 3"),
+        legend.position = "none")->AY2024_secondary_all_plot
+
+ggsave(plot = AY2024_secondary_all_plot, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\2024_secondary_all_plot.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+#2024 all contract types
+secondary_2024%>%
+  group_by(`Contract type`)%>%
+  summarize(counts = n())%>%
+  arrange(counts)%>%
+  mutate(`Contract type` = as_factor(`Contract type`))%>%
+  ggplot(aes(`Contract type`, counts, fill = `Contract type`, label = counts))+
+  geom_bar(stat = "identity")+
+  geom_text(nudge_y = 4, size = 15)+
+  coord_flip()+
+  theme_minimal(base_size = 60)+
+  theme(text = element_text(family = "Source Sans 3"),
+        legend.position = "none")+
+  scale_fill_manual(values = cb_colors)+
+  ggtitle("2024, secondary cycle, all contract types")->AY2024_secondary_all_plot_contracts
+
+ggsave(plot = AY2024_secondary_all_plot_contracts, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\AY2024_secondary_all_plot_contracts.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+secondary_2024%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  filter(`Job type` == "Postdoc or similar" | `Job type` == "Junior faculty")%>%
+  mutate(`Job description` = paste(`Job type`, `Contract type`, sep = ",\n"))%>%
+  group_by(`Job description`)%>% #`Job type`, `Contract type`
+  summarize(counts = n())%>%
+  ungroup()%>%
+  arrange(counts)%>%
+  mutate(`Job description` = as_factor(`Job description`))%>%
+  ggplot(aes(`Job description`, counts, fill = `Job description`, label = counts))+
+  geom_bar(stat = "identity")+
+  geom_text(nudge_y = 4, size = 15)+
+  coord_flip()+
+  theme_minimal(base_size = 60)+
+  theme(text = element_text(family = "Source Sans 3"),
+        legend.position = "none")+
+  scale_fill_manual(values = cb_colors)+
+  ggtitle("2024, secondary cycle,\njunior and postdoc contract types")->AY2024_secondary_junior_postdoc
+
+#secondary cycle, all job types, 
+secondary_all%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  filter(`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar")%>%
+  add_count(`Contract type`, `Job type`, yr)%>%
+  select(`Contract type`, `Job type`, n, yr)%>%
+  distinct()%>%
+  arrange(n)%>%
+  mutate(`Contract type` = as_factor(`Contract type`))%>%
+  ggplot(aes(yr, n, color = `Contract type`))+
+  geom_point(size = 4, alpha = .25)+
+  geom_line(linewidth = 4, alpha = .25)+
+  geom_smooth(method = "lm", se = FALSE, linewidth = 4)+
+  xlab("year")+
+  ylab("counts")+
+  facet_wrap(~`Job type`)+
+  ggtitle("2024, secondary cycle\nhistorical view for junior and postdocs")+
+  theme_minimal(base_size = 60)+
+  scale_color_manual(values = rev(cb_colors))+
+  theme(text = element_text(family = "Source Sans 3"))->AY2024_secondary_historic_junior_postdoc
+
+secondary_all%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  filter(`Job type` != "Junior faculty" & `Job type` != "Postdoc or similar")%>%
+  add_count(`Contract type`, `Job type`, yr)%>%
+  select(`Contract type`, `Job type`, n, yr)%>%
+  distinct()%>%
+  arrange(n)%>%
+  mutate(`Contract type` = as_factor(`Contract type`),
+         `Job type` = str_replace_all(`Job type`, "Administration \\(non-academic\\)", "Administration"),
+         `Job type` = str_replace_all(`Job type`, "Visiting fellowship \\/ Professorship", "Visiting fellowship,\nProfessorship"))%>%
+  ggplot(aes(yr, n, color = `Contract type`))+
+  geom_point(size = 4, alpha = .25)+
+  geom_line(linewidth = 4, alpha = .25)+
+  geom_smooth(method = "lm", se = FALSE, linewidth = 4)+
+  xlab("year")+
+  ylab("counts")+
+  facet_wrap(~`Job type`)+
+  ggtitle("2024, secondary cycle\nhistorical view for non-junior, non-postdoc")+
+  theme_minimal(base_size = 60)+
+  scale_color_manual(values = rev(cb_colors))+
+  theme(text = element_text(family = "Source Sans 3"))->AY2024_secondary_historic_non_junior_postdoc
+
+#comparing primary and secondary for all job types over time
+jobs%>%
+  mutate(post_date = mdy(`Date posted`),
+         year = year(post_date),
+         mth = month(post_date))%>%
+  filter(year>=2014 & year < 2024)%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  select(`Job type`, `Contract type`, year, mth)%>%
+  mutate(cycle = ifelse(mth < 7, "secondary", "primary"))%>%
+  group_by(`Contract type`, year, cycle)%>%
+  summarize(counts = n())%>%
+  group_by(`Contract type`, cycle)%>%
+  mutate(avg = mean(counts))%>%
+  ungroup()%>%
+  ggplot(aes(year, counts, color = `Contract type`))+
+  geom_point(size = 3, alpha = .25)+
+  geom_line(linewidth = 3, alpha = .25)+
+  geom_smooth(linewidth = 4, method = "lm", se = FALSE)+
+  theme_minimal( base_size = 60)+
+  facet_wrap(~cycle)+
+  ggtitle("Comparing primary and secondary cycles,\nhistorical view for all job types")+
+  scale_color_manual(values = rev(cb_colors))->AY2024_secondary_and_primary_historic_all
+
+jobs%>%
+  mutate(post_date = mdy(`Date posted`), 
+         year = year(post_date), 
+         mth = month(post_date))%>%
+  filter(year>=2014 & year < 2024)%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  select(`Job type`, `Contract type`, year)%>%
+  group_by(`Contract type`, year)%>%
+  summarize(counts = n())%>%
+  ggplot(aes(year, counts, color = `Contract type`))+
+  geom_point(size = 3, alpha = .25)+
+  geom_line(linewidth = 3, alpha = .25)+
+  geom_smooth(linewidth = 4, method = "lm", se = FALSE)+
+  theme_minimal( base_size = 60)+
+  ggtitle("Comparing contract types,\nhistorical view for all job types")+
+  scale_color_manual(values = rev(cb_colors))->AY2024_historic_all
+
+jobs%>%
+  mutate(post_date = mdy(`Date posted`),
+         year = year(post_date),
+         mth = month(post_date))%>%
+  filter(year>=2014 & year < 2024)%>%
+  filter(`Job type` != "Postdoc or similar" | `Contract type` != "Tenured, continuing or permanent")%>%
+  filter(`Job type` == "Postdoc or similar" | `Job type` == "Junior faculty")%>%
+  select(`Job type`, `Contract type`, year)%>%
+  group_by(`Contract type`, year)%>%
+  summarize(counts = n())%>%
+  ggplot(aes(year, counts, color = `Contract type`))+
+  geom_point(size = 3, alpha = .25)+
+  geom_line(linewidth = 3, alpha = .25)+
+  geom_smooth(linewidth = 4, method = "lm", se = FALSE)+
+  theme_minimal( base_size = 60)+
+  ggtitle("Comparing contract types,\nhistorical view for junior and postdoc openings")+
+  scale_color_manual(values = rev(cb_colors))->AY2024_historic_all_junior_postdoc
+
+jobs%>%
+  mutate(post_date = mdy(`Date posted`),
+         yr = year(post_date),
+         mth = month(post_date))%>%
+  filter(yr>=2014 & yr < 2023 & (`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar"))%>%
+  select(`Job type`, yr, mth)%>% #`Contract type`, 
+  arrange(yr)%>%
+  add_count( yr)%>% #`Job type`,
+  select(n, yr)%>% #`Job type`, 
+  distinct()%>%
+  arrange(-yr)->junior_jobs_df
+
+#data from SED
+earned <- tibble(yr = c(2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014), phds = c(445, 416, 475, 467, 522, 468, 472, 492, 460))
+
+right_join(junior_jobs_df, earned, by = "yr") -> jobs_earned
+
+jobs_earned%>%
+  arrange(yr)%>%
+  rename(year = yr)%>%
+  mutate(`PhDs conferred` = cumsum(phds),
+         `Junior openings` = cumsum(n))%>%
+  pivot_longer(cols = c(phds, n, `Junior openings`, `PhDs conferred`), names_to = "variables", values_to = "counts")%>%
+  filter(variables != "n" & variables != "phds")%>%
+  ggplot(aes(x = year, y = counts, color = variables, label = counts))+
+  geom_point(size = 4, alpha = .75)+
+  geom_text(size = 10, nudge_x = .5)+
+  geom_line(size = 4, alpha = .75)+
+  theme_minimal( base_size = 60)+
+  ggtitle("Degrees conferred and jobs advertised")+
+  scale_color_manual(values = rev(cb_colors))->AY2024_degrees_and_openings

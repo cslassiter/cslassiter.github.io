@@ -1,0 +1,414 @@
+---
+title: "ay23-24"
+output: html_document
+date: "2024-03-12"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+primary <- c("#D1495B", "#EDAE49", "#00798C","#003D5B", "#30638E","#56B4E9", "#7F67B6", "#A4A8D1", "#380606")
+```
+
+
+#cleaning
+```{r}
+survey <- read.csv("Survey about job applicants, AY24-25.csv")
+
+survey%>%
+  select(-1:-6, -8, -10:-17, -X)%>%
+  mutate(Q1 = str_remove_all(Q1, "~"),
+         Q1 = str_remove_all(Q1, "\\+"),
+         Q1 = as.numeric(Q1),
+         Q2 = str_replace_all(Q2, "Science, Logic, and Mathematics", "SLM"),
+         Q3 = str_replace_all(Q3, "^(?=\\s*$)", "not given"),
+         Q2 = str_replace_all(Q2, "^(?=\\s*$)", "not given"),
+         Q3 = factor(Q3, levels = c("Bachelors", "Masters", "Doctorate")))%>%
+    filter(!is.na(Q1))%>%
+  separate_wider_delim(cols = Q2, delim = ",", names_sep = "_sep", too_few = "align_start")%>%
+  select(-6, -7)->survey_clean
+```
+
+#intro numbers
+```{r}
+survey_clean|>
+  summary()
+  
+survey_clean|>
+  arrange(Q2_sep1, Q1)|>
+  view()
+```
+
+#boxplots
+```{r}
+survey_clean%>%
+  ggplot(aes(x = Finished, y = Q1))+
+  geom_boxplot()
+
+quantile(survey_clean$Q1)
+
+survey_clean%>%
+  ggplot(aes(x = Q3, y = Q1))+
+  geom_boxplot()
+
+survey_clean%>%
+  ggplot(aes(x = Q2_sep1, y = Q1))+
+  geom_boxplot()
+```
+
+#overviews
+```{r}
+#overview: counts
+survey_clean|>
+  count(Q3)|>
+  na.omit()|>
+  rename(`Degree type` = Q3,
+         Count = n)|>
+  arrange(`Degree type`)|>
+  gt::gt(caption = "Responses by program terminal degree")
+
+survey_clean|>
+  count(Q2_sep1)|>
+  view()
+
+survey_clean%>%
+  arrange(Q3, Q1)%>%
+  view()
+```
+
+#details--plot titles indicate what's being tracked
+```{r}
+survey_clean|>
+  select(Q1, Q3)|>
+  filter(Q3 != "not given")|>
+  na.omit()|>
+  arrange(Q3, Q1)|>
+  group_by(Q3)|>
+  mutate(rn = row_number(),
+         med = median(Q1),
+         avg = round(mean(Q1), 1))|>
+  ungroup()|>
+  ggplot(aes(rn, Q1))+
+  geom_bar(stat = "identity")+
+  geom_hline(aes(yintercept = med, color = factor(med)), linewidth = 4)+
+  #geom_line()+
+  #geom_smooth(linewidth = 2, se = FALSE)+
+  facet_wrap(~Q3, scales = "free_x")+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications by program status")+
+  theme(axis.text.x = element_blank())+
+  labs(color = "Median")+
+  xlab("")+
+  ylab("counts")+
+  scale_color_manual(values = primary)->ay24_vol_status
+
+ggsave(plot = vol_status_24, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\ay24_vol_status.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+
+survey_clean|>
+  select(Q1, Q3)|>
+  filter(Q3 != "not given")|>
+  na.omit()|>
+  arrange(Q3, Q1)|>
+  group_by(Q3)|>
+  mutate(rn = row_number(),
+         med = median(Q1),
+         avg = round(mean(Q1), 1),
+         diff = avg - Q1)|>
+  ungroup()|>
+  ggplot(aes(rn, diff)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~Q3, scales = "free_x")
+
+#contract type
+survey_clean|>
+  select(Q1, Q3, Q4, Q2_sep1)|>
+  mutate(Q4 = str_replace_all(Q4, "^(?=\\s*$)", "x"))%>%
+  filter(Q4 != "x" & Q4 != "Associate professor/tenured" & Q4 != "Fixed-term with no option for renewal (e.g. sabbatical replacement)")%>%
+  na.omit()|>
+  arrange(Q4, Q1)|>
+  group_by(Q4)|>
+  mutate(rn = row_number(),
+         med = median(Q1),
+         avg = round(mean(Q1), 1),
+         diff = med - Q1,
+         std = sd(Q1),
+         upper = round(std, 1),
+         lower = round(-1*std, 1),
+         dist = max(Q1) - min(Q1),
+         Q4 = str_remove_all(Q4, "\\(e.g. rolling contract\\)"))%>%
+  ungroup()%>%
+  ggplot(aes(rn, Q1, fill = Q3)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~Q4, scales = "free_x")+
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications by contract type and program status")+
+  theme(axis.text.x = element_blank())+
+  labs(fill = "Program\nstatus")+
+  xlab("")+
+  ylab("counts")+
+  scale_fill_manual(values = primary)->ay24_vol_contract_program
+
+  ggsave(plot = ay24_vol_contract_program, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\vol_contract_program_24_a.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+  
+
+survey_clean|>
+  select(Q1, Q2_sep1, Q3)|>
+  filter(Q2_sep1 != "not given")%>%
+  na.omit()|>
+  arrange(-Q1)|>
+  group_by(Q2_sep1, Q3)|>
+  summarise(avg = median(Q1), # change to median?
+            max = max(Q1),
+            min = min(Q1))|>
+  mutate(Q2_sep1 = as_factor(Q2_sep1),
+         aos_avg = median(avg))|>
+  ungroup()|>
+  ggplot(aes(Q3, avg, color = Q2_sep1))+
+  geom_point(alpha = .8, size = 8)+
+    geom_errorbar(aes(ymin = min, ymax = max),alpha = .7, linewidth = 5)+
+  geom_hline(aes(yintercept = aos_avg), linetype = "solid", alpha = .2, linewidth = 5)+
+  coord_flip()+
+  facet_wrap(~ Q2_sep1)+
+  theme_minimal(base_size = 60)+
+  xlab("AOS")+
+  ylab("counts")+
+  ggtitle("Volume of applications by AOS and program status")+
+  theme(legend.position="none")+
+  scale_color_manual(values = primary)->ay24_aos_max_min_avg
+
+ggsave(plot = ay24_aos_max_min_avg, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\ay_24_aos_program_max_min_avg_c.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+
+survey_clean|>
+  select(Q1, Q2_sep1, Q3, Q4)|>
+  mutate(Q4 = str_replace_all(Q4, "^(?=\\s*$)", "x"),
+         Q2_sep1 = str_replace_all(Q2_sep1, "Metaphysics and Epistemology", "Metaphysics, Epistemology"))%>%
+  filter(Q4 != "x" & Q4 != "Associate professor/tenured" & Q4 != "Fixed-term with no option for renewal (e.g. sabbatical replacement)")%>%
+  filter(Q2_sep1 != "not given")%>%
+  na.omit()|>
+  arrange(-Q1)|>
+  group_by(Q2_sep1)|>
+  mutate(aos_med = median(Q1))|>
+  ungroup()%>%
+  group_by(Q2_sep1, Q4)|>
+  mutate(spec_med =  median(Q1), # change to median?
+            max = max(Q1),
+            min = min(Q1),
+         Q4 = str_remove_all(Q4, "\\(e.g. rolling contract\\)"),
+         Q4 = as_factor(Q4))|>
+   ungroup()|>
+  ggplot(aes(Q4, spec_med, color = Q4))+
+  geom_point(alpha = .8, size = 8)+
+    geom_errorbar(aes(ymin = min, ymax = max),alpha = .7, linewidth = 5)+
+  geom_hline(aes(yintercept = aos_med), linetype = "solid", alpha = .2, linewidth = 5)+
+  coord_flip()+
+  facet_wrap(~ Q2_sep1)+
+  theme_minimal(base_size = 60)+
+  xlab("AOS")+
+  ylab("counts")+
+  ggtitle("Volume of applications by AOS and contract type")+
+  theme(legend.position="none")+
+  scale_color_manual(values = primary)->ay24_aos_contract_max_min_avg
+
+ggsave(plot = ay24_aos_contract_max_min_avg, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\ay_24_aos_contract_max_min_avg_d.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+
+survey_clean|>
+  filter(!is.na(Q7))|>
+  arrange(Q1)|>
+  mutate(rn = row_number())|>
+  rename(counts = Q1)|>
+  mutate(Q7 = str_replace_all(Q7, "There were about as many applicants as I was expecting", "Expected"),
+         Q7 = str_replace_all(Q7, "There were fewer applicants than I was expecting", "Fewer"),
+         Q7 = str_replace_all(Q7, "There were more applicants than I was expecting", "More"))|>
+  ggplot(aes(rn, counts, fill = Q7))+
+  geom_bar(stat = "identity")+
+  scale_fill_manual(values = primary)+
+  facet_wrap(~Q3)
+  theme_minimal(base_size = 60)+
+  ggtitle("Volume of applications for TT jobs")+
+  theme(axis.text.x = element_blank())+
+  xlab("")+
+  ylab("counts")->num_imp_23
+
+ggsave(plot = num_imp_23, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\num_imp_23.png", width = 40, height = 30, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+#tables: not used in AY24-25
+```{r}
+survey_clean|>
+  select(Q1, Q2_sep1, Q3)|>
+  na.omit()|>
+  group_by(Q3)|>
+  reframe(std = sd(Q1), average = mean(Q1))|>
+  ungroup()|>
+  rename(status = Q3,
+         `standard deviation` = std)|>
+  mutate(across(where(is.double), round))|>
+  gt::gt(caption = "Averages and dispersion") -> overview_p23
+
+gt::gtsave(overview_p23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\overview_p23.png", expand = 10)
+
+survey_clean|>
+  select(Q1, Q3)|>
+  na.omit()|>
+  arrange(-Q1)|>view()
+  group_by(Q3)|>
+ summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1),most = max(Q1) )|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(status = Q3,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption = "Overview of applicantions by program status")->all_over_23
+
+gt::gtsave(all_over_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\all_over_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 == "Assistant professor/tenure-track")|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "TT position applications")->tt_23
+
+gt::gtsave(tt_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\tt_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 == "Postdoc" | str_detect(Q4, "Fixed"))|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "Postdoc and fixed-term position applications")->pd_fixed_23
+
+gt::gtsave(pd_fixed_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\pd_fixed_23.png", expand = 10)
+
+survey_clean|>
+  filter(Q4 != "Postdoc" & Q4 != "Assistant professor/tenure-track" & str_detect(Q4, "Fixed", negate = TRUE))|>
+  group_by(Q2_sep1)|>
+  summarize(least = min(Q1), avg = mean(Q1), mid = median(Q1), most = max(Q1))|>
+  ungroup()|>
+  mutate(across(where(is.double), round))|>
+  rename(AOS = Q2_sep1,
+         mean = avg,
+         median = mid)|>
+  gt::gt(caption  = "Open and tenured position applications")->open_23
+
+gt::gtsave(open_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\open_23.png", expand = 10)
+
+  
+  survey_clean|>
+  filter(!is.na(Q7))|>
+  count(Q7)|>
+  rename(response = Q7,
+         count = n)|>
+  arrange(-count)|>
+  gt::gt(caption = "Impressions of applicant volume")->imp_app_23
+  
+  gt::gtsave(imp_app_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\imp_app_23.png", expand = 10)
+  
+  survey_clean|>
+  filter(!is.na(Q6))|>
+  count(Q6, Q3)|>view()
+  rename(response = Q6,
+         count = n)|>
+  arrange(-count)|>view()
+  gt::gt(caption = "Time allotment for job")->time_job_23
+  
+  gt::gtsave(time_job_23, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\time_job_23.png", expand = 10)
+
+
+```
+#perceptions  
+```{r}
+survey_clean%>%
+  select(Q3, Q4, Q7)%>%
+  arrange(Q3, Q4, Q7)%>%
+  view()
+```
+
+
+#top and bottom
+```{r}
+survey_clean|>
+ select(Q1, Q2_sep1, Q3)%>%
+  na.omit()%>%
+  arrange(Q1)%>%
+  add_count(Q2_sep1, Q3)%>%
+  mutate(ends = ifelse(Q1 > 65 & Q1 < 159, FALSE, TRUE),
+         end = ifelse(ends == TRUE & Q1<= 65, "Bottom", "Top"))%>%
+  rename(`overall frequency` = n)%>%
+  filter(ends == TRUE)%>%
+  add_count(Q2_sep1, Q3, end)%>%
+  mutate(ratio = round(n / `overall frequency`, 2))%>%
+  
+  rename(frequency = n,
+         AOS = Q2_sep1,
+         `degree type` = Q3)%>%
+  distinct(AOS, `degree type`, frequency, end, .keep_all = TRUE)%>%
+  select(AOS, `degree type`, frequency, `overall frequency`, ratio, end)%>%
+  arrange(end, ratio, AOS, `degree type`)%>%
+  gt::gt(caption = "Chararteristics of top and bottom quartile for applicant volume")->top_bottom
+
+ gt::gtsave(top_bottom, "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs_annual_outputs\\ay24_top_bottom_a.png", expand = 10)
+ 
+ survey_clean|>
+ select(Q1, Q2_sep1, Q3)%>%
+  na.omit()%>%
+  arrange(Q1)%>%
+  add_count(Q2_sep1, Q3)%>%
+  mutate(ends = ifelse(Q1 > 65 & Q1 < 159, FALSE, TRUE),
+         end = ifelse(ends == TRUE & Q1<= 65, "Bottom", "Top"))%>%
+   filter(end == "Top")%>%
+   select(2,3)%>%
+   fastDummies::dummy_cols()%>%
+   select(-1, -2)%>%
+   cor()-> bottom_cor
+ 
+ corrplot::cor.mtest(bottom_cor, conf.level = .95) -> bottom_cor_sig
+ 
+ corrplot::corrplot(bottom_cor, method = "number")
+   
+ 
+ #method = 'circle', type = 'lower', insig='blank',
+  #       addCoef.col ='black', number.cex = 0.8, order = 'AOE', diag=FALSE
+```
+
+```{r}
+DN|>
+  count(Q3, Q2_sep1)|>
+  group_by(Q3)|>
+  mutate(tots = n / sum(n))|>
+  ungroup()|>
+  
+  view()
+
+
+DN|>
+  select(Q2_sep1, Q3, Q1)|>
+  filter(Q2_sep1 == "Open")|>
+  select(-Q1)|>
+  table()->AOS_status
+
+(prop.table(AOS_status))
+addmargins(AOS_status)
+fisher.test(AOS_status)
+chisq.test(AOS_status)
+
+table(survey_clean$Q2_sep1)
+
+```
+

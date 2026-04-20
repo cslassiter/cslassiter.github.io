@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What are they saying about us? — Charles Lassiter</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-body img { max-width: 100%; height: auto; display: block; margin: 1.5rem auto; border-radius: 3px; }
+    .post-body p { margin-bottom: 1rem; }
+    .post-body ol, .post-body ul { margin: 1rem 0 1rem 1.5rem; }
+    .post-body li { margin-bottom: 0.4rem; }
+    .post-img { text-align: center; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+  <div class="site-header">
+    <div class="container">
+      <h1>Charles Lassiter</h1>
+      <p class="tagline">Professor of Philosophy · Gonzaga University</p>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../research.html">Research</a>
+        <a href="../teaching.html">Teaching</a>
+        <a href="../cv.html">CV</a>
+        <a href="../blog.html" class="active">Blog</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <main>
+      <p class="blog-date">3/14/2023</p>
+      <h2>What are they saying about us?</h2>
+      <div class="post-body">
+</p>
+			<p class="blog-comments">
+				
+			</p>
+		</div>
+	
+		<div class="blog-separator">&nbsp;</div>
+	
+		<div class="blog-content">
+				<p>&#8203;<font color="#2a2a2a"><a href="https://youtu.be/Y6jSKetRBU0?t=4" target="_blank">Hello! I'm Charlie Lassiter.</a> You may remember me from such blog posts as "<a href="https://charleslassiter.net/blog/how-blue-can-you-get-the-2020-2021-job-cycle" target="_blank">The Job Market: We're All Doomed</a>!" and "<a href="https://charleslassiter.net/blog/leiter-year-in-review-review" target="_blank">What Does Brian Leiter Blog About?</a>" I'm here today to help answer the question, "what are newspapers saying about philosophy?"</p>
+<p>This was inspired by my colleague <a href="https://www.gonzaga.edu/academics/faculty-listing/detail/alfino" target="_blank">Mark Alfino</a>, who keeps tabs on trends in higher ed. I says to myself I says, "I wonder how academic philosophy is talked about in newspapers?" I'm typically worried by articles like this one from <a href="https://www.axios.com/2023/03/04/studying-english-makes-little-sense" target="_blank">Axios</a>. And while I plan to get to online sources soon, newspaper turned out to be the easiest to tackle first.</p>
+<p>I used LexisNexis to get all American newspaper articles from the last 10 years mentioning "philosophy." To make sure I was getting returns on academic philosophy instead of the <a href="https://www.philosophy.com/" target="_blank">makeup brand</a>&nbsp;or things like "her investment philosophy is...", I first filtered by "liberal arts" and then by "philosophy." Also, I limited the search to national and local newspapers. This means leaving out&nbsp;<em>Chronicle of Higher Ed</em>&nbsp;as well as some other higher-ed-specific sources.&nbsp;This gave me a batch of 686 articles. After that, I filtered out obituaries; they were throwing off the&nbsp; results.</font></div>  <p><font color="#2a2a2a">From here, I used the fantastic package<a href="https://cran.rstudio.com/web/packages/LexisNexisTools/index.html" target="_blank"> LexisNexisTools</a> to parse out the data and metadata. Seriously, if you do text mining in newspapers with R, I can't recommend this package enough. Text mining was done with <a href="https://www.tidytextmining.com/" target="_blank">Tidytext</a>. Today we're going to do some sentiment analysis.</font><br /></div>  <h2 class="wsite-content-title">Sentiment analysis</h2>  <p><span style="color:rgb(42, 42, 42)">Sentiment analysis is exactly what it sounds like: getting an analysis of the positive and negative sentiments in a text. There are a few different ways to do this. The AFINN corpus from&nbsp;Finn Arup Nielsen tags words with a value between -5 ("bastard", "motherfucker") and 5 ("outstanding", "superb"), excluding 0. We'll be using that. Nielsen assigned these tags by hand and then checked his ratings against other corpora. You can find his paper discussing methodology and validation of his ratings&nbsp;</span><a href="https://arxiv.org/pdf/1103.2903.pdf" target="_blank">here</a><span style="color:rgb(42, 42, 42)">. I like it because it gives some nuance between bivalent "positive" and "negative" assignments, like you find with Bing Liu's lexicon.</span>&#8203;</div>  <p><font color="#2a2a2a">A good first step is looking at the distribution of values.&nbsp;</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/sent-dist_orig.png" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">We see lots of 2 and 1 followed by -2 and -1. So more positive than negative and nothing really extreme. So far so good.</font></div>  <p><font color="#2a2a2a">&#8203;Now let's look at sentiment over time. Using the AFINN corpus, I added up the values of the tags for each article by year. The problem, though, is that this could be affected by the number of words published in a year. More words could mean more positive things written, but if (let's say) 2012 had fewer words written on academic philosophy than 2022, then just plotting totals per year would make it seem as though 2012 was less positive than 2022. So I addressed this by scaling the total sentiment score to the number of words written: i.e. Score = Sum(Sentiment score per year) / Sum(Words published per year). That's what we find in this plot:</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/sent-by-year_orig.png" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">Notice that the scores are all positive--that means that, on the whole, academic philosophy is being reported using more positive than negative language in newspapers. But also notice the downward trend over the last 10 years. We're being talked about less positively as time goes on. In 2022, for instance, the&nbsp;<em>New York Times</em>&nbsp;ran an article "At the Edge of a Cliff, Some Colleges Are Teaming Up to Survive." And&nbsp;<em>Moneywise</em>&nbsp;ran "How to Build a University Unafraid of True Intellectual Diversity." These are, on the whole, positive but there's quite a bit of negative in them too. Compare that with "We Need More STEM Majors with Liberal Arts Training" from the 2015 <em>Salt Lake Tribune</em>&nbsp;and "UW's Liberal Arts Grads Finding Work," from&nbsp;<em>Wisconsin State Journal</em>.</font></div>  <p><font color="#2a2a2a">What might explain the sharp dips from 2015 to 2016 and 2018 to 2019? I'm just taking a guess here, but the presidential race from 2016 might have a lot to do with it. There was quite a lot of "enough with the eggheads" talk. And 2019 was...well...COVID and the economic pressures that came along with that.</font></div>  <p><font color="#2a2a2a">Let's look at individual newspapers now. We're using the same scoring method of scaling sentiment by number of words written--but now by newspaper.</font></div>  <div><div class="post-img"><img src="https://charleslassiter.net/uploads/3/0/1/2/30128463/news-sent3_orig.png" alt="Picture" style="width:auto;max-width:100%" /></div> </div></div>  <p><font color="#2a2a2a">I only included newspapers that had articles totaling more than 1000 words on academic philosophy over 10 years. The blue line is the average score of 0.281. The dashed lines are the standard deviation. The red line is the median score of 0.133. The newspaper to write most favorably about philosophy is the&nbsp;<em>New York Times</em>. I don't suppose that's a huge surprise; they did have The Stone after all. The outlet to write least favorably is <em>USA Today Online</em> along with the <em>New York Observer</em>. Both these outlets had negative scores, which means they put out more negative sentiments than positive ones. Most outlets are lukewarm in their reporting about philosophy, it seems, but most are below average. This is probably due to the three points&nbsp;<em>waaaaay</em>&nbsp;north of the standard deviation throwing off the average.</p>
+<p>The median is more representative of the bigger picture.&nbsp; But&nbsp;how do we interpret it? Recall that the AFINN corpus uses a scale of -5 to 5 to rank the sentiment of a term. And these scores are scaled to the number of words written. So if we find values close to 0, then it doesn't matter how many words are written--there are about as many positive sentiments as negative ones. This is what the median tells us: that, relative to the number of words written, there are&nbsp;<em>slightly</em>&nbsp;more positive sentiments than negative ones. The&nbsp;<em>Alaska Dispatch News</em>&nbsp;has relatively fewer positive sentiments than the&nbsp;<em>Spokesman Review--</em>which, I might add, is above both the median and the mean. <a href="https://www.visitspokane.com/" target="_blank">Go Spokane</a>!</p>
+<p>Whether the outlet ranks above or below a score of 0 tells us whether there are more positive or negative things said.&nbsp;<em>USA Today Online</em>, for example, could only get a negative score if there were more negative sentiments than positive ones.&nbsp; Note that this fits with sorts of intuitions primed by the histogram above.&nbsp;</font></div>  <p><font color="#2a2a2a">Well that's it for now. If there's anything else you'd like to see analyzed, let me know. And I'm making a zip file of the articles I used for analysis available here if anyone else want to play with them.</font></div>
+
+		</div>
+	
+	
+			<div class="blog-social  ">
+		<div
+      </div>
+      <p style="margin-top:2rem;"><a href="../blog.html">&larr; Back to Blog</a></p>
+    </main>
+    <footer>
+      &copy; 2026 Charles Lassiter
+    </footer>
+  </div>
+</body>
+</html>

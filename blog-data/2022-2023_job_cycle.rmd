@@ -1,0 +1,886 @@
+---
+title: "2022-2023 job cycle"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#load libraries & set theme
+```{r}
+library(tidyverse)
+library(viridis)
+library(lubridate)
+library(ggthemes)
+library(RColorBrewer)
+library(tidygeocoder)
+library(tidycensus)
+library(maps)
+library(ggsci)
+library(ggmap)
+library(gghighlight)
+register_google(key = "AIzaSyC1jqd-OsIzSFK6VhDUTea6txRtfTWa87M")
+
+theme_set(
+    theme_minimal(base_size = 50) ## big base size for blog pics
+)
+```
+
+#misc checking
+```{r}
+temp_clean <- jobs_clean%>%
+  mutate(Post_date = mdy(`Date posted`),
+         mth = month(Post_date),
+         yr = year(Post_date))%>%
+  select(-`Date posted`)
+
+anti_join(temp_clean, master_temp, by = "Id")->temp_prim
+
+write_csv(temp_prim, "temp_prim.csv")
+
+```
+
+
+#getting & cleaning latest data
+```{r}
+##main idea: add on to the new file
+#step 0: reload master file (if needed)
+#last update: 19 July 2023
+master_file_philjobs <- read_csv("master_file_philjobs_2023-07-19.csv")
+#step 1: import latest data & clean up format
+jobs_raw<-read_csv("C:\\Users\\lassiter\\Downloads\\jobs.csv", 
+                   col_types = cols(`Date posted` = col_date(format = "%m/%d/%Y")))
+
+jobs_raw%>%
+  rename(Post_date = `Date posted`)%>%
+  select(-`How to apply`, 
+         -`Info link`, -`Application link`, -`PhilJobs page`, -`Start time`,)%>%
+  mutate(AOS_main = "XXXX",
+         AOS_detail = "XXXX",
+         other_keyword = "XXXX",
+         yr = year(Post_date),
+         mth = month(Post_date)) -> jobs_clean
+
+#step 2: get only latest data
+jobs_latest <- jobs_clean%>%
+  anti_join(master_file_philjobs)
+
+#step 3: clean AOS
+jobs_latest <- edit(jobs_latest)
+#jobs_latest <- jobs_secondary
+
+
+```
+
+#rejoining to main file
+```{r}
+#this gets everything together into a temp file
+master_temp <- rbind(jobs_latest, master_file_philjobs)
+
+#if everything checks out, switch temp file to permanent
+master_file_philjobs <- master_temp
+
+#to save the updated file with the date
+d <- paste0("master_file_philjobs_", Sys.Date(), ".csv")
+write_csv(master_file_philjobs, d)
+
+master_file_philjobs <- master_file_philjobs%>%
+  mutate(Post_date = as.Date(Post_date, format = "%m/%d/%Y"))
+```
+
+
+#primary cycle hiring
+##creating df for primary cycle
+```{r}
+master_file_philjobs%>%
+  filter(mth >= 7 & mth <= 12)->jobs_primary
+```
+
+
+##all job posts with historical context, primary cycle
+```{r}
+jobs_primary%>%
+  add_count(`Job type`, yr)%>%
+  select(`Job type`, yr, n)%>%
+  ggplot(mapping = aes(x = yr, y = n, color = `Job type`, label = n))+
+  geom_point(size = 3)+
+  geom_line(size = 3)+
+  scale_color_viridis(discrete = TRUE)+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")#->job_plots_history
+
+ggsave(plot = job_plots_history, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\all_jobs_22_history_big.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+```
+
+##adding labels for a handful of job types
+```{r}
+jobs_primary%>%
+  filter(`Job type` == "Junior faculty" |`Job type` == "Postdoc or similar" | `Job type` == "Other (non-academic)" | `Job type` == "Faculty (open rank)" )%>%
+  add_count(`Job type`, yr)%>%
+  select(`Job type`, yr, n)%>%
+  distinct()%>%
+  ggplot(mapping = aes(x = yr, y = n, color = `Job type`, label = n))+
+  geom_point(size = 3)+
+  geom_line(size = 3)+
+  geom_text_repel(aes(label = n), nudge_y = 10, nudge_x = 0, max.overlaps = 100, size = 10)+
+  #geom_text(hjust = 1, vjust = -1)+
+  scale_color_viridis(discrete = TRUE)+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")->some_job_plots_history
+
+ggsave(plot = some_job_plots_history, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\some_jobs_22_history_big.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+
+##filtering for junior and postdoc
+```{r}
+jobs_primary%>%
+  filter(`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar" )->junior
+```
+
+##looking at junior trends
+```{r}
+junior%>%
+  #filter(yr != 2020)%>%
+  add_count(`Contract type`, yr)%>%
+  select(`Contract type`, yr, n)%>%
+  distinct()%>%
+  ggplot(mapping = aes(x = yr, y = n, color = `Contract type`))+
+  geom_point(size = 2)+
+  geom_line(size = 2)+
+  #geom_smooth(method = "lm", se = FALSE)+
+  scale_color_viridis(discrete = TRUE)+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")+
+    geom_text_repel(aes(label = n), nudge_y = 10, nudge_x = 0, max.overlaps = 100, size = 10)->junior_plots_history
+
+ggsave(plot = junior_plots_history, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\junior_jobs_22_history_labels_big.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+
+
+##deadlines with historical context, primary cycle
+```{r}
+jobs_primary%>%
+  filter(Deadline != "---")%>%
+  mutate(Deadline = str_remove_all(Deadline, "\\(.*\\)"),
+         Deadline = str_replace_all(Deadline, "/", "-"),
+         Deadline_clean = parse_date_time(Deadline, orders = c("mdY", "Ymd")))%>%
+  arrange(Deadline_clean)%>%
+  mutate(Deadline_day = yday(Deadline_clean),
+         Deadline_yr = factor(year(Deadline_clean)))%>%
+  filter(Deadline_yr != 2015 & Deadline_yr != 2023)%>%
+  filter(Deadline_day >= 260)%>% ##change to <= 50 to get beginning of year deadlines
+  group_by(Deadline_yr, Deadline_clean)%>%
+  add_count()%>%
+  ungroup()%>%
+  select(Deadline_day, Deadline_clean, Deadline_yr, n)%>%
+  distinct()%>%
+  group_by(Deadline_yr)%>%
+  mutate(totals = cumsum(n),
+         maximums = max(totals))%>%
+  ungroup()%>%
+  select(Deadline_day, n, maximums, Deadline_yr)%>%
+  distinct()%>%
+  mutate(st_apps = n/maximums)%>%
+  ggplot(mapping = aes(x = Deadline_day, y = st_apps, color = Deadline_yr, group = Deadline_yr))+
+  geom_line(size = 1, alpha = .5)+
+  labs(x = "Deadlines Sept 17 to Dec 31",
+       y = "")+
+  theme_minimal(base_size = 11)#->deadlines_2022_history
+
+ggsave(plot = deadlines_2022_history, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\deadlines_22_history.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+```
+
+
+##daily posts, all and junior
+```{r}
+#ALL
+jobs_primary%>%
+  mutate(DayMonth = format(as.Date(Post_date), "%m-%d"))%>%
+  #filter(mth == 9 | mth == 10 | mth == 11)%>%
+  group_by(yr, Post_date)%>%
+  add_count()%>%
+  ungroup()%>%
+  select(DayMonth, yr, n)%>%
+  unique()%>%
+  arrange(yr, DayMonth)%>%
+  group_by(yr)%>%
+  mutate(c = cumsum(n),
+         d = c/max(c))%>% ## d relativizes to total postings for the cycle, use n for daily posts and c for cummulative posts
+  ungroup()%>%
+  mutate(yr = factor(yr))%>%
+  group_by(DayMonth)%>%
+  mutate(big = max(d),
+         big_yr = ifelse(d == big, yr, NA),
+         big_yr = big_yr + 2014)%>%
+  ungroup()%>%
+  na.omit()%>%
+  add_count(big_yr)%>%
+  ggplot()+
+  aes(x = DayMonth, y = d, group = yr, color = yr)+
+  #geom_line(linewidth = 1.5)+
+  geom_point()+
+  #gghighlight(max(d))+
+  labs(x = "date",
+       y = "")+
+  theme_minimal(base_size = 11)+theme(axis.text.x = element_blank())+
+  labs(x = "July 1 to December 31",
+       y="")+
+  scale_color_viridis(discrete = TRUE)
+
+#JUNIOR
+
+junior%>%
+  mutate(DayMonth = format(as.Date(Post_date), "%m-%d"))%>%
+  #filter(mth == 9 | mth == 10 | mth == 11)%>%
+  group_by(yr, Post_date)%>%
+  add_count()%>%
+  ungroup()%>%
+  select(DayMonth, yr, n)%>%
+  unique()%>%
+  arrange(yr, DayMonth)%>%
+  group_by(yr)%>%
+  mutate(c = cumsum(n),
+         d = c/max(c))%>%
+  ungroup()%>%
+  mutate(yr = factor(yr))%>%
+  ggplot()+
+  aes(x = DayMonth, y = d, color = yr, group = yr)+
+  geom_point()+
+  #geom_line(linewidth = 1.5)+
+  #gghighlight(yr == 2022 | yr == 2015)+
+  gghighlight(yr == 2022)+
+  theme_minimal(base_size = 11)+
+  theme(axis.text.x = element_blank())+
+  labs(x = "July 1 to December 31",
+       y="")
+
+```
+
+#secondary cycle hiring
+
+##creating df for secondary cycle
+```{r}
+master_file_philjobs%>%
+  filter(mth >= 1 & mth <= 6)->jobs_secondary
+```
+
+##number of jobs, present year
+```{r}
+js <- jobs_secondary%>%
+  filter(yr == 2023)%>%
+  add_count(`Job type`, yr)%>%
+  select(`Job type`, yr, n)%>%
+  distinct
+
+jsp <- ggplot(data = js, mapping = aes(x = `Job type`, y = n))
+
+jsp_f <- jsp+geom_bar(stat = "identity")+
+  coord_flip()+
+  labs(x = "Job type",
+       y = "Posts",
+       title = "")
+
+ggsave(plot = jsp_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_secondary_2023.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+
+##number of jobs, historical context
+```{r}
+jsh <- jobs_secondary%>%
+  add_count(`Job type`, yr)%>%
+  select(`Job type`, yr, n)%>%
+  distinct()
+
+jshp <- ggplot(data = jsh, mapping = aes(x = yr, y = n, color = `Job type`))
+  
+jshp_f <- jshp +  geom_point(size = 5)+
+  geom_smooth(method = "lm", se = FALSE, linewidth = 5)+ 
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")
+
+ggsave(plot = jshp_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_secondary_history.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+##select positions labeled
+```{r}
+jobs_secondary%>%
+  filter(`Job type` == "Junior faculty" |`Job type` == "Postdoc or similar" | `Job type` == "Faculty (open rank)" )%>%
+  add_count(`Job type`, yr)%>%
+  select(`Job type`, yr, n)%>%
+  distinct()%>%
+  ggplot(mapping = aes(x = yr, y = n, color = `Job type`))+
+  geom_point(size = 3)+
+  geom_smooth(method = "lm", se = FALSE, size = 3)+
+  ggrepel::geom_text_repel(aes(label = n), nudge_y = 10, nudge_x = 0, max.overlaps = 100, size = 10)+
+  #geom_text(hjust = 1, vjust = -1)+
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")
+```
+
+##filtering for junior and postdoc
+```{r}
+jobs_secondary%>%
+  filter(`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar" )->junior
+```
+
+##looking at junior trends
+```{r}
+jun_second <- junior%>%
+  #filter(yr != 2020)%>%
+  add_count(`Contract type`, yr)%>%
+  select(`Contract type`, yr, n)%>%
+  distinct()
+
+jun_second_p <-  ggplot(data = jun_second, mapping = aes(x = yr, y = n, color = `Contract type`))
+
+jun_second_p1 <- jun_second_p+
+  geom_point(size = 5)+
+  geom_smooth(method = "lm", se = FALSE, linewidth = 5)
+  
+dev.new(width=50000, height=30000, unit="px")
+
+jun_second_p1_f <- jun_second_p1 +
+ggrepel::geom_text_repel(aes(label = n), size = 8, color = "black", hjust = 0, vjust = 0, nudge_x = .1, nudge_y = .5)+
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")
+
+ggsave(plot = jun_second_p1_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\junior_jobs_secondary_23_history.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+#comparing primary and secondary and across entire year
+```{r}
+p_s <- master_file_philjobs%>%
+    filter(yr != 2023)%>%
+  mutate(cycle = ifelse((mth >=7 & mth <= 12), "primary", "seconary"))%>%
+  add_count(yr, cycle, name = "annual_posts")%>%
+  add_count(`Contract type`, yr, cycle)%>%
+  select(`Contract type`, yr, cycle, n, annual_posts)%>%
+  distinct()%>%
+  mutate(rel_posts = n / annual_posts)
+
+p_s_p <- ggplot(data = p_s, mapping = aes(x = yr, y = n, color = cycle))
+  
+p_s_p_f <- p_s_p +
+  geom_point(size = 5)+ 
+  geom_smooth(method = "lm", se = FALSE, size = 5)+
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "")+
+  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021))+
+  facet_wrap(~`Contract type`)
+
+
+ggsave(plot = p_s_p_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\junior_jobs_compare_cycles.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+#############
+p_s_no_2020 <- master_file_philjobs%>%
+    filter(yr != 2023 )%>%
+  mutate(cycle = ifelse((mth >=7 & mth <= 12), "primary", "seconary"))%>%
+  add_count(yr, cycle, name = "annual_posts")%>%
+  add_count(`Contract type`, yr, cycle)%>%
+  select(`Contract type`, yr, cycle, n, annual_posts)%>%
+  distinct()%>%
+  mutate(rel_posts = n / annual_posts)
+
+p_s_p_n <- ggplot(data = p_s_no_2020, mapping = aes(x = yr, y = n, color = cycle))
+  
+p_s_p_n_f <-
+  p_s_p_n +
+  geom_point(size = 5)+ 
+  geom_smooth(method = "lm", se = FALSE, size = 5)+
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "",
+       caption = "Omitting 2020 job data")+
+  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021))+
+  facet_wrap(~`Contract type`)
+
+
+ggsave(plot = p_s_p_n_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\junior_jobs_compare_cycles_no_2020.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+  
+
+p_s_no_2020 <- master_file_philjobs%>%
+    filter(yr != 2023 )%>%
+  mutate(cycle = ifelse((mth >=7 & mth <= 12), "primary", "seconary"))%>%
+  add_count(yr, cycle, name = "annual_posts")%>%
+  add_count(`Contract type`, yr, cycle)%>%
+  select(`Contract type`, yr, cycle, n, annual_posts)%>%
+  distinct()%>%
+  mutate(rel_posts = n / annual_posts)
+
+p_s_p_n <- ggplot(data = p_s_no_2020, mapping = aes(x = yr, y = rel_posts, color = cycle))
+  
+p_s_p_n_f <-
+  p_s_p_n +
+  geom_point(size = 5)+ 
+  geom_smooth(method = "lm", se = FALSE, size = 5)+
+  scale_color_simpsons()+
+  labs(x = "Year",
+       y = "Posts",
+       title = "",
+       caption = "Omitting 2020 job data")+
+  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021))+
+  facet_wrap(~`Contract type`)
+
+
+ggsave(plot = p_s_p_n_f, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\junior_jobs_compare_cycles_no_2020.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+  
+```
+
+
+#AOS analyses
+```{r}
+#for these, you'll need to update jobs_primary and jobs_secondary as needed
+```
+
+##AOS, all
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  separate(AOS_main, into = c("AOS1", "AOS2", "AOS3"), sep = " or ")%>%
+  select(AOS1, AOS2, AOS3)%>%
+  pivot_longer(cols = c(AOS1, AOS2, AOS3), names_to = "aos", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values)%>%
+  select(values, n)%>%
+  distinct()%>%
+  ggplot()+
+  aes(x = reorder(values, n), y = n)+
+  geom_bar(stat = "identity")+
+  labs(x = "areas",
+       y = "")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))->aos_all
+
+ggsave(plot = aos_all, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_22_all_2.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+##AOS, value theory
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  filter(AOS_main %in% "value_theory")%>%
+  separate(AOS_detail, into = c("AOSd1", "AOSd2", "AOSd3"), sep = " or ")%>%
+  select(`Job type`, `Contract type`, AOSd1, AOSd2, AOSd3)%>% #, other_keyword
+  pivot_longer(cols = c( AOSd1, AOSd2, AOSd3), names_to = "names", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values)%>%
+  arrange(n)%>%
+  select(values, n)%>%
+  distinct()%>%view()
+  ggplot()+
+  aes(x = reorder(values,n), y = n)+
+  geom_bar(stat = "identity")+
+  labs(x = "Value theory detail",
+       y = "")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))->aos_vt
+
+ggsave(plot = aos_vt, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_22_vt_1.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+## VT, other
+jobs_clean%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  filter(AOS_main %in% "value_theory")%>%
+  filter(AOS_detail %in% "value_other")%>% 
+  select(other_keyword)%>%
+  add_count(other_keyword)%>%
+  distinct()%>%
+  view()
+
+```
+
+##AOS, hist/trad
+
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  filter(AOS_main %in% "hist_trad")%>%
+  select(AOS_detail)%>%
+  separate(AOS_detail, into = c("A1", "A2", "A3", "A4", "A5", "A6"), sep = " or ")%>%
+  pivot_longer(cols = c(A1, A2, A3, A4, A5, A6), names_to = "names", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values)%>%
+  select(n, values)%>%
+  distinct()%>%
+  ggplot()+
+  aes(x = reorder(values, n), y = n)+
+  geom_bar(stat = "identity")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
+  labs(x = "History and traditions detail",
+       y = "")-> aos_hist_trad_22
+
+ggsave(plot = aos_hist_trad_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_hist_trad_22_1.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+```
+
+
+##AOS, open
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  separate(AOS_main, into = c("AOS1", "AOS2", "AOS3"), sep = " or ")%>%
+  select(AOS1, AOS2, AOS3, `Job type`)%>%
+  #filter(`Job type` == "Junior" | `Job type` == "Postdoc or similar")%>%
+  pivot_longer(cols = c(AOS1, AOS2, AOS3), names_to = "aos", values_to = "values")%>%
+  na.omit()%>%
+  ggplot()+
+  aes(x = `Job type`)+
+  geom_histogram(stat = "count")+
+  theme_minimal(base_size = 11)+
+    facet_wrap(~values)+
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
+
+#open, junior and postdoc
+jobs_clean%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  separate(AOS_main, into = c("AOS1", "AOS2", "AOS3"), sep = " or ")%>%
+  filter(`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar")%>%
+  filter(`Contract type` == "Tenure-track or similar")%>%
+  filter(AOS1 == "open")%>% 
+  select(AOS1, Institution, `Job type`)%>%
+  pivot_longer(cols = c(AOS1, AOS2, AOS3), names_to = "aos", values_to = "values")%>%
+  na.omit()%>%
+  ggplot()+
+  aes(x = `Job type`)+
+  geom_histogram(stat = "count")+
+    
+    facet_wrap(~values)+
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1))
+
+```
+
+##AOS, science, logic, math
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_science", "phil_sci"))%>%
+  filter(AOS_main %in% "science_logic_math")%>%
+  select(AOS_detail)%>%
+  separate(AOS_detail, into = c("A1", "A2", "A3", "A4"), sep = " or ")%>%
+  pivot_longer(cols = c(A1, A2, A3, A4), names_to = "names", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values)%>%
+  select(n, values)%>%
+  distinct()%>%
+  ggplot()+
+  aes(x = reorder(values, n), y = n)+
+  geom_bar(stat = "identity")+
+  labs(x = "Science, logic, math detail",
+       y = "")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))->aos_slm_22
+
+ggsave(plot = aos_slm_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_slm_22_1.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+##slm_other
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_science", "phil_sci"))%>%
+  filter(AOS_detail %in% "slm_other")%>%
+  select(other_keyword)%>%
+  view()
+```
+
+##AOS, epist_meta
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_science", "phil_sci"),
+         AOS_detail = str_replace_all(AOS_detail, "epis.*_meta_other", "meta_epist_other"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_mind", "mind"))%>%
+  filter(AOS_main %in% "meta_epist")%>%
+  select(AOS_detail)%>%
+  separate(AOS_detail, into = c("A1", "A2", "A3", "A4"), sep = " or ")%>%
+  pivot_longer(cols = c(A1, A2, A3, A4), names_to = "names", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values)%>%
+  select(n, values)%>%
+  distinct()%>%
+  ggplot()+
+  aes(x = reorder(values, n), y = n)+
+  geom_bar(stat = "identity")+
+  labs(x = "Metaphysics and epistemology detail",
+       y = "")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))->aos_me_22_2
+
+ggsave(plot = aos_me_22_2, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_me_22_2.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+##me_other
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_science", "phil_sci"),
+         AOS_detail = str_replace_all(AOS_detail, "epis.*_meta_other", "meta_epist_other"),
+         AOS_detail = str_replace_all(AOS_detail, "phil_mind", "mind"))%>%
+  filter(AOS_detail %in% "meta_epist_other")%>%
+  select(other_keyword)%>%
+  view()
+```
+
+
+##AOS, junior
+```{r}
+jobs_%>%
+  mutate(AOS_main = str_replace_all(AOS_main, "epist_meta", "meta_epist"),
+         AOS_main = str_replace_all(AOS_main, "science_math_logic", "science_logic_math"))%>%
+  separate(AOS_main, into = c("AOS1", "AOS2", "AOS3"), sep = " or ")%>%
+  filter(`Job type` == "Junior faculty" | `Job type` == "Postdoc or similar")%>%
+  select(AOS1, AOS2, AOS3, `Job type`)%>%
+  pivot_longer(cols = c(AOS1, AOS2, AOS3), names_to = "aos", values_to = "values")%>%
+  na.omit()%>%
+  add_count(values, `Job type`)%>%
+  select(-aos)%>%
+  distinct()%>%
+  ggplot()+
+  aes(x = values, y = n)+
+  geom_bar(stat = "identity")+
+  facet_wrap(~`Job type`)+
+  labs(x = "areas",
+       y = "")+
+  theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust = 1)) -> aos_junior
+
+ggsave(plot = aos_junior, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\aos_junior_22.png", width = 30, height = 20, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+
+
+```
+##AOS, misc
+```{r}
+
+master_file_philjobs%>%
+  filter(str_detect(AOS, ".*AI.*"))%>%
+  add_count(yr)%>%
+  ggplot()+
+  aes(x = yr, y = n)+
+  geom_point()+
+  geom_smooth(method = "lm")
+
+```
+
+
+#census analyses
+```{r}
+v20 <- load_variables(2020, "acs5", cache = TRUE)
+
+view(v20)
+v20%>%
+  filter(str_detect(concept, "POPULATION"),
+         str_detect(name, ".*[0-9]_001"))%>%
+  view()
+
+#B25070_001 -- median rent as percentage of hoursehold income
+#B25064_001 -- median gross rent
+#B01003_001 -- population
+```
+
+##population
+```{r}
+pop_df <- get_acs(
+  geography = "county", 
+  variables = "B01003_001", 
+  survey = "acs5",
+  year = 2020
+)
+
+pop_df%>%
+  ggplot()+
+  aes(x = estimate, fill = "red")+
+  geom_histogram(bins = 1000)
+
+pop_df%>%
+  filter(estimate >= 36700)%>%
+  mutate(population = dvmisc::quant_groups(estimate, groups = 5))%>%
+  separate(NAME, into = c("subregion", "region"), sep = ", ")%>%
+  mutate(region = tolower(region),
+         subregion = tolower(subregion),
+         subregion = str_remove_all(subregion, " county"),
+         subregion = str_remove_all(subregion, " parish"))%>%
+  select(3, 2, 5, 7)->pop_clean
+
+levels(pop_clean$population)
+pop_clean$population <- recode(pop_clean$population,
+                                    "[117,8.94e+03]"="117-8.94k",
+                                    "(8.94e+03,1.9e+04]"="8.94k-19k",
+                                    "(1.9e+04,3.67e+04]" = "19k-36.7k", 
+                                    "(3.67e+04,9.22e+04]" = "36.7k-92.2k", 
+                                    "(9.22e+04,1e+07]" = "92.2k-10m")
+  
+```
+
+
+##median income
+```{r}
+income_df <- get_acs(
+  geography = "county", 
+  variables = "B19013_001", 
+  survey = "acs5",
+  year = 2020
+)
+
+income_df%>%
+  ggplot()+
+  aes(x = estimate)+
+  geom_histogram(bins = 50)
+
+income_df %>%
+  mutate(income = dvmisc::quant_groups(estimate, groups = 5))%>%
+  separate(NAME, into = c("subregion", "region"), sep = ", ")%>%
+  mutate(region = tolower(region),
+         subregion = tolower(subregion),
+         subregion = str_remove_all(subregion, " county"),
+         subregion = str_remove_all(subregion, " parish"))%>%
+  select(3, 2, 5, 7)->income_clean
+
+levels(income_clean$estimate_disc)
+
+income_clean$income <- recode(income_clean$income,
+                                    "[1.23e+04,4.29e+04]"="12.3k-42.9k",
+                                    "(4.29e+04,5e+04]"="42.9k-50k",
+                                    "(5e+04,5.55e+04]" = "50k-55k", 
+                                    "(5.55e+04,6.39e+04]" = "55.5k-63.9k", 
+                                    "(6.39e+04,1.47e+05]" = "63.9k-147k")
+```
+
+##median rent
+```{r}
+rent_df <- get_acs(
+  geography = "county", 
+  variables = "B25064_001", 
+  survey = "acs5",
+  year = 2020
+)
+
+rent_df %>%
+  filter(estimate >= 765)%>%
+  mutate(rent = dvmisc::quant_groups(estimate, groups = 5))%>%
+  #rename(region = NAME)%>%
+  separate(NAME, into = c("subregion", "region"), sep = ", ")%>% #for county level
+  mutate(region = tolower(region),
+         subregion = tolower(subregion),
+         subregion = str_remove_all(subregion, " county"),
+         subregion = str_remove_all(subregion, " parish"))%>%
+  select(region, subregion, rent)%>%
+  na.omit()->rent_clean
+
+levels(rent_clean$rent)
+
+rent_clean$rent <- recode(rent_clean$rent,
+                                    "[275,621]"="275-621",
+                                    "(621,690]"="621-690",
+                                    "(690,765]" = "690-765", 
+                                    "(765,915]" = "765-915", 
+                                    "(915,2.44e+03]" = "915-2440")
+
+```
+
+##income and rent
+```{r}
+rent_income_df <- get_acs(
+  geography = "county", 
+  variables = "B25071_001", 
+  survey = "acs5",
+  year = 2020
+)
+
+rent_income_df %>%
+  mutate(rent_percent = dvmisc::quant_groups(estimate, groups = 5))%>%
+  separate(NAME, into = c("subregion", "region"), sep = ", ")%>%
+  mutate(region = tolower(region),
+         subregion = tolower(subregion),
+         subregion = str_remove_all(subregion, " county"),
+         subregion = str_remove_all(subregion, " parish"))%>%
+  select(3, 2, 5, 7)%>%
+  na.omit()->rent_income_clean
+```
+
+
+##locating the institutions
+```{r}
+jobs_primary%>%
+  filter(yr == 2022)%>%
+  tidygeocoder::geocode(Institution, method = 'osm', lat = latitude , long = longitude)->long_lat
+
+##geocoder doesn't pick up U of TX Rio Grande Valley
+long_lat%>% 
+  mutate(latitude = ifelse(str_detect(Institution, "Rio Grande"), 26.30715335, latitude),
+         longitude = ifelse(str_detect(Institution, "Rio Grande"), -98.1728187, longitude))%>%
+  na.omit()->long_lat
+
+
+long_lat%>%
+  filter(longitude > -128 & longitude < -64 & latitude < 50 & latitude > 20)%>%
+  mutate(long = as.numeric(longitude),
+         lat = as.numeric(latitude),
+         hit = TRUE)%>%
+  select(Institution, latitude, longitude)->long_lat_us
+```
+
+##getting census data into mappable format for locating institution
+```{r}
+
+job_locations <- map_data("county")
+
+##options for the 2nd arg in left_join: pop_clean, income_clean, rent_clean, rent_income_clean
+## use by = c("region, "subregion") for county level
+left_join(job_locations, rent_clean, by = c("region", "subregion"), keep = T)->final_df
+``` 
+
+##making the maps
+```{r}
+p <- ggplot(data = final_df,
+            mapping = aes(x = long, y = lat,
+                          group = group, fill = rent))+
+  theme_minimal(base_size = 25)
+##don't forget to change the "fill" value: income, rent, rent_percent
+
+p1 <- p + geom_polygon(color = "grey90", linewidth = 0.1) +
+    coord_map(projection = "albers", lat0 = 39, lat1 = 45)+
+    scale_fill_simpsons()
+p1 +
+  layer(
+    geom = "point", aes (x = longitude, y = latitude), stat = "identity", position = "identity",
+    data = long_lat_us, params = list(size = 1, alpha = .5,na.rm = TRUE), inherit.aes = FALSE
+  )# -> map_jobs_pop_22
+
+```
+
+##saving the plots
+```{r}
+#population
+ggsave(map_jobs_pop_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_and_pop_22.png", width = 80, height = 65, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+#income
+ggsave(map_jobs_income_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_and_income_22.png", width = 80, height = 65, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+#rent
+ggsave(map_jobs_rent_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_and_rents_22.png", width = 80, height = 65, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+#rent and income
+ggsave(map_jobs_rent_income_22, device = "png", filename = "C:\\Users\\lassiter\\OneDrive - Gonzaga University\\R data\\PhilJobs outputs\\jobs_income_and_rents_22.png", width = 80, height = 65, units = "in", dpi = 300, limitsize = FALSE, bg = "white")
+
+```
+
