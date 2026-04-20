@@ -7,69 +7,120 @@
 body {
   font-family: Georgia, "Times New Roman", serif;
   color: #222;
-  background: #fff;
+  background: #f5f4f0;
   line-height: 1.7;
 }
 
-header {
-  border-bottom: 2px solid #222;
-  padding: 2rem 0 1rem;
-  margin-bottom: 2rem;
+/* ── Site header / hero band ── */
+
+.site-header {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 2rem 0 0;
 }
 
-header h1 {
+.site-header h1 {
   font-size: 2rem;
   font-weight: normal;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  color: #fff;
 }
 
-header p.tagline {
-  font-size: 1rem;
-  color: #555;
-  margin-top: 0.25rem;
+.site-header p.tagline {
+  font-size: 0.95rem;
+  color: #aab;
+  margin-top: 0.2rem;
+  font-family: Arial, sans-serif;
 }
 
 nav {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 nav a {
   text-decoration: none;
-  color: #333;
+  color: #ccd;
   margin-right: 1.5rem;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-family: Arial, sans-serif;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 nav a:hover,
 nav a.active {
-  color: #8B0000;
-  border-bottom: 1px solid #8B0000;
+  color: #fff;
+  border-bottom: 2px solid #8B0000;
+  padding-bottom: 2px;
 }
 
+/* ── Layout ── */
+
 .container {
-  max-width: 760px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
 main {
   min-height: 60vh;
+  padding: 2rem 0;
 }
 
+/* ── Homepage hero bio ── */
+
+.home-hero {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.home-hero img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.home-hero-text p {
+  margin-bottom: 0.9rem;
+}
+
+@media (max-width: 540px) {
+  .home-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* ── Section headings ── */
+
 h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: normal;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 0.4rem;
+  letter-spacing: 0.02em;
+  color: #1a1a2e;
+  border-left: 4px solid #8B0000;
+  padding-left: 0.6rem;
   margin-bottom: 1.2rem;
+  margin-top: 2rem;
+}
+
+h2:first-child {
+  margin-top: 0;
 }
 
 h3 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   margin-bottom: 0.3rem;
+  color: #1a1a2e;
 }
 
 p {
@@ -83,6 +134,15 @@ ul {
 
 ul li {
   margin-bottom: 0.75rem;
+  padding-left: 0.9rem;
+  position: relative;
+}
+
+ul li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: #8B0000;
 }
 
 a {
@@ -93,57 +153,108 @@ a:hover {
   text-decoration: underline;
 }
 
-.pub-item {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
+/* ── Publication cards ── */
 
-.pub-item:last-child {
-  border-bottom: none;
+.pub-item {
+  background: #fff;
+  border-radius: 4px;
+  border-left: 3px solid #8B0000;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
 }
 
 .pub-journal {
   color: #555;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 0.93rem;
+  margin-bottom: 0.25rem;
 }
 
 .pub-links {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-family: Arial, sans-serif;
-  margin-top: 0.3rem;
+  margin-top: 0.4rem;
 }
 
 .pub-links a {
   margin-right: 0.75rem;
+  background: #f0e8e8;
+  padding: 0.1rem 0.45rem;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #8B0000;
 }
+
+.pub-links a:hover {
+  background: #8B0000;
+  color: #fff;
+}
+
+/* ── Blog cards ── */
 
 .blog-post-item {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.blog-post-item:last-child {
-  border-bottom: none;
+  background: #fff;
+  border-radius: 4px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  border-left: 3px solid #8B0000;
 }
 
 .blog-date {
-  font-size: 0.85rem;
-  color: #777;
+  font-size: 0.82rem;
+  color: #888;
   font-family: Arial, sans-serif;
+  margin-bottom: 0.2rem;
 }
 
+.blog-post-item h3 {
+  margin-bottom: 0;
+}
+
+/* ── Course cards ── */
+
 .course-item {
+  background: #fff;
+  border-radius: 4px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  border-left: 3px solid #1a1a2e;
+}
+
+.course-item h3 {
+  color: #1a1a2e;
+}
+
+/* ── CV page ── */
+
+.cv-download {
+  display: inline-block;
+  background: #8B0000;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 3px;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
 
+.cv-download:hover {
+  background: #6a0000;
+  text-decoration: none;
+  color: #fff;
+}
+
+/* ── Footer ── */
+
 footer {
+  background: #1a1a2e;
+  color: #aab;
   margin-top: 3rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid #ccc;
-  font-size: 0.85rem;
-  color: #777;
+  padding: 1.25rem 0;
+  font-size: 0.82rem;
   font-family: Arial, sans-serif;
 }
