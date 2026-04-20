@@ -75,6 +75,14 @@ main {
   padding: 2rem 0;
 }
 
+main.content-block {
+  background: #fff;
+  border-radius: 6px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
 /* ── Homepage hero bio ── */
 
 .home-hero {
