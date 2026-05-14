@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identity Explorer — Phil 201</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:wght@300;400;600&display=swap');
+
+  :root {
+    --ink: #1a1209;
+    --parchment: #f5f0e8;
+    --amber: #c8902a;
+    --rust: #8b3a2a;
+    --sage: #4a6741;
+    --shadow: rgba(26,18,9,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background-image: 
+      radial-gradient(ellipse at 10% 20%, rgba(200,144,42,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(139,58,42,0.06) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--amber);
+  }
+
+  .module-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #5a4a35;
+    font-size: 1.05rem;
+  }
+
+  .scenario-container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .ship-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .plank-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0.25rem 0;
+  }
+
+  .plank {
+    width: 52px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.2);
+    transition: all 0.5s ease;
+    cursor: default;
+    position: relative;
+  }
+
+  .plank.original { background: #7a4f1e; }
+  .plank.replaced { background: #c8d4a8; border-color: var(--sage); }
+
+  .ship-frame {
+    background: white;
+    border: 2px solid var(--amber);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 4px 4px 0 var(--amber);
+  }
+
+  .ship-label {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #5a4a35;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .slider-wrap {
+    margin: 2rem 0 1rem;
+  }
+
+  .slider-wrap label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    appearance: none;
+    background: linear-gradient(to right, #7a4f1e, #c8d4a8);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 3px solid white;
+    box-shadow: 0 2px 6px var(--shadow);
+    cursor: pointer;
+  }
+
+  .percentage-display {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--amber);
+    margin: 0.5rem 0;
+  }
+
+  .question-card {
+    background: white;
+    border-left: 4px solid var(--rust);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 2px 8px var(--shadow);
+  }
+
+  .question-card h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--rust);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+  }
+
+  .option-btn {
+    background: var(--parchment);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .option-btn:hover { border-color: var(--amber); background: #fff; }
+  .option-btn.selected { border-color: var(--sage); background: #eef3ea; }
+  .option-btn.wrong { border-color: var(--rust); background: #fdf0ee; }
+
+  .feedback {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.positive { background: #eef3ea; border-left: 3px solid var(--sage); }
+  .feedback.neutral { background: #fef9ee; border-left: 3px solid var(--amber); }
+
+  .philosopher-quote {
+    background: linear-gradient(135deg, #2a1f0f, #3d2d15);
+    color: #f5f0e8;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .philosopher-quote::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    color: rgba(200,144,42,0.15);
+    position: absolute;
+    top: -1rem;
+    left: 0.5rem;
+    line-height: 1;
+  }
+
+  .philosopher-quote p {
+    font-style: italic;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .philosopher-quote cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--amber);
+    font-style: normal;
+    letter-spacing: 0.05em;
+  }
+
+  .journal-prompt {
+    background: white;
+    border: 2px dashed var(--amber);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .journal-prompt h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 0.75rem;
+    color: var(--amber);
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid #d4c4a0;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    min-height: 120px;
+    resize: vertical;
+    background: var(--parchment);
+    color: var(--ink);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  textarea:focus { outline: 2px solid var(--amber); }
+
+  .copy-btn {
+    margin-top: 0.5rem;
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-family: 'Source Serif 4', serif;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--amber); color: var(--ink); }
+
+  .dynamic-verdict {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    transition: all 0.4s;
+  }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #7a5a35;
+  }
+
+  .legend-dot { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .plank { width: 36px; height: 14px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="module-tag">Module 1 · Personal Identity</div>
+  <h1>The Ship of Theseus</h1>
+  <p class="subtitle">An interactive thought experiment on identity, change, and what makes you <em>you</em></p>
+</header>
+
+<div class="scenario-container">
+
+  <div class="ship-frame">
+    <div class="ship-label">Theseus's Ship — drag the slider to replace planks over time</div>
+
+    <div id="ship-viz">
+      <!-- Planks generated by JS -->
+    </div>
+
+    <div class="slider-wrap">
+      <label for="plank-slider">Planks replaced: <span id="pct-label">0%</span></label>
+      <input type="range" id="plank-slider" min="0" max="100" value="0">
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="legend-dot" style="background:#7a4f1e"></div> Original wood &nbsp;
+      <div class="legend-dot" style="background:#c8d4a8; border:1px solid #4a6741"></div> New wood
+    </div>
+
+    <div class="dynamic-verdict" id="verdict"></div>
+  </div>
+
+  <div class="philosopher-quote">
+    <p>Locke argued that personal identity consists in the continuity of consciousness — memory linking past and present selves into one person. But what happens when memory fails, or when every physical part is replaced?</p>
+    <cite>— After John Locke, <em>An Essay Concerning Human Understanding</em> (1689), Book II, Ch. 27</cite>
+  </div>
+
+  <div class="question-card">
+    <h3>Question 1: The Classic Puzzle</h3>
+    <p>At 100% replacement, is this still Theseus's ship?</p>
+    <div class="options-grid" id="q1">
+      <button class="option-btn" onclick="answer('q1',0,'neutral')">Yes — it's the same ship. Identity is about continuity of form and function, not material parts.</button>
+      <button class="option-btn" onclick="answer('q1',1,'neutral')">No — when every part is replaced, the original ship no longer exists.</button>
+      <button class="option-btn" onclick="answer('q1',2,'neutral')">It depends — on what we <em>mean</em> by "same ship." The question is conceptual, not factual.</button>
+    </div>
+    <div class="feedback neutral" id="q1-fb">
+      <strong>All three answers have serious philosophical defenders!</strong> Option 3 is where most contemporary philosophers land — this is a case of <em>conceptual underdetermination</em>. Our concept of "same ship" wasn't built to handle this case. Locke would lean toward continuity; Hume would say there's no deep fact of the matter beyond our conventions.
+    </div>
+  </div>
+
+  <div class="question-card">
+    <h3>Question 2: The Twist — The Rebuilt Ship</h3>
+    <p>Suppose someone collected every original plank and reassembled them into a ship. Now there are TWO ships. Which one is <em>really</em> Theseus's?</p>
+    <div class="options-grid" id="q2">
+      <button class="option-btn" onclick="answer('q2',0,'neutral')">The continuously maintained one — identity requires unbroken continuity through time.</button>
+      <button class="option-btn" onclick="answer('q2',1,'neutral')">The reassembled one — original material parts are what make something what it is.</button>
+      <button class="option-btn" onclick="answer('q2',2,'neutral')">Neither, or both — the puzzle shows that our concept of identity breaks down here.</button>
+    </div>
+    <div class="feedback neutral" id="q2-fb">
+      <strong>This is the "branching problem"</strong> — a classic in personal identity theory. Derek Parfit used similar puzzles to argue that identity is not what matters. What matters is <em>psychological connectedness</em>, not some metaphysical fact about identity. (See Parfit, <em>Reasons and Persons</em>, 1984, Part III.)
+    </div>
+  </div>
+
+  <div class="question-card">
+    <h3>Question 3: Apply It to Yourself</h3>
+    <p>Your body replaces most of its cells over several years. Meanwhile, your beliefs, memories, and personality change throughout life. Given this, what makes you the <em>same person</em> you were at age 5?</p>
+    <div class="options-grid" id="q3">
+      <button class="option-btn" onclick="answer('q3',0,'positive')">Memory and psychological continuity — I remember being that child, and there's an unbroken chain of experience connecting us.</button>
+      <button class="option-btn" onclick="answer('q3',1,'positive')">Bodily continuity — even if cells change, there's a persistent biological organism.</button>
+      <button class="option-btn" onclick="answer('q3',2,'positive')">Narrative identity — I construct a story that links my past and present self into a coherent "me."</button>
+      <button class="option-btn" onclick="answer('q3',3,'positive')">Nothing does — personal identity is a useful fiction, not a deep metaphysical truth.</button>
+    </div>
+    <div class="feedback positive" id="q3-fb">
+      <strong>These map to real theories!</strong> Option 1 = Locke's psychological theory. Option 2 = biological/animalist view (Olson, 1997). Option 3 = narrative identity (Ricoeur, <em>Oneself as Another</em>, 1992 — also covered in Module 4!). Option 4 = Hume's bundle theory and Parfit's reductionism. None is obviously correct — that's what makes this such a rich philosophical problem.
+    </div>
+  </div>
+
+  <div class="journal-prompt">
+    <h3>✍ Reflect &amp; Connect</h3>
+    <p style="margin-bottom:0.5rem; font-size:0.95rem;">Think of a significant way you've changed over your life. Does the Ship of Theseus puzzle help you think about whether you're still the "same person"? Which theory of identity resonates most with your experience, and why?</p>
+    <textarea placeholder="Write your reflection here… (you can copy and paste into your discussion post)"></textarea>
+    <button class="copy-btn" onclick="copyText(this)">Copy to clipboard</button>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL_PLANKS = 40;
+
+  function buildShip(pct) {
+    const viz = document.getElementById('ship-viz');
+    const replaced = Math.round((pct / 100) * TOTAL_PLANKS);
+    const rows = [8, 10, 10, 8, 4];
+    let html = '';
+    let count = 0;
+    rows.forEach(n => {
+      html += '<div class="plank-row">';
+      for (let i = 0; i < n; i++) {
+        const cls = count < (TOTAL_PLANKS - replaced) ? 'original' : 'replaced';
+        html += `<div class="plank ${cls}" title="${cls === 'original' ? 'Original plank' : 'Replaced plank'}"></div>`;
+        count++;
+      }
+      html += '</div>';
+    });
+    viz.innerHTML = html;
+  }
+
+  function updateVerdict(pct) {
+    const v = document.getElementById('verdict');
+    let text, bg;
+    if (pct === 0) { text = 'No planks replaced — clearly Theseus\'s ship.'; bg = '#eef3ea'; }
+    else if (pct < 25) { text = 'A few planks replaced — still obviously the same ship... right?'; bg = '#f5f8f0'; }
+    else if (pct < 50) { text = 'Nearly half replaced — doubts begin to creep in.'; bg = '#fef9ee'; }
+    else if (pct < 75) { text = 'Majority replaced — is this still the ship Theseus sailed?'; bg = '#fdf3ea'; }
+    else if (pct < 100) { text = 'Almost entirely new — identity hangs by a thread.'; bg = '#fdeeed'; }
+    else { text = '100% replaced — is this still Theseus\'s ship at all?'; bg = '#fce8e8'; }
+    v.style.background = bg;
+    v.textContent = text;
+  }
+
+  document.getElementById('plank-slider').addEventListener('input', function() {
+    const pct = parseInt(this.value);
+    document.getElementById('pct-label').textContent = pct + '%';
+    buildShip(pct);
+    updateVerdict(pct);
+  });
+
+  function answer(qId, idx, fbType) {
+    const btns = document.querySelectorAll(`#${qId} .option-btn`);
+    btns.forEach((b, i) => {
+      b.classList.remove('selected', 'wrong');
+      if (i === idx) b.classList.add('selected');
+    });
+    const fb = document.getElementById(`${qId}-fb`);
+    fb.className = `feedback ${fbType} show`;
+  }
+
+  function copyText(btn) {
+    const ta = btn.previousElementSibling;
+    ta.select();
+    document.execCommand('copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
+  }
+
+  buildShip(0);
+  updateVerdict(0);
+</script>
+</body>
+</html>

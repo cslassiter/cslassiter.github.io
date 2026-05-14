@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Will Spectrum — Phil 201</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;1,400;1,600&display=swap');
+
+  :root {
+    --bg: #f2ede6;
+    --dark: #1e1a14;
+    --mid: #3d3428;
+    --warm: #7a5c38;
+    --accent1: #c0392b; /* hard determinist */
+    --accent2: #d4951a; /* compatibilist */
+    --accent3: #2c7a4b; /* libertarian free will */
+    --text: #2a2018;
+    --soft: #8a7a68;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  header { text-align: center; margin-bottom: 2.5rem; }
+
+  .module-tag {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 0.4rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.0;
+    margin-bottom: 0.4rem;
+    color: var(--dark);
+  }
+
+  .subtitle { color: var(--soft); font-style: italic; }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  /* ── Spectrum bar ── */
+  .spectrum-wrap {
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .spectrum-bar {
+    height: 28px;
+    border-radius: 14px;
+    background: linear-gradient(to right, var(--accent1), var(--accent2), var(--accent3));
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  }
+
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .spectrum-labels span:first-child { color: var(--accent1); }
+  .spectrum-labels span:nth-child(2) { color: var(--accent2); text-align: center; }
+  .spectrum-labels span:last-child { color: var(--accent3); text-align: right; }
+
+  .spectrum-marker {
+    position: absolute;
+    top: -8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--dark);
+    border: 4px solid white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transform: translateX(-50%);
+    transition: left 0.6s cubic-bezier(.34,1.56,.64,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  /* ── Questions ── */
+  .questions-intro {
+    font-size: 0.95rem;
+    color: var(--soft);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .q-block {
+    background: white;
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 2px 8px rgba(30,26,20,0.08);
+    border-left: 4px solid #ddd;
+    transition: border-color 0.3s;
+  }
+
+  .q-block p {
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    color: var(--mid);
+  }
+
+  .q-scale {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .scale-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex: 1;
+  }
+
+  .scale-label:first-child { color: var(--accent1); }
+  .scale-label:last-child { color: var(--accent3); text-align: right; }
+
+  .scale-btns {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .scale-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    background: white;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    color: var(--soft);
+  }
+
+  .scale-btn:hover { border-color: var(--warm); color: var(--warm); }
+  .scale-btn.sel-1 { background: var(--accent1); border-color: var(--accent1); color: white; }
+  .scale-btn.sel-2 { background: #a04020; border-color: #a04020; color: white; }
+  .scale-btn.sel-3 { background: var(--accent2); border-color: var(--accent2); color: white; }
+  .scale-btn.sel-4 { background: #4a9a60; border-color: #4a9a60; color: white; }
+  .scale-btn.sel-5 { background: var(--accent3); border-color: var(--accent3); color: white; }
+
+  /* ── Result card ── */
+  .result-card {
+    background: var(--dark);
+    color: #f2ede6;
+    border-radius: 14px;
+    padding: 2rem;
+    margin: 2rem 0;
+    display: none;
+    animation: fadeUp 0.5s ease;
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform:none; } }
+
+  .result-card.show { display: block; }
+
+  .result-position {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+
+  .result-desc {
+    font-style: italic;
+    line-height: 1.65;
+    color: #c8c0b0;
+    margin-bottom: 1.25rem;
+  }
+
+  .result-thinkers {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8a8070;
+    margin-bottom: 0.4rem;
+  }
+
+  .result-thinkers + p { font-size: 0.95rem; color: #c8c0b0; line-height: 1.5; }
+
+  .challenge-q {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+  }
+
+  .challenge-q h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #d4951a;
+    margin-bottom: 0.4rem;
+  }
+
+  .challenge-q p { font-style: italic; font-size: 0.95rem; color: #c8c0b0; line-height: 1.5; }
+
+  .recalc-btn {
+    margin-top: 1.5rem;
+    background: transparent;
+    border: 2px solid #8a8070;
+    color: #c8c0b0;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .recalc-btn:hover { border-color: #d4951a; color: #d4951a; }
+
+  .journal-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(30,26,20,0.08);
+  }
+
+  .journal-section h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--warm);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    min-height: 100px;
+    resize: vertical;
+    color: var(--text);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  textarea:focus { outline: 2px solid var(--warm); }
+
+  .copy-btn {
+    margin-top: 0.4rem;
+    background: var(--dark);
+    color: var(--bg);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .copy-btn:hover { background: var(--warm); }
+</style>
+</head>
+<body>
+<header>
+  <div class="module-tag">Module 3 · Free Will &amp; Determinism</div>
+  <h1>Where Do You Stand?</h1>
+  <p class="subtitle">A self-assessment across the free will spectrum</p>
+</header>
+
+<div class="container">
+
+  <div class="spectrum-wrap">
+    <div class="spectrum-bar">
+      <div class="spectrum-marker" id="marker" style="left:50%">🤔</div>
+    </div>
+    <div class="spectrum-labels">
+      <span>Hard Determinist</span>
+      <span>Compatibilist</span>
+      <span>Libertarian<br>Free Will</span>
+    </div>
+  </div>
+
+  <p class="questions-intro">Answer the five questions below using a 1–5 scale. <strong>1</strong> = strongly agree with the determinist side; <strong>5</strong> = strongly agree with the libertarian free will side. Your marker will update as you respond.</p>
+
+  <!-- Q1 -->
+  <div class="q-block" id="qb0">
+    <p>"Every decision I've ever made was ultimately the result of prior causes — genes, upbringing, brain chemistry — that I did not choose."</p>
+    <div class="q-scale">
+      <span class="scale-label">Agree (determinist)</span>
+      <div class="scale-btns">
+        <button class="scale-btn" onclick="rate(0,1)">1</button>
+        <button class="scale-btn" onclick="rate(0,2)">2</button>
+        <button class="scale-btn" onclick="rate(0,3)">3</button>
+        <button class="scale-btn" onclick="rate(0,4)">4</button>
+        <button class="scale-btn" onclick="rate(0,5)">5</button>
+      </div>
+      <span class="scale-label">Disagree (free will)</span>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-block" id="qb1">
+    <p>"When I praise or blame someone for their actions, I'm responding to their real agency — not just the causes behind their behavior."</p>
+    <div class="q-scale">
+      <span class="scale-label">Disagree (determinist)</span>
+      <div class="scale-btns">
+        <button class="scale-btn" onclick="rate(1,1)">1</button>
+        <button class="scale-btn" onclick="rate(1,2)">2</button>
+        <button class="scale-btn" onclick="rate(1,3)">3</button>
+        <button class="scale-btn" onclick="rate(1,4)">4</button>
+        <button class="scale-btn" onclick="rate(1,5)">5</button>
+      </div>
+      <span class="scale-label">Agree (free will)</span>
+    </div>
+  </div>
+
+  <!-- Q3 — Strawson-themed -->
+  <div class="q-block" id="qb2">
+    <p>P.F. Strawson argues that our "reactive attitudes" — like gratitude, resentment, and love — <em>just are</em> what it means to treat someone as a moral agent. Even if determinism is true, we could never fully abandon these attitudes.</p>
+    <p style="margin-top:0.5rem; font-style:normal; font-size:0.9rem; color:var(--soft);">Rate your agreement with Strawson's view:</p>
+    <div class="q-scale" style="margin-top:0.5rem;">
+      <span class="scale-label">Disagree strongly</span>
+      <div class="scale-btns">
+        <button class="scale-btn" onclick="rate(2,1)">1</button>
+        <button class="scale-btn" onclick="rate(2,2)">2</button>
+        <button class="scale-btn" onclick="rate(2,3)">3</button>
+        <button class="scale-btn" onclick="rate(2,4)">4</button>
+        <button class="scale-btn" onclick="rate(2,5)">5</button>
+      </div>
+      <span class="scale-label">Agree strongly</span>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-block" id="qb3">
+    <p>"If neuroscience showed definitively that every 'choice' was determined by brain activity milliseconds before I became conscious of it, I would conclude that free will is an illusion."</p>
+    <div class="q-scale">
+      <span class="scale-label">Agree (determinist)</span>
+      <div class="scale-btns">
+        <button class="scale-btn" onclick="rate(3,1)">1</button>
+        <button class="scale-btn" onclick="rate(3,2)">2</button>
+        <button class="scale-btn" onclick="rate(3,3)">3</button>
+        <button class="scale-btn" onclick="rate(3,4)">4</button>
+        <button class="scale-btn" onclick="rate(3,5)">5</button>
+      </div>
+      <span class="scale-label">Disagree (free will)</span>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-block" id="qb4">
+    <p>"Holding people morally responsible for their actions makes sense <em>only if</em> they could have done otherwise in an absolute, uncaused sense — not just in the sense that different inputs would have produced different outputs."</p>
+    <div class="q-scale">
+      <span class="scale-label">Disagree (compatibilist)</span>
+      <div class="scale-btns">
+        <button class="scale-btn" onclick="rate(4,1)">1</button>
+        <button class="scale-btn" onclick="rate(4,2)">2</button>
+        <button class="scale-btn" onclick="rate(4,3)">3</button>
+        <button class="scale-btn" onclick="rate(4,4)">4</button>
+        <button class="scale-btn" onclick="rate(4,5)">5</button>
+      </div>
+      <span class="scale-label">Agree (libertarian free will)</span>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="result">
+    <div class="result-position" id="r-pos"></div>
+    <p class="result-desc" id="r-desc"></p>
+    <div class="result-thinkers">Key thinkers in this area</div>
+    <p id="r-thinkers"></p>
+    <div class="challenge-q">
+      <h4>Discussion prompt for you</h4>
+      <p id="r-challenge"></p>
+    </div>
+    <button class="recalc-btn" onclick="reset()">Reset &amp; try again</button>
+  </div>
+
+  <div class="journal-section">
+    <h3>✍ Reflect</h3>
+    <p style="font-size:0.95rem; color:var(--soft); line-height:1.55;">After seeing your position on the spectrum, does it match how you think of yourself? What's the strongest argument against your position? Use this space to draft a discussion post response or reflection.</p>
+    <textarea placeholder="Your reflection here…"></textarea>
+    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  </div>
+
+</div>
+
+<script>
+  const responses = new Array(5).fill(null);
+  const positions = [1,1,1,1,1]; // direction of each question (1 = higher score = more libertarian)
+
+  const results = [
+    {
+      range: [5, 11],
+      pos: 'Hard Determinist',
+      emoji: '⛓️',
+      desc: 'You lean toward the view that free will is incompatible with determinism — and that determinism is true. Every event, including human choice, is the inevitable result of prior causes. Moral responsibility as we normally conceive it may need serious revision.',
+      thinkers: 'Baron d\'Holbach, Derk Pereboom ("hard incompatibilism"), Sam Harris (contemporary). Consistent with some readings of Spinoza.',
+      challenge: 'If no one is truly responsible for their actions, does Strawson\'s observation — that we can\'t help but feel resentment and gratitude — suggest that our reactive attitudes are just useful fictions? Or does it show that "responsibility" means something different from what you\'re assuming?'
+    },
+    {
+      range: [12, 17],
+      pos: 'Soft Determinist / Compatibilist',
+      emoji: '⚖️',
+      desc: 'You hold that free will and determinism are compatible — we can be free even in a determined universe, as long as our actions flow from our own desires and reasoning without external compulsion. Moral responsibility survives.',
+      thinkers: 'David Hume, P.F. Strawson ("Freedom and Resentment"), Daniel Dennett. Most contemporary professional philosophers identify here.',
+      challenge: 'A hard incompatibilist might say you\'ve just changed the definition of "free will" to make it compatible with determinism. How do you respond? Is Strawson\'s appeal to reactive attitudes a genuine philosophical argument, or just an observation about human psychology?'
+    },
+    {
+      range: [18, 25],
+      pos: 'Libertarian Free Will',
+      emoji: '🗽',
+      desc: 'You hold that genuine free will requires the ability to have done otherwise in an absolute sense — and that humans really do possess this. Determinism is either false or incomplete. Moral responsibility is grounded in real, uncaused agency.',
+      thinkers: 'Immanuel Kant (transcendental freedom), Roderick Chisholm (agent causation), Robert Kane (indeterministic free will).',
+      challenge: 'If your choices are not determined by prior causes, does that mean they are random? How do you explain the difference between a free choice and a random event? Can you give an account of agent causation that avoids this objection?'
+    }
+  ];
+
+  function rate(qIdx, val) {
+    responses[qIdx] = val;
+    // Style buttons
+    const block = document.getElementById('qb' + qIdx);
+    const btns = block.querySelectorAll('.scale-btn');
+    btns.forEach((b, i) => {
+      b.className = 'scale-btn';
+      if (i + 1 === val) b.classList.add('sel-' + val);
+    });
+    // Color block border
+    const colors = ['','#c0392b','#a04020','#d4951a','#4a9a60','#2c7a4b'];
+    block.style.borderLeftColor = colors[val];
+    updateMarker();
+    updateResult();
+  }
+
+  function updateMarker() {
+    const filled = responses.filter(r => r !== null);
+    if (filled.length === 0) return;
+    const avg = filled.reduce((a, b) => a + b, 0) / filled.length;
+    const pct = ((avg - 1) / 4) * 100;
+    document.getElementById('marker').style.left = pct + '%';
+    // emoji
+    const emojis = { low: '⛓️', mid: '⚖️', high: '🗽' };
+    const m = document.getElementById('marker');
+    if (pct < 35) m.textContent = '⛓️';
+    else if (pct < 65) m.textContent = '⚖️';
+    else m.textContent = '🗽';
+  }
+
+  function updateResult() {
+    const filled = responses.filter(r => r !== null);
+    if (filled.length < 3) return;
+    const total = responses.reduce((a, b) => a + (b || 3), 0);
+    const res = results.find(r => total >= r.range[0] && total <= r.range[1]);
+    if (!res) return;
+    document.getElementById('r-pos').textContent = res.emoji + ' ' + res.pos;
+    document.getElementById('r-desc').textContent = res.desc;
+    document.getElementById('r-thinkers').textContent = res.thinkers;
+    document.getElementById('r-challenge').textContent = res.challenge;
+    document.getElementById('result').classList.add('show');
+  }
+
+  function reset() {
+    responses.fill(null);
+    document.querySelectorAll('.scale-btn').forEach(b => b.className = 'scale-btn');
+    document.querySelectorAll('.q-block').forEach(b => b.style.borderLeftColor = '#ddd');
+    document.getElementById('marker').style.left = '50%';
+    document.getElementById('marker').textContent = '🤔';
+    document.getElementById('result').classList.remove('show');
+  }
+
+  function copyText(btn) {
+    const ta = btn.previousElementSibling;
+    ta.select();
+    document.execCommand('copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  }
+</script>
+</body>
+</html>

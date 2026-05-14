@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emotion vs. Reason — Phil 201</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300;1,600&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #fff8f0;
+    --surface: #fff3e6;
+    --border: #e8d4b8;
+    --red: #c0392b;
+    --blue: #2471a3;
+    --gold: #b7950b;
+    --green: #1e8449;
+    --text: #1a1008;
+    --muted: #7a6a58;
+    --card-shadow: 0 4px 20px rgba(26,16,8,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  header { text-align: center; margin-bottom: 2.5rem; }
+
+  .module-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    margin-bottom: 0.3rem;
+    font-weight: 300;
+  }
+
+  h1 em { font-style: italic; color: var(--red); }
+
+  .subtitle { color: var(--muted); font-size: 0.95rem; }
+
+  .container { max-width: 800px; margin: 0 auto; }
+
+  /* ── Scenario cards ── */
+  .scenario-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+
+  .scen-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .scen-btn .scen-icon { font-size: 1.5rem; display: block; margin-bottom: 0.4rem; }
+  .scen-btn .scen-title { font-size: 0.9rem; font-weight: 500; display: block; margin-bottom: 0.2rem; }
+  .scen-btn .scen-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+  .scen-btn:hover { border-color: var(--gold); }
+  .scen-btn.active { border-color: var(--red); background: #fff5f3; }
+
+  /* ── Main scenario ── */
+  .scenario-display {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin: 1.5rem 0;
+    box-shadow: var(--card-shadow);
+    display: none;
+  }
+
+  .scenario-display.visible { display: block; }
+
+  .scenario-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.7;
+    color: #2a1a08;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border-left: 4px solid var(--gold);
+  }
+
+  .position-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .position-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (max-width: 500px) { .position-btns { grid-template-columns: 1fr; } }
+
+  .pos-btn {
+    padding: 0.85rem 0.75rem;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: white;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .pos-btn:hover { border-color: var(--gold); }
+  .pos-btn.sel-reason { border-color: var(--blue); background: #eaf2fb; color: var(--blue); }
+  .pos-btn.sel-emotion { border-color: var(--red); background: #fdf2f0; color: var(--red); }
+  .pos-btn.sel-both { border-color: var(--green); background: #eafaf1; color: var(--green); }
+
+  .your-reasoning {
+    margin-bottom: 1.25rem;
+  }
+
+  .your-reasoning label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    min-height: 90px;
+    resize: vertical;
+    color: var(--text);
+    line-height: 1.55;
+    background: var(--surface);
+  }
+
+  textarea:focus { outline: 2px solid var(--gold); border-color: transparent; }
+
+  .ask-btn {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 0.7rem 1.75rem;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ask-btn:hover { background: var(--red); }
+  .ask-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── AI response ── */
+  .ai-response {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #1a1008, #2a2018);
+    border-radius: 12px;
+    color: #f0ead8;
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+
+  @keyframes slideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+  .ai-response.show { display: block; }
+
+  .ai-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c8a870;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .ai-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #e8dfc8;
+    white-space: pre-wrap;
+  }
+
+  .spinner { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ── Thinkers bar ── */
+  .thinkers-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 520px) { .thinkers-bar { grid-template-columns: 1fr; } }
+
+  .thinker-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .thinker-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .thinker-card .thinker-side {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .thinker-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .side-reason { color: var(--blue); }
+  .side-emotion { color: var(--red); }
+  .side-both { color: var(--green); }
+
+  .journal-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+  }
+
+  .journal-section h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .copy-btn {
+    margin-top: 0.4rem;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover { background: var(--gold); color: var(--text); }
+</style>
+</head>
+<body>
+<header>
+  <div class="module-tag">Module 5 · Emotion &amp; Reason</div>
+  <h1>Reason vs. <em>Emotion</em></h1>
+  <p class="subtitle">Analyze real moral dilemmas — then get AI-powered Socratic pushback on your reasoning</p>
+</header>
+
+<div class="container">
+
+  <!-- Thinkers bar -->
+  <div class="thinkers-bar">
+    <div class="thinker-card">
+      <h4>Descartes / Kant</h4>
+      <div class="thinker-side side-reason">Reason side</div>
+      <p>Moral truth is accessed through pure reason. Emotions are unreliable guides — potentially biasing or misleading our judgments.</p>
+    </div>
+    <div class="thinker-card">
+      <h4>Hume / Jaggar</h4>
+      <div class="thinker-side side-emotion">Emotion side</div>
+      <p>Reason alone can never motivate action. Emotion is the engine of moral life. "Outlaw emotions" can reveal injustice that reason misses.</p>
+    </div>
+    <div class="thinker-card">
+      <h4>Aristotle / Nussbaum</h4>
+      <div class="thinker-side side-both">Integration</div>
+      <p>The virtuous person feels the right emotions at the right time. Emotion and reason are both essential to practical wisdom (<em>phronesis</em>).</p>
+    </div>
+  </div>
+
+  <!-- Scenario selector -->
+  <p style="color:var(--muted); font-size:0.92rem; margin-bottom:0.75rem;">Choose a scenario to analyze:</p>
+  <div class="scenario-selector">
+    <button class="scen-btn" onclick="loadScenario('trolley')">
+      <span class="scen-icon">🚃</span>
+      <span class="scen-title">The Trolley Problem</span>
+      <span class="scen-desc">Classic dilemma: sacrifice one to save five?</span>
+    </button>
+    <button class="scen-btn" onclick="loadScenario('whistleblow')">
+      <span class="scen-icon">📢</span>
+      <span class="scen-title">The Whistleblower</span>
+      <span class="scen-desc">Loyalty to employer vs. public good</span>
+    </button>
+    <button class="scen-btn" onclick="loadScenario('friend')">
+      <span class="scen-icon">👤</span>
+      <span class="scen-title">The Biased Referee</span>
+      <span class="scen-desc">Your friend deserves the job — but so does a stranger</span>
+    </button>
+    <button class="scen-btn" onclick="loadScenario('anger')">
+      <span class="scen-icon">😤</span>
+      <span class="scen-title">Righteous Anger</span>
+      <span class="scen-desc">When outrage at injustice leads to better — or worse — action</span>
+    </button>
+  </div>
+
+  <!-- Scenario display -->
+  <div class="scenario-display" id="scen-display">
+    <div class="scenario-text" id="scen-text"></div>
+
+    <div class="position-label">Which faculty should guide this decision?</div>
+    <div class="position-btns">
+      <button class="pos-btn" id="btn-reason" onclick="selectPos('reason')">🧠 Pure Reason<br><small style="font-weight:300;">Descartes/Kant: emotion clouds judgment</small></button>
+      <button class="pos-btn" id="btn-emotion" onclick="selectPos('emotion')">❤️ Emotion / Intuition<br><small style="font-weight:300;">Hume/Jaggar: feeling reveals truth</small></button>
+      <button class="pos-btn" id="btn-both" onclick="selectPos('both')">⚖️ Both Together<br><small style="font-weight:300;">Aristotle: integrated practical wisdom</small></button>
+    </div>
+
+    <div class="your-reasoning">
+      <label>Your reasoning (optional — makes AI feedback richer)</label>
+      <textarea id="user-reasoning" placeholder="Explain why you chose that option, in a sentence or two…"></textarea>
+    </div>
+
+    <button class="ask-btn" id="ask-btn" onclick="getAIFeedback()" disabled>
+      <span>Get Socratic pushback</span>
+    </button>
+
+    <div class="ai-response" id="ai-response">
+      <div class="ai-label">🤖 Philosophical feedback</div>
+      <div class="ai-text" id="ai-text"></div>
+    </div>
+  </div>
+
+  <div class="journal-section">
+    <h3>✍ Reflection prompt</h3>
+    <p style="font-size:0.92rem; color:var(--muted); line-height:1.55; margin-bottom:0.6rem;">Jaggar argues that emotions aren't just feelings — they can be a form of <em>epistemic access</em> to moral truth. Think of a time when an emotion (anger, empathy, guilt) gave you moral knowledge that pure reasoning alone might have missed. How does this connect to the Cartesian view of emotion you studied in Module 2?</p>
+    <textarea placeholder="Your reflection…"></textarea>
+    <button class="copy-btn" onclick="copyText(this)">Copy</button>
+  </div>
+
+</div>
+
+<script>
+  const scenarios = {
+    trolley: {
+      text: 'A runaway trolley is heading toward five people tied to the tracks. You are standing next to a lever that will divert it to a side track — where one person is tied. If you pull the lever, you save five but cause the death of one. If you do nothing, five die. What should you do, and what role do reason and emotion each play in this decision?',
+      context: 'trolley problem'
+    },
+    whistleblow: {
+      text: 'You work at a company and discover your employer is quietly dumping pollutants in ways that are technically legal but cause serious long-term harm to a low-income community nearby. Reporting it will cost you your job and harm your family financially. Your colleagues are unaware. What should you do? Is your emotional reaction — outrage, fear, loyalty — guiding you toward or away from the right answer?',
+      context: 'whistleblowing dilemma'
+    },
+    friend: {
+      text: 'You are on a hiring committee. Your close friend has applied for a position, and they are nearly as qualified as a stranger who is slightly more qualified. You feel strong loyalty and affection for your friend. Philosophically, does your emotion of loyalty have any moral weight here — or should it be set aside in favor of pure impartial reasoning? What would Hume, Kant, and Jaggar each say?',
+      context: 'friendship vs. impartiality'
+    },
+    anger: {
+      text: 'Alison Jaggar argues in "Love and Knowledge" that marginalized groups often develop "outlaw emotions" — feelings of anger, grief, or discomfort at injustice that the dominant culture tries to suppress or dismiss as irrational. Consider: when activists express anger at racial or economic injustice, are they being epistemically (cognitively) unreliable — letting emotion overwhelm reason? Or could their anger be a form of moral perception that reveals something those without it cannot see?',
+      context: 'outlaw emotions and epistemic justice'
+    }
+  };
+
+  let currentScenario = null;
+  let selectedPosition = null;
+
+  function loadScenario(key) {
+    currentScenario = key;
+    selectedPosition = null;
+    document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('scen-text').textContent = scenarios[key].text;
+    document.getElementById('scen-display').classList.add('visible');
+    document.getElementById('btn-reason').className = 'pos-btn';
+    document.getElementById('btn-emotion').className = 'pos-btn';
+    document.getElementById('btn-both').className = 'pos-btn';
+    document.getElementById('user-reasoning').value = '';
+    document.getElementById('ask-btn').disabled = true;
+    document.getElementById('ai-response').classList.remove('show');
+  }
+
+  function selectPos(pos) {
+    selectedPosition = pos;
+    document.getElementById('btn-reason').className = 'pos-btn';
+    document.getElementById('btn-emotion').className = 'pos-btn';
+    document.getElementById('btn-both').className = 'pos-btn';
+    document.getElementById('btn-' + pos).classList.add('sel-' + pos);
+    document.getElementById('ask-btn').disabled = false;
+  }
+
+  async function getAIFeedback() {
+    const btn = document.getElementById('ask-btn');
+    const aiBox = document.getElementById('ai-response');
+    const aiText = document.getElementById('ai-text');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner">⟳</span> Thinking…';
+    aiBox.classList.add('show');
+    aiText.textContent = '';
+
+    const scen = scenarios[currentScenario];
+    const posLabels = { reason: 'Pure Reason (Cartesian/Kantian)', emotion: 'Emotion and Intuition (Humean/Jaggar)', both: 'Integration of Reason and Emotion (Aristotelian)' };
+    const userReasoning = document.getElementById('user-reasoning').value.trim();
+
+    const prompt = `You are a Socratic philosophy tutor for a second-year undergraduate course on Philosophy of Human Nature (Phil 201 at a Jesuit university). The module is on Emotion and Reason.
+
+The student has been given this scenario:
+"${scen.text}"
+
+The student chose the position: "${posLabels[selectedPosition]}"
+${userReasoning ? `The student's reasoning: "${userReasoning}"` : ''}
+
+Your task:
+1. Briefly acknowledge the strongest points in their position (2-3 sentences).
+2. Then give them genuine Socratic pushback — the strongest objection from an opposing philosophical view (Hume, Jaggar, Kant, Aristotle, or Nussbaum). Be specific and cite the relevant thinker.
+3. End with one open-ended discussion question that would work well in a philosophy class.
+
+Keep your response to 200-250 words. Write in a warm but intellectually rigorous tone. Do not moralize or tell the student what the "right" answer is.`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await response.json();
+      const text = data.content?.find(b => b.type === 'text')?.text || 'Sorry, no response received.';
+      aiText.textContent = text;
+    } catch (err) {
+      aiText.textContent = 'Could not connect to AI. Please check your connection and try again.';
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<span>Get Socratic pushback</span>';
+  }
+
+  function copyText(btn) {
+    const ta = btn.previousElementSibling;
+    ta.select();
+    document.execCommand('copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  }
+</script>
+</body>
+</html>
