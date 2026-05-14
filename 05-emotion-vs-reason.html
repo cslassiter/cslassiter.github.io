@@ -50,12 +50,31 @@
   }
 
   h1 em { font-style: italic; color: var(--red); }
-
   .subtitle { color: var(--muted); font-size: 0.95rem; }
-
   .container { max-width: 800px; margin: 0 auto; }
 
-  /* ── Scenario cards ── */
+  .thinkers-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+    margin: 2rem 0;
+  }
+  @media (max-width: 520px) { .thinkers-bar { grid-template-columns: 1fr; } }
+
+  .thinker-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 2px 2px 0 var(--border);
+  }
+  .thinker-card h4 { font-family: 'Fraunces', serif; font-size: 1rem; margin-bottom: 0.4rem; }
+  .thinker-card .thinker-side { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .thinker-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .side-reason { color: var(--blue); }
+  .side-emotion { color: var(--red); }
+  .side-both { color: var(--green); }
+
   .scenario-selector {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -73,15 +92,12 @@
     transition: all 0.2s;
     font-family: 'Inter', sans-serif;
   }
-
   .scen-btn .scen-icon { font-size: 1.5rem; display: block; margin-bottom: 0.4rem; }
   .scen-btn .scen-title { font-size: 0.9rem; font-weight: 500; display: block; margin-bottom: 0.2rem; }
   .scen-btn .scen-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
-
   .scen-btn:hover { border-color: var(--gold); }
   .scen-btn.active { border-color: var(--red); background: #fff5f3; }
 
-  /* ── Main scenario ── */
   .scenario-display {
     background: white;
     border: 1px solid var(--border);
@@ -91,12 +107,11 @@
     box-shadow: var(--card-shadow);
     display: none;
   }
-
   .scenario-display.visible { display: block; }
 
   .scenario-text {
     font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-style: italic;
     line-height: 1.7;
     color: #2a1a08;
@@ -122,7 +137,6 @@
     gap: 0.75rem;
     margin-bottom: 1.25rem;
   }
-
   @media (max-width: 500px) { .position-btns { grid-template-columns: 1fr; } }
 
   .pos-btn {
@@ -136,163 +150,114 @@
     font-weight: 500;
     transition: all 0.2s;
     line-height: 1.4;
+    text-align: center;
   }
-
   .pos-btn:hover { border-color: var(--gold); }
   .pos-btn.sel-reason { border-color: var(--blue); background: #eaf2fb; color: var(--blue); }
   .pos-btn.sel-emotion { border-color: var(--red); background: #fdf2f0; color: var(--red); }
   .pos-btn.sel-both { border-color: var(--green); background: #eafaf1; color: var(--green); }
 
-  .your-reasoning {
-    margin-bottom: 1.25rem;
-  }
-
-  .your-reasoning label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.92rem;
-    min-height: 90px;
-    resize: vertical;
-    color: var(--text);
-    line-height: 1.55;
-    background: var(--surface);
-  }
-
-  textarea:focus { outline: 2px solid var(--gold); border-color: transparent; }
-
-  .ask-btn {
-    background: var(--text);
-    color: var(--bg);
-    border: none;
-    padding: 0.7rem 1.75rem;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .ask-btn:hover { background: var(--red); }
-  .ask-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* ── AI response ── */
-  .ai-response {
+  .feedback-panel {
     margin-top: 1.5rem;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #1a1008, #2a2018);
-    border-radius: 12px;
-    color: #f0ead8;
     display: none;
-    animation: slideIn 0.4s ease;
+    animation: fadeUp 0.4s ease;
   }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .feedback-panel.show { display: block; }
 
-  @keyframes slideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-
-  .ai-response.show { display: block; }
-
-  .ai-label {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #c8a870;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+  .feedback-strengths {
+    background: #eafaf1;
+    border-left: 4px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
   }
-
-  .ai-text {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: #e8dfc8;
-    white-space: pre-wrap;
+  .feedback-strengths h4 {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem;
   }
+  .feedback-strengths p { font-size: 0.94rem; line-height: 1.65; color: #1a4a30; }
 
-  .spinner { display: inline-block; animation: spin 1s linear infinite; }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-  /* ── Thinkers bar ── */
-  .thinkers-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.75rem;
-    margin: 2rem 0;
+  .feedback-pushback {
+    background: linear-gradient(135deg, #1a1008, #2d200e);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    color: #f0ead8;
   }
+  .feedback-pushback h4 {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #c8a870; margin-bottom: 0.5rem;
+  }
+  .feedback-pushback p { font-size: 0.94rem; line-height: 1.65; color: #e8dfc8; }
 
-  @media (max-width: 520px) { .thinkers-bar { grid-template-columns: 1fr; } }
-
-  .thinker-card {
+  .feedback-question {
     background: white;
-    border: 1px solid var(--border);
+    border: 2px dashed var(--gold);
     border-radius: 10px;
-    padding: 1rem;
-    box-shadow: 2px 2px 0 var(--border);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
   }
-
-  .thinker-card h4 {
-    font-family: 'Fraunces', serif;
-    font-size: 1rem;
-    margin-bottom: 0.4rem;
+  .feedback-question h4 {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;
   }
+  .feedback-question p { font-size: 0.96rem; line-height: 1.65; font-style: italic; color: #4a3010; }
 
-  .thinker-card .thinker-side {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+  .thinker-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+  .thinker-pill {
+    font-size: 0.72rem; font-weight: 500; padding: 0.25rem 0.65rem;
+    border-radius: 20px; border: 1px solid; cursor: default;
   }
+  .pill-reason { border-color: var(--blue); color: var(--blue); background: #eaf2fb; }
+  .pill-emotion { border-color: var(--red); color: var(--red); background: #fdf2f0; }
+  .pill-both { border-color: var(--green); color: var(--green); background: #eafaf1; }
 
-  .thinker-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
-  .side-reason { color: var(--blue); }
-  .side-emotion { color: var(--red); }
-  .side-both { color: var(--green); }
+  .explore-more {
+    margin-top: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .explore-more h4 {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem;
+  }
+  .counter-btn {
+    display: block; width: 100%;
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.6rem 1rem; margin-bottom: 0.4rem;
+    font-family: 'Inter', sans-serif; font-size: 0.88rem;
+    text-align: left; cursor: pointer; transition: all 0.2s;
+    color: var(--text); line-height: 1.4;
+  }
+  .counter-btn:hover { border-color: var(--gold); background: var(--surface); }
+  .counter-btn.open { border-color: var(--gold); }
+  .counter-answer {
+    background: #fef9ee; border-left: 3px solid var(--gold);
+    padding: 0.75rem 1rem; font-size: 0.88rem; line-height: 1.6;
+    color: #4a3010; margin-bottom: 0.5rem; border-radius: 0 6px 6px 0; display: none;
+  }
+  .counter-answer.show { display: block; }
 
   .journal-section {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border: 1px solid var(--border);
+    background: white; border-radius: 12px;
+    padding: 1.5rem; margin: 1.5rem 0; border: 1px solid var(--border);
   }
-
-  .journal-section h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 1.15rem;
-    color: var(--gold);
-    margin-bottom: 0.4rem;
+  .journal-section h3 { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--gold); margin-bottom: 0.4rem; }
+  textarea {
+    width: 100%; border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.75rem 1rem; font-family: 'Inter', sans-serif; font-size: 0.92rem;
+    min-height: 90px; resize: vertical; color: var(--text);
+    line-height: 1.55; background: var(--surface); margin-top: 0.5rem;
   }
-
+  textarea:focus { outline: 2px solid var(--gold); border-color: transparent; }
   .copy-btn {
-    margin-top: 0.4rem;
-    background: var(--text);
-    color: var(--bg);
-    border: none;
-    padding: 0.45rem 1.1rem;
-    border-radius: 6px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
-    cursor: pointer;
+    margin-top: 0.4rem; background: var(--text); color: var(--bg);
+    border: none; padding: 0.45rem 1.1rem; border-radius: 6px;
+    font-family: 'Inter', sans-serif; font-size: 0.8rem; cursor: pointer;
   }
-
   .copy-btn:hover { background: var(--gold); color: var(--text); }
 </style>
 </head>
@@ -300,17 +265,16 @@
 <header>
   <div class="module-tag">Module 5 · Emotion &amp; Reason</div>
   <h1>Reason vs. <em>Emotion</em></h1>
-  <p class="subtitle">Analyze real moral dilemmas — then get AI-powered Socratic pushback on your reasoning</p>
+  <p class="subtitle">Choose a scenario, pick a position, and explore structured Socratic pushback</p>
 </header>
 
 <div class="container">
 
-  <!-- Thinkers bar -->
   <div class="thinkers-bar">
     <div class="thinker-card">
       <h4>Descartes / Kant</h4>
       <div class="thinker-side side-reason">Reason side</div>
-      <p>Moral truth is accessed through pure reason. Emotions are unreliable guides — potentially biasing or misleading our judgments.</p>
+      <p>Moral truth is accessed through pure reason. Emotions are unreliable guides that potentially bias or mislead our judgments.</p>
     </div>
     <div class="thinker-card">
       <h4>Hume / Jaggar</h4>
@@ -324,32 +288,31 @@
     </div>
   </div>
 
-  <!-- Scenario selector -->
   <p style="color:var(--muted); font-size:0.92rem; margin-bottom:0.75rem;">Choose a scenario to analyze:</p>
+
   <div class="scenario-selector">
-    <button class="scen-btn" onclick="loadScenario('trolley')">
+    <button class="scen-btn" onclick="loadScenario('trolley', this)">
       <span class="scen-icon">🚃</span>
       <span class="scen-title">The Trolley Problem</span>
       <span class="scen-desc">Classic dilemma: sacrifice one to save five?</span>
     </button>
-    <button class="scen-btn" onclick="loadScenario('whistleblow')">
+    <button class="scen-btn" onclick="loadScenario('whistleblow', this)">
       <span class="scen-icon">📢</span>
       <span class="scen-title">The Whistleblower</span>
-      <span class="scen-desc">Loyalty to employer vs. public good</span>
+      <span class="scen-desc">Loyalty to employer vs. the public good</span>
     </button>
-    <button class="scen-btn" onclick="loadScenario('friend')">
+    <button class="scen-btn" onclick="loadScenario('friend', this)">
       <span class="scen-icon">👤</span>
       <span class="scen-title">The Biased Referee</span>
-      <span class="scen-desc">Your friend deserves the job — but so does a stranger</span>
+      <span class="scen-desc">Your friend vs. a more qualified stranger</span>
     </button>
-    <button class="scen-btn" onclick="loadScenario('anger')">
+    <button class="scen-btn" onclick="loadScenario('anger', this)">
       <span class="scen-icon">😤</span>
       <span class="scen-title">Righteous Anger</span>
-      <span class="scen-desc">When outrage at injustice leads to better — or worse — action</span>
+      <span class="scen-desc">When outrage at injustice shapes — or distorts — action</span>
     </button>
   </div>
 
-  <!-- Scenario display -->
   <div class="scenario-display" id="scen-display">
     <div class="scenario-text" id="scen-text"></div>
 
@@ -360,24 +323,28 @@
       <button class="pos-btn" id="btn-both" onclick="selectPos('both')">⚖️ Both Together<br><small style="font-weight:300;">Aristotle: integrated practical wisdom</small></button>
     </div>
 
-    <div class="your-reasoning">
-      <label>Your reasoning (optional — makes AI feedback richer)</label>
-      <textarea id="user-reasoning" placeholder="Explain why you chose that option, in a sentence or two…"></textarea>
-    </div>
-
-    <button class="ask-btn" id="ask-btn" onclick="getAIFeedback()" disabled>
-      <span>Get Socratic pushback</span>
-    </button>
-
-    <div class="ai-response" id="ai-response">
-      <div class="ai-label">🤖 Philosophical feedback</div>
-      <div class="ai-text" id="ai-text"></div>
+    <div class="feedback-panel" id="feedback-panel">
+      <div class="feedback-strengths">
+        <h4>✓ Strengths of your position</h4>
+        <p id="fb-strengths"></p>
+        <div class="thinker-pills" id="fb-pills-for"></div>
+      </div>
+      <div class="feedback-pushback">
+        <h4>⟳ Socratic pushback</h4>
+        <p id="fb-pushback"></p>
+        <div class="thinker-pills" id="fb-pills-against"></div>
+      </div>
+      <div class="feedback-question">
+        <h4>💬 Discussion question</h4>
+        <p id="fb-question"></p>
+      </div>
+      <div class="explore-more" id="explore-more"></div>
     </div>
   </div>
 
   <div class="journal-section">
     <h3>✍ Reflection prompt</h3>
-    <p style="font-size:0.92rem; color:var(--muted); line-height:1.55; margin-bottom:0.6rem;">Jaggar argues that emotions aren't just feelings — they can be a form of <em>epistemic access</em> to moral truth. Think of a time when an emotion (anger, empathy, guilt) gave you moral knowledge that pure reasoning alone might have missed. How does this connect to the Cartesian view of emotion you studied in Module 2?</p>
+    <p style="font-size:0.92rem; color:var(--muted); line-height:1.55; margin-bottom:0.25rem;">Jaggar argues that emotions aren't just feelings — they can be a form of <em>epistemic access</em> to moral truth. Think of a time when an emotion (anger, empathy, guilt) gave you moral knowledge that pure reasoning alone might have missed. How does this connect to the Cartesian view of emotion you studied in Module 2?</p>
     <textarea placeholder="Your reflection…"></textarea>
     <button class="copy-btn" onclick="copyText(this)">Copy</button>
   </div>
@@ -385,110 +352,196 @@
 </div>
 
 <script>
-  const scenarios = {
-    trolley: {
-      text: 'A runaway trolley is heading toward five people tied to the tracks. You are standing next to a lever that will divert it to a side track — where one person is tied. If you pull the lever, you save five but cause the death of one. If you do nothing, five die. What should you do, and what role do reason and emotion each play in this decision?',
-      context: 'trolley problem'
-    },
-    whistleblow: {
-      text: 'You work at a company and discover your employer is quietly dumping pollutants in ways that are technically legal but cause serious long-term harm to a low-income community nearby. Reporting it will cost you your job and harm your family financially. Your colleagues are unaware. What should you do? Is your emotional reaction — outrage, fear, loyalty — guiding you toward or away from the right answer?',
-      context: 'whistleblowing dilemma'
-    },
-    friend: {
-      text: 'You are on a hiring committee. Your close friend has applied for a position, and they are nearly as qualified as a stranger who is slightly more qualified. You feel strong loyalty and affection for your friend. Philosophically, does your emotion of loyalty have any moral weight here — or should it be set aside in favor of pure impartial reasoning? What would Hume, Kant, and Jaggar each say?',
-      context: 'friendship vs. impartiality'
-    },
-    anger: {
-      text: 'Alison Jaggar argues in "Love and Knowledge" that marginalized groups often develop "outlaw emotions" — feelings of anger, grief, or discomfort at injustice that the dominant culture tries to suppress or dismiss as irrational. Consider: when activists express anger at racial or economic injustice, are they being epistemically (cognitively) unreliable — letting emotion overwhelm reason? Or could their anger be a form of moral perception that reveals something those without it cannot see?',
-      context: 'outlaw emotions and epistemic justice'
+const scenarios = {
+  trolley: {
+    text: 'A runaway trolley is heading toward five people tied to the tracks. You are standing next to a lever that will divert it to a side track — where one person is tied. If you pull the lever, you save five but cause the death of one. If you do nothing, five die. What should you do, and what role do reason and emotion each play in this decision?',
+    positions: {
+      reason: {
+        strengths: 'A rationalist approach here has real force. Kant\'s principle of universalizability and utilitarian calculation both offer principled, impartial ways to resolve the dilemma without letting fear or squeamishness drive the outcome. If we want consistency across cases — treating like cases alike — dispassionate reasoning is essential. The appeal to pure reason also avoids the problem of letting our emotional proximity to the one person (versus the five strangers) bias us unfairly.',
+        pushback: 'Hume famously argued that "reason is the slave of the passions" — reason can tell you the math (five lives > one), but it cannot by itself motivate you to pull the lever. What actually gets your hand moving is something emotional: care for the five, horror at inaction, a felt sense of responsibility. More pointedly, Joshua Greene\'s neuroscience research (building on Hume) suggests our "rational" judgments in trolley cases are themselves shaped by emotional systems we are not conscious of. So even when we think we are reasoning, we may be rationalizing emotional reactions after the fact.',
+        question: 'If it turned out that your "rational" conclusion — pull the lever — was actually produced by unconscious emotional processing in your brain, would that change whether you think it is the right answer? Does the source of a moral judgment affect its validity?',
+        counters: [
+          { q: 'Doesn\'t Kant say we should never treat a person merely as a means? Wouldn\'t pulling the lever do exactly that to the one person?', a: 'Yes — this is one of the most important objections from within the Kantian tradition. If you divert the trolley, you are using the one person\'s death as a means to saving five, which violates the Formula of Humanity. This is why many deontologists say you should not pull the lever, even though five die. Pure reason here gives a different answer than utilitarian calculation — which shows that "reason" does not speak with one voice.' },
+          { q: 'Wouldn\'t a purely reasonable person be paralyzed — unable to act in time?', a: 'This is the "paralysis objection." Aristotle\'s answer is that the practically wise person (phronimos) does not reason from scratch every time — they have cultivated emotional dispositions that allow quick, appropriate response. The felt urgency of the situation is itself morally informative, not an obstacle to clear thinking.' }
+        ]
+      },
+      emotion: {
+        strengths: 'Trusting emotional intuition here captures something real. The feeling of horror at letting five people die is not mere squeamishness — it may be tracking a genuine moral fact about the weight of preventable death. Jaggar\'s concept of "outlaw emotions" suggests that strong moral feelings, especially widely shared ones, can serve as evidence about what matters. Many people feel viscerally that there is a morally relevant difference between killing and letting die — and that felt difference may be philosophically significant even if it resists neat systematic justification.',
+        pushback: 'Kant\'s challenge is sharp: emotions are notoriously unreliable and parochial. Research in moral psychology (e.g., Jonathan Haidt\'s "moral dumbfounding" studies) shows people often have strong moral feelings they cannot justify — and that these feelings vary widely across cultures, individuals, and even time of day. If the five people were strangers of a different background, would your emotional intuition be identical? If emotions are shaped by bias and social conditioning, can we trust them as guides to moral truth in high-stakes cases?',
+        question: 'Jaggar argues that "outlaw emotions" — feelings that go against dominant social norms — can reveal injustice. But in the trolley case, most people\'s emotional intuitions align with the dominant view. Does her argument extend to mainstream emotional reactions, or only to marginalized ones?',
+        counters: [
+          { q: 'Our emotions evolved for small-group living, not trolley-scale dilemmas. Aren\'t they just the wrong tool?', a: 'This is Peter Singer\'s argument — our moral emotions are Pleistocene-era software running on modern hardware. But Aristotle\'s response is that emotions can be educated and refined through habituation. The virtuous person\'s emotional responses are not raw evolutionary impulses — they have been cultivated through practice and reflection into more reliable moral guides.' },
+          { q: 'Different people have different emotional reactions to the same case. Doesn\'t that make emotion an unreliable guide?', a: 'This is the variability objection. Jaggar anticipates it: she does not say all emotions are epistemically reliable, only that they can be — especially when they are reflectively endorsed and socially situated. The task is to critically examine which emotions track moral reality and which reflect bias or parochialism.' }
+        ]
+      },
+      both: {
+        strengths: 'Aristotle\'s virtue ethics offers the most realistic picture of actual moral agency. The practically wise person (phronimos) does not deliberate from cold principles — they perceive the morally salient features of the situation through cultivated emotional sensitivity, then reason about how to respond. Martha Nussbaum extends this: emotions like compassion and grief are not obstacles to moral clarity but forms of moral perception in their own right. The integrated view avoids the implausible picture of a purely rational moral agent unmoved by the suffering in front of them.',
+        pushback: 'Kant would press: how do you decide which emotions to trust and which to override with reason? If both are in play, what adjudicates between them when they conflict — as they often do? Without a principled answer, "both together" risks collapsing into "go with your gut and call it wisdom." The Kantian worry is that appeals to integration can become a way of rationalizing whatever we emotionally wanted to do in the first place.',
+        question: 'Aristotle says the virtuous person feels the right emotion at the right time, toward the right person, in the right amount. But who decides what counts as "right"? Is that standard itself set by reason, emotion, or social consensus — and does it matter which?',
+        counters: [
+          { q: 'Isn\'t "integrated practical wisdom" just a fancy way of saying "use good judgment"? Is it really a philosophical position?', a: 'Fair challenge. Aristotle\'s response would be that phronesis is not mere common sense — it is a specific intellectual virtue that takes years to develop and cannot be reduced to a decision procedure. The philosophical content is in the account of how reason and emotion are unified in virtuous character, not in a simple formula.' },
+          { q: 'Can integration even work in real time? The trolley is moving now.', a: 'This is where Aristotle\'s emphasis on habituation becomes crucial. Practical wisdom is not about deliberating from scratch in the moment — it is about having cultivated the right dispositions in advance so that appropriate response becomes, in a real sense, second nature.' }
+        ]
+      }
     }
-  };
-
-  let currentScenario = null;
-  let selectedPosition = null;
-
-  function loadScenario(key) {
-    currentScenario = key;
-    selectedPosition = null;
-    document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById('scen-text').textContent = scenarios[key].text;
-    document.getElementById('scen-display').classList.add('visible');
-    document.getElementById('btn-reason').className = 'pos-btn';
-    document.getElementById('btn-emotion').className = 'pos-btn';
-    document.getElementById('btn-both').className = 'pos-btn';
-    document.getElementById('user-reasoning').value = '';
-    document.getElementById('ask-btn').disabled = true;
-    document.getElementById('ai-response').classList.remove('show');
-  }
-
-  function selectPos(pos) {
-    selectedPosition = pos;
-    document.getElementById('btn-reason').className = 'pos-btn';
-    document.getElementById('btn-emotion').className = 'pos-btn';
-    document.getElementById('btn-both').className = 'pos-btn';
-    document.getElementById('btn-' + pos).classList.add('sel-' + pos);
-    document.getElementById('ask-btn').disabled = false;
-  }
-
-  async function getAIFeedback() {
-    const btn = document.getElementById('ask-btn');
-    const aiBox = document.getElementById('ai-response');
-    const aiText = document.getElementById('ai-text');
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner">⟳</span> Thinking…';
-    aiBox.classList.add('show');
-    aiText.textContent = '';
-
-    const scen = scenarios[currentScenario];
-    const posLabels = { reason: 'Pure Reason (Cartesian/Kantian)', emotion: 'Emotion and Intuition (Humean/Jaggar)', both: 'Integration of Reason and Emotion (Aristotelian)' };
-    const userReasoning = document.getElementById('user-reasoning').value.trim();
-
-    const prompt = `You are a Socratic philosophy tutor for a second-year undergraduate course on Philosophy of Human Nature (Phil 201 at a Jesuit university). The module is on Emotion and Reason.
-
-The student has been given this scenario:
-"${scen.text}"
-
-The student chose the position: "${posLabels[selectedPosition]}"
-${userReasoning ? `The student's reasoning: "${userReasoning}"` : ''}
-
-Your task:
-1. Briefly acknowledge the strongest points in their position (2-3 sentences).
-2. Then give them genuine Socratic pushback — the strongest objection from an opposing philosophical view (Hume, Jaggar, Kant, Aristotle, or Nussbaum). Be specific and cite the relevant thinker.
-3. End with one open-ended discussion question that would work well in a philosophy class.
-
-Keep your response to 200-250 words. Write in a warm but intellectually rigorous tone. Do not moralize or tell the student what the "right" answer is.`;
-
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-
-      const data = await response.json();
-      const text = data.content?.find(b => b.type === 'text')?.text || 'Sorry, no response received.';
-      aiText.textContent = text;
-    } catch (err) {
-      aiText.textContent = 'Could not connect to AI. Please check your connection and try again.';
+  },
+  whistleblow: {
+    text: 'You work at a company and discover your employer is quietly dumping pollutants in ways that are technically legal but cause serious long-term harm to a low-income community nearby. Reporting it will cost you your job and harm your family financially. Your colleagues are unaware. What should you do? Is your emotional reaction — outrage, fear, loyalty — guiding you toward or away from the right answer?',
+    positions: {
+      reason: {
+        strengths: 'A principled, impartial analysis cuts through the personal complications here. Kant\'s Formula of Universal Law asks: what if everyone in your position stayed silent about corporate harm? A world of universal silence about preventable harm is not one you could rationally will. The harm to the community is real and measurable; your financial discomfort, while real, does not outweigh it when assessed impartially. Reason provides the impersonal standpoint that self-interest and loyalty cannot.',
+        pushback: 'Jaggar\'s concept of "outlaw emotions" is directly relevant here. Your outrage at the harm to the community is not a distortion of clear thinking — it is precisely the emotion that is tracking the moral reality that abstract principle might miss. Without emotional engagement with the suffering of real people in that community, "the principle says report it" remains an abstraction. Hume\'s point: it is your felt sense of injustice, your empathy with those harmed, that actually moves you to act at personal cost. Reason alone would not get you off the couch.',
+        question: 'Kant insists on doing the right thing regardless of consequences. But if whistleblowing destroys your family financially while only marginally improving things for the community, does reason really demand it? Or does impartial reason also have to weigh the harm to your dependents?',
+        counters: [
+          { q: 'Doesn\'t loyalty to colleagues and employer count as a rational commitment too?', a: 'Yes — and this is where Bernard Williams\' critique of impartialism is important. Williams argues that Kantian impartiality can require us to betray our most fundamental commitments — our ground projects — which is not rationality but a kind of alienation from ourselves. The loyalty you feel is not merely emotional noise; it may reflect a genuine moral consideration that impartial reason fails to honor.' },
+          { q: 'What if your reasoning about the harm is simply wrong — you\'re not an environmental scientist?', a: 'This is the epistemic humility objection, and it is a good one. But notice it applies equally to emotion-based responses: your outrage might also be based on a misunderstanding of the facts. Both reason and emotion require accurate information to function well as moral guides.' }
+        ]
+      },
+      emotion: {
+        strengths: 'Your outrage at harm to a vulnerable community is, in Jaggar\'s terms, a perfectly calibrated outlaw emotion — it cuts against the dominant norm (corporate loyalty, go-along-to-get-along) and reveals a moral truth that the institutional structure has an interest in suppressing. The fear for your family is also morally significant data, not mere weakness: it honestly registers the real costs of doing the right thing. Emotion here is tracking genuine moral complexity rather than distorting a clear rational answer.',
+        pushback: 'The Kantian worry is that emotion is unreliable precisely because it is self-serving. Your fear of financial harm and your loyalty to colleagues are also emotions — and they pull in the opposite direction from your outrage. If you privilege outrage over loyalty, on what grounds? The utilitarian challenge is similar: your emotional reaction to this particular community may be stronger than your emotional reaction to equally harmed communities you do not see. Emotion gives us vivid, proximate concerns — not necessarily the morally most important ones.',
+        question: 'Jaggar says marginalized groups often develop accurate outlaw emotions because their social position gives them epistemic access to injustice. You are not from the affected community. Does your outrage have the same epistemic status as theirs? Should it?',
+        counters: [
+          { q: 'Emotional burnout is real — if you act every time you feel outraged, you will be destroyed. Doesn\'t reason need to manage emotion here?', a: 'This is the sustainability objection, and it matters. Aristotle\'s answer is that the virtuous person feels the right emotions in the right amount — not so little as to be callous, not so much as to be overwhelmed. Emotion needs to be educated and calibrated, not simply followed wherever it leads.' },
+          { q: 'What if the community does not want you to blow the whistle — they fear retaliation?', a: 'Excellent complication. This is a case where your emotional sense of justice might conflict with the expressed preferences of those you are trying to help. It forces a question about whose emotional and rational responses should guide action — and whether outsider moral concern can override insider risk calculation.' }
+        ]
+      },
+      both: {
+        strengths: 'Nussbaum\'s "narrative imagination" — the capacity to feel with people in different circumstances — combined with principled reasoning gives the richest account of what moral competence requires here. Your outrage provides the motivational fuel; reason helps you assess the facts, weigh competing loyalties, and choose an action proportionate to the harm. Neither alone is sufficient: cold calculation without empathy misses the human weight of the situation; raw emotion without deliberation might lead to reckless or counterproductive action.',
+        pushback: 'Kant\'s challenge to integration is sharp in this case: the emotions pulling at you (fear for your family, loyalty to colleagues, outrage at harm) all pull in different directions. "Use both reason and emotion" tells you very little about how to adjudicate when they conflict — which is exactly the hard case here. There is a real risk that integration becomes post-hoc rationalization: you decide based on emotion, then construct a reasoned justification afterward. How would you distinguish genuine integration from sophisticated self-deception?',
+        question: 'Aristotle says practical wisdom is partly constituted by having the right emotions. But what if your emotions were shaped by a corporate culture that normalized this kind of harm? Can we trust the integrated judgment of someone whose emotional responses have been corrupted by their institutional environment?',
+        counters: [
+          { q: 'Does integration just mean compromising — doing something half-hearted?', a: 'No — integration does not mean splitting the difference. Aristotle\'s phronimos acts decisively. The integration is in how the response is reached: emotion perceives the moral salience of the situation, reason deliberates about the appropriate response, and action follows with genuine emotional engagement, not detachment. The result might be full whistleblowing, pursued with both conviction and strategic care.' }
+        ]
+      }
     }
-
-    btn.disabled = false;
-    btn.innerHTML = '<span>Get Socratic pushback</span>';
+  },
+  friend: {
+    text: 'You are on a hiring committee. Your close friend has applied for a position, and they are nearly as qualified as another candidate who is slightly more qualified on paper. You feel strong loyalty and affection for your friend. Philosophically, does your emotion of loyalty have any moral weight here — or should it be set aside in favor of pure impartial reasoning? What would Hume, Kant, and Jaggar each say?',
+    positions: {
+      reason: {
+        strengths: 'Kant\'s impartialism is compelling in institutional contexts like hiring. When you sit on a committee, you have implicitly agreed to evaluate candidates fairly — your role creates an obligation to impartiality that personal relationships cannot override. A world in which everyone hired friends over more qualified candidates would be one of nepotism and institutional dysfunction, which you cannot rationally will. The slightly-more-qualified stranger deserves the position on the merits; your emotional loyalty, however genuine, is simply the wrong input for this decision.',
+        pushback: 'Bernard Williams argued that a moral theory requiring you to betray your most intimate commitments has "one thought too many." The husband who calculates impartially whether to save his wife or a stranger has, Williams says, failed as a husband before he has even started calculating. Hume would add: your loyalty to your friend is not moral noise — it is evidence of a genuine and admirable human commitment. The question is whether this is the right context for that commitment, not whether the commitment itself has moral weight.',
+        question: 'The role of committee member creates obligations. But so does friendship. When two genuine moral obligations conflict — institutional fairness and personal loyalty — what decides which takes precedence? Is there a rational principle that can settle this, or does it depend on something that cannot be fully articulated?',
+        counters: [
+          { q: 'If we hire purely on "objective" metrics, aren\'t those metrics also shaped by bias?', a: 'Sharp point — and a key insight from feminist epistemology. Jaggar and others argue that supposedly neutral criteria (like certain credentials or standardized measures) often encode the advantages of already-privileged groups. Pure impartial reason applied to biased data is not actually impartial. The politics of objectivity are never fully neutral.' },
+          { q: 'Isn\'t there genuine value in hiring someone you already trust and know well?', a: 'Yes — and this is a legitimate consideration that abstract reasoning might miss. Working relationships involve trust, communication, and fit, which are hard to measure objectively. Acknowledging your friendship and its relevance is more honest than pretending it does not exist. The question is what to do with that honest acknowledgment.' }
+        ]
+      },
+      emotion: {
+        strengths: 'Hume would say your loyalty is not a bias to be corrected but a genuine moral sentiment — one of the calm passions that constitutes our moral character. Friendships create real moral obligations; they are not mere preferences to be discarded when inconvenient. Jaggar\'s framework suggests that dismissing loyalty as "mere emotion" in favor of abstract impartiality reflects a bias toward a particular model of rationality — one that devalues relational and emotional knowledge as sources of moral insight.',
+        pushback: 'Kant\'s challenge is practical: if every committee member privileged their friends, the institution would collapse. Your loyalty, however genuine, exists within an institutional context that you entered voluntarily and that creates obligations to others — including the more qualified candidate, who has done nothing wrong and deserves fair consideration. More sharply: is it really your emotional loyalty that should guide you here, or is it your self-interest in being seen as a good friend? Those are very different things, and emotion alone cannot distinguish between them.',
+        question: 'Jaggar argues that emotions can be epistemically reliable when they are reflectively endorsed — that is, when you can, on reflection, defend them as tracking something morally real rather than something merely personally convenient. Can you reflectively endorse loyalty in this particular context?',
+        counters: [
+          { q: 'There is a difference between loyalty and favoritism. Am I conflating them?', a: 'Important distinction. Loyalty means honoring genuine obligations created by relationships. Favoritism means giving someone advantages they have not earned because of personal connection. In a hiring context, your friend\'s qualifications — nearly as strong — might support a case for loyalty; your emotional preference alone might shade into favoritism. The emotions may feel similar, but their moral status differs significantly.' }
+        ]
+      },
+      both: {
+        strengths: 'Nussbaum\'s account of practical wisdom acknowledges that both loyalty and fairness are genuine moral considerations — neither can simply override the other by fiat. The practically wise person brings emotional attunement to relationships together with principled commitment to fair institutions, and navigates the tension honestly. This might mean: acknowledging the conflict openly, recusing yourself if the conflict is irresolvable, or advocating for your friend within legitimate channels while accepting the committee\'s final decision.',
+        pushback: 'Williams\' critique of integration cuts here: in practice, "use both reason and emotion" often means reason gets used to dress up what emotion already decided. If you were going to hire your friend anyway, you will find reasons; if you were not, you will find different reasons. The integration view needs to explain how it avoids becoming motivated reasoning — and it is not obvious it can, in a case where the emotional stakes are this personal.',
+        question: 'One practical option is recusal — removing yourself from the decision because of the conflict of interest. Is recusal the intellectually honest integration of reason and emotion here, or is it an evasion of the genuine moral tension that practical wisdom ought to be able to navigate?',
+        counters: [
+          { q: 'What if your friend desperately needs this job and the other candidate is fine either way — does that change anything?', a: 'It changes the emotional calculus significantly, and Aristotle would say it should change the moral calculus too. The stakes of each person\'s situation are part of the moral landscape the practically wise person must perceive. But notice this requires reasoning about consequences alongside the emotional pull of loyalty — which is exactly what the integrated view recommends.' }
+        ]
+      }
+    }
+  },
+  anger: {
+    text: 'Alison Jaggar argues in "Love and Knowledge" that marginalized groups often develop "outlaw emotions" — feelings of anger, grief, or discomfort at injustice that the dominant culture tries to suppress or dismiss as irrational. When activists express anger at racial or economic injustice, are they being epistemically unreliable — letting emotion overwhelm reason? Or could their anger be a form of moral perception that reveals something those without it cannot see?',
+    positions: {
+      reason: {
+        strengths: 'The concern about emotion overwhelming reason in political contexts is not trivial. History offers examples of collective moral outrage directed at genuine injustice — but also outrage directed at scapegoats. Reason provides the tool for distinguishing between them. If anger at injustice is to be morally credible, it needs to be checked against evidence: Is the harm real? Is it systematic? Is the proposed remedy proportionate? A purely emotional politics, however righteous it feels, risks manipulation by those who know how to trigger outrage without regard for accuracy.',
+        pushback: 'Jaggar\'s argument is precisely that this "reason checks emotion" framework is itself ideologically loaded. Dominant groups have historically dismissed the anger of oppressed people — enslaved people, women, colonial subjects — as "irrational," "hysterical," or "threatening," while treating the calm reasonableness of the privileged as the neutral standard. The demand that marginalized people prove their anger is justified through the dominant group\'s epistemic criteria is itself a form of epistemic injustice (Miranda Fricker\'s term). The outrage came first; it tracked a real wrong before the dominant discourse had the language to articulate it.',
+        question: 'The Kantian asks: what is the universal principle behind "trust outlaw emotions"? If we say marginalized people\'s anger is epistemically reliable, are we committed to saying all emotions from all oppressed groups are reliable — including ones that might be misdirected? How do we adjudicate without falling back on some standard external to emotion itself?',
+        counters: [
+          { q: 'Isn\'t calm reasonableness more persuasive in practice — doesn\'t anger just alienate potential allies?', a: 'This is the tone-policing objection inverted — and Jaggar would say it proves her point. The demand that oppressed people manage their emotional expression for the comfort of potential allies is itself a form of epistemic domination. It places the burden of palatability on those who have the least power. Strategic questions about communication are real, but they are separate from the epistemic question of whether the anger accurately tracks a moral reality.' }
+        ]
+      },
+      emotion: {
+        strengths: 'Jaggar\'s argument is strongest here. Outlaw emotions — those that deviate from what dominant social norms expect — are often the first indicators that something is morally wrong. The anger of enslaved people at their condition, the grief of queer communities over AIDS deaths ignored by government, the fury of workers over unsafe conditions — these emotions tracked moral realities that the dominant rational consensus refused to recognize. The social position of marginalized groups gives them what standpoint epistemologists call epistemic advantage: they experience the underside of social arrangements that others benefit from without noticing.',
+        pushback: 'Kant\'s worry is not that anger is never reliable — it is that anger alone cannot tell us what to do about injustice. Anger can reveal that something is wrong; it cannot by itself identify the right remedy. History also shows that oppressed groups\' anger can be redirected toward scapegoats rather than actual causes of injustice — and distinguishing genuine from misdirected outlaw emotions requires reasoning beyond the emotional response itself. Jaggar herself acknowledges this: not all outlaw emotions are epistemically valuable, only those that survive critical reflection.',
+        question: 'Jaggar says outlaw emotions must be "reflectively endorsed" to have epistemic value — the person must be able, on reflection, to see what the emotion is tracking. Does this requirement bring reason back in through the back door? Is a "reflectively endorsed emotion" really emotion at all, or is it emotion plus reason under a different label?',
+        counters: [
+          { q: 'What about the anger of groups whose cause we think is wrong — does their anger also count as epistemically reliable?', a: 'This is a pointed challenge. Jaggar\'s answer relies on the specific social positioning of genuinely marginalized groups — not just any group that feels aggrieved. But critics note this can become circular: we identify genuine outlaw emotions by their connection to real injustice, and we identify real injustice partly through the outlaw emotions that track it. The account needs a way out of this circle that does not simply reinstate the dominant group\'s epistemic authority.' }
+        ]
+      },
+      both: {
+        strengths: 'Nussbaum\'s account of emotions as "intelligent responses to value" captures what is right about both sides. Anger at injustice is not mere heat — it embodies a cognitive appraisal: this situation is wrong, someone is responsible, something should change. That appraisal can be accurate or inaccurate, well-founded or distorted. The practical wisdom view asks us to take the emotion seriously as evidence while subjecting its implicit claims to rational scrutiny — not to dismiss it, not to follow it blindly, but to engage with what it is tracking and why.',
+        pushback: 'The integration view sounds right in theory, but who does the integrating? If the dominant epistemic community gets to decide which outlaw emotions are rationally defensible, then the integration framework reproduces the original problem: marginalized voices are admitted to the table only when they can speak the dominant language. Jaggar\'s point is more radical — sometimes the outlaw emotion itself is the evidence, prior to and independent of rational justification. Integration that requires prior rational endorsement may not be genuine integration at all.',
+        question: 'Nussbaum says we need "narrative imagination" — the ability to feel with people in different circumstances — to integrate emotion and reason in justice. But narrative imagination is itself something that can be cultivated or stunted by social position. Is the integrated perspective available equally to everyone, or is it also shaped by privilege and experience?',
+        counters: [
+          { q: 'Doesn\'t "both reason and emotion" always favor whoever already controls the terms of rational debate?', a: 'This is one of the sharpest critiques of liberalism from critical theory — that appeals to reason are never neutral but always embed particular standpoints as the default. The integrated view needs to take this seriously. Aristotle\'s phronimos was an Athenian male property-owner. Any contemporary account of integrated practical wisdom must grapple with whose practical wisdom counts as the model and why.' }
+        ]
+      }
+    }
   }
+};
 
-  function copyText(btn) {
-    const ta = btn.previousElementSibling;
-    ta.select();
-    document.execCommand('copy');
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy', 2000);
-  }
+let currentScenario = null;
+
+function loadScenario(key, btn) {
+  currentScenario = key;
+  document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('scen-text').textContent = scenarios[key].text;
+  document.getElementById('scen-display').classList.add('visible');
+  ['reason','emotion','both'].forEach(p => {
+    document.getElementById('btn-' + p).className = 'pos-btn';
+  });
+  document.getElementById('feedback-panel').classList.remove('show');
+}
+
+function selectPos(pos) {
+  if (!currentScenario) return;
+  ['reason','emotion','both'].forEach(p => {
+    document.getElementById('btn-' + p).className = 'pos-btn';
+  });
+  document.getElementById('btn-' + pos).classList.add('sel-' + pos);
+  renderFeedback(currentScenario, pos);
+}
+
+function renderFeedback(scenKey, pos) {
+  const data = scenarios[scenKey].positions[pos];
+  document.getElementById('fb-strengths').textContent = data.strengths;
+  document.getElementById('fb-pushback').textContent = data.pushback;
+  document.getElementById('fb-question').textContent = data.question;
+
+  const forMap = { reason: ['Kant','Descartes'], emotion: ['Hume','Jaggar'], both: ['Aristotle','Nussbaum'] };
+  const againstMap = { reason: ['Hume','Jaggar'], emotion: ['Kant','Descartes'], both: ['Kant','Williams'] };
+  const pillClass = { reason: 'pill-reason', emotion: 'pill-emotion', both: 'pill-both' };
+  const oppClass = { reason: 'pill-emotion', emotion: 'pill-reason', both: 'pill-reason' };
+
+  document.getElementById('fb-pills-for').innerHTML =
+    forMap[pos].map(t => `<span class="thinker-pill ${pillClass[pos]}">${t}</span>`).join('');
+  document.getElementById('fb-pills-against').innerHTML =
+    againstMap[pos].map(t => `<span class="thinker-pill ${oppClass[pos]}">${t}</span>`).join('');
+
+  const explore = document.getElementById('explore-more');
+  explore.innerHTML = '<h4>Dig deeper — common objections to consider</h4>';
+  (data.counters || []).forEach((c, i) => {
+    const uid = `ca-${scenKey}-${pos}-${i}`;
+    explore.innerHTML += `
+      <button class="counter-btn" onclick="toggleCounter(this,'${uid}')">"${c.q}"</button>
+      <div class="counter-answer" id="${uid}">${c.a}</div>`;
+  });
+
+  document.getElementById('feedback-panel').classList.add('show');
+  document.getElementById('feedback-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function toggleCounter(btn, id) {
+  const ans = document.getElementById(id);
+  const showing = ans.classList.toggle('show');
+  btn.classList.toggle('open', showing);
+}
+
+function copyText(btn) {
+  const ta = btn.previousElementSibling;
+  ta.select();
+  document.execCommand('copy');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 2000);
+}
 </script>
 </body>
 </html>
