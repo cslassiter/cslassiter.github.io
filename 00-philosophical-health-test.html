@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Philosophical Health Test — Phil 201</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0e0c08;
+    --paper: #f7f3ec;
+    --warm: #ede5d4;
+    --rule: #c8b89a;
+    --accent: #8b2e12;
+    --gold: #b8860b;
+    --sage: #3d5a3e;
+    --blue: #1a3a5c;
+    --muted: #7a6a58;
+    --shadow: rgba(14,12,8,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8b89a' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ── INTRO SCREEN ── */
+  #intro-screen {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .masthead {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .course-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .intro-subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  .intro-body {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 4px 4px 0 var(--warm);
+  }
+
+  .intro-body p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: #3a2e20;
+    margin-bottom: 1rem;
+  }
+
+  .intro-body p:last-child { margin-bottom: 0; }
+
+  .intro-body strong { color: var(--ink); font-weight: 600; }
+
+  .modules-covered {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 1.25rem 0;
+  }
+
+  .module-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    padding: 0.35rem 0;
+  }
+
+  .module-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  .start-btn:hover { background: var(--accent); }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen { display: none; }
+
+  .quiz-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .quiz-header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .progress-text {
+    font-size: 0.78rem;
+    color: #a0906e;
+    font-weight: 500;
+  }
+
+  .progress-bar {
+    width: 120px;
+    height: 4px;
+    background: #2a2218;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .quiz-body {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .statement-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 3px 3px 0 var(--warm);
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .statement-card.active { display: block; }
+
+  .statement-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+
+  .statement-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+
+  .answer-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .answer-btn {
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--rule);
+    border-radius: 3px;
+    background: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+
+  .answer-btn:hover { border-color: var(--ink); background: var(--warm); }
+
+  .answer-btn.agree-btn:hover,
+  .answer-btn.agree-btn.selected { border-color: var(--sage); background: #edf3ee; color: var(--sage); }
+
+  .answer-btn.disagree-btn:hover,
+  .answer-btn.disagree-btn.selected { border-color: var(--accent); background: #fdf0ed; color: var(--accent); }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .prev-btn {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--muted);
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .prev-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  .next-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 3px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.06em;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .next-btn.ready { opacity: 1; pointer-events: all; }
+  .next-btn.ready:hover { background: var(--accent); }
+
+  .submit-btn {
+    display: none;
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2rem;
+  }
+
+  .submit-btn:hover { background: #6a1f0a; }
+
+  /* ── RESULTS SCREEN ── */
+  #results-screen { display: none; }
+
+  .results-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .results-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+
+  .tq-display {
+    margin: 2rem auto;
+    max-width: 240px;
+    position: relative;
+  }
+
+  .tq-ring {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .tq-ring svg { transform: rotate(-90deg); }
+
+  .tq-ring-bg { fill: none; stroke: #2a2218; stroke-width: 10; }
+  .tq-ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
+
+  .tq-number {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .tq-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a0906e;
+    text-align: center;
+    margin-top: 0.75rem;
+  }
+
+  .tq-verdict {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #c0a878;
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .results-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .results-intro {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: 3px 3px 0 var(--warm);
+  }
+
+  .results-intro p {
+    font-size: 0.97rem;
+    line-height: 1.75;
+    color: #3a2e20;
+    margin-bottom: 0.75rem;
+  }
+
+  .results-intro p:last-child { margin-bottom: 0; }
+
+  .tensions-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .no-tensions {
+    background: #edf3ee;
+    border: 1px solid #a0c0a0;
+    border-radius: 4px;
+    padding: 1.5rem;
+    font-size: 0.97rem;
+    line-height: 1.7;
+    color: var(--sage);
+  }
+
+  .tension-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 3px 3px 0 var(--warm);
+  }
+
+  .tension-pair-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .tension-statements {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .tension-stmt {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .tension-stmt-num {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold);
+    width: 28px;
+    flex-shrink: 0;
+    padding-top: 2px;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .tension-stmt-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .tension-stmt-answer {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    margin-left: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .ans-agree { background: #edf3ee; color: var(--sage); }
+  .ans-disagree { background: #fdf0ed; color: var(--accent); }
+
+  .tension-explanation {
+    font-size: 0.93rem;
+    line-height: 1.7;
+    color: #3a2e20;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--warm);
+  }
+
+  .tension-module-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.18rem 0.55rem;
+    border-radius: 2px;
+    background: var(--warm);
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .reconcile-hint {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #fef9ee;
+    border-left: 3px solid var(--gold);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #5a4020;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .reconcile-hint strong { font-weight: 600; color: var(--gold); }
+
+  .overall-chart {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 3px 3px 0 var(--warm);
+  }
+
+  .overall-chart h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  .module-tension-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .module-tension-label { color: var(--muted); width: 140px; flex-shrink: 0; }
+
+  .module-tension-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--warm);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .module-tension-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+
+  .module-tension-count {
+    font-size: 0.78rem;
+    color: var(--muted);
+    width: 16px;
+    text-align: right;
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 0.65rem 1.4rem;
+    border-radius: 3px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+
+  .action-btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+  }
+  .action-btn-primary:hover { background: var(--accent); }
+
+  .action-btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+  }
+  .action-btn-secondary:hover { border-color: var(--ink); background: var(--warm); }
+
+  .journal-section {
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .journal-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--gold);
+  }
+
+  .journal-section p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.75rem 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.92rem;
+    min-height: 100px;
+    resize: vertical;
+    color: var(--ink);
+    background: white;
+    line-height: 1.6;
+  }
+
+  textarea:focus { outline: 2px solid var(--gold); border-color: transparent; }
+
+  .copy-btn {
+    margin-top: 0.5rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: 3px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+  }
+
+  .copy-btn:hover { background: var(--gold); color: var(--ink); }
+
+  @media (max-width: 500px) {
+    .answer-btns { grid-template-columns: 1fr; }
+    .modules-covered { grid-template-columns: 1fr; }
+    .quiz-header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     INTRO SCREEN
+════════════════════════════════ -->
+<div id="intro-screen">
+  <div class="masthead">
+    <div class="course-label">Phil 201 · Philosophy of Human Nature</div>
+    <h1>Philosophical<br><em>Health Test</em></h1>
+    <p class="intro-subtitle">A consistency check for the beliefs you hold about mind, self, freedom, and society</p>
+  </div>
+
+  <div class="intro-body">
+    <p>This test presents you with <strong>30 statements</strong> drawn from the six modules of this course. For each one, simply indicate whether you <strong>agree</strong> or <strong>disagree</strong>. If you are unsure, choose whichever response is closest to your view.</p>
+
+    <p>The test does not judge whether your responses are right or wrong. What it does is check for <strong>tensions</strong> — pairs of beliefs that are logically inconsistent, or that require significant philosophical work to hold together simultaneously.</p>
+
+    <p>At the end, you will receive a <strong>Tension Quotient</strong> score and a detailed analysis of any tensions in your beliefs, with explanations drawn from the course readings.</p>
+
+    <p><strong>Topics covered:</strong></p>
+    <div class="modules-covered">
+      <div class="module-chip"><div class="dot"></div>Personal Identity &amp; the Self</div>
+      <div class="module-chip"><div class="dot"></div>The Cartesian Picture of Mind</div>
+      <div class="module-chip"><div class="dot"></div>Free Will &amp; Moral Responsibility</div>
+      <div class="module-chip"><div class="dot"></div>Social Existence &amp; Identity</div>
+      <div class="module-chip"><div class="dot"></div>Emotion, Reason &amp; Knowledge</div>
+      <div class="module-chip"><div class="dot"></div>Extended &amp; Embodied Mind</div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startQuiz()">Begin the Test →</button>
+</div>
+
+<!-- ════════════════════════════════
+     QUIZ SCREEN
+════════════════════════════════ -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <div class="quiz-header-title">Philosophical Health Test</div>
+    <div class="progress-wrap">
+      <span class="progress-text" id="progress-text">1 of 30</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="quiz-body" id="quiz-body">
+    <!-- Statement cards injected by JS -->
+    <div class="nav-row" id="nav-row" style="display:none;">
+      <button class="prev-btn" onclick="prevQ()">← Back</button>
+      <button class="next-btn" id="next-btn" onclick="nextQ()">Next →</button>
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">See My Results</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     RESULTS SCREEN
+════════════════════════════════ -->
+<div id="results-screen">
+  <div class="results-header">
+    <h2>Your Philosophical Health Report</h2>
+    <div class="tq-display">
+      <div class="tq-ring">
+        <svg viewBox="0 0 100 100" width="180" height="180">
+          <circle class="tq-ring-bg" cx="50" cy="50" r="40"/>
+          <circle class="tq-ring-fill" id="tq-ring-fill" cx="50" cy="50" r="40"
+            stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+        </svg>
+        <div class="tq-number" id="tq-number">0%</div>
+      </div>
+      <div class="tq-label">Tension Quotient</div>
+      <div class="tq-verdict" id="tq-verdict"></div>
+    </div>
+  </div>
+
+  <div class="results-body">
+    <div class="results-intro">
+      <p>The <strong>Tension Quotient</strong> measures the percentage of possible tensions actually present in your beliefs (lower is better). A score of 0% means no detectable tensions — your stated beliefs are fully consistent. A higher score means more philosophical work is needed to reconcile what you believe.</p>
+      <p>Remember: tensions are not moral failures. They are invitations to think more carefully. As the course asks you to practice <em>reflective equilibrium</em> — the process of revising beliefs until they cohere — the tensions identified here are precisely the places to start.</p>
+    </div>
+
+    <div class="overall-chart" id="overall-chart"></div>
+
+    <div class="tensions-heading" id="tensions-heading"></div>
+    <div id="tensions-container"></div>
+
+    <div class="journal-section">
+      <h3>✍ Reflect for Canvas</h3>
+      <p>Pick the tension that surprised you most. In 2–3 sentences: which belief would you give up, and why? Or, describe the philosophical move you would make to reconcile them. This can seed your discussion post for Module 1's sharing assignment.</p>
+      <textarea placeholder="Your reflection here…"></textarea>
+      <button class="copy-btn" onclick="copyText(this)">Copy</button>
+    </div>
+
+    <div class="actions-row">
+      <button class="action-btn action-btn-primary" onclick="retake()">Retake the Test</button>
+      <button class="action-btn action-btn-secondary" onclick="window.print()">Print Report</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// STATEMENTS
+// ═══════════════════════════════════════════════════════
+const statements = [
+  // Module 1 — Identity
+  { id: 1,  text: "What makes me the same person I was ten years ago is an unbroken chain of memories linking my past and present selves." },
+  { id: 2,  text: "Personal identity is a social and narrative construction — there is no deeper fact about who I really am beyond the stories I and others tell about me." },
+  { id: 3,  text: "If every cell in my body were gradually replaced, I would still be the same person." },
+  { id: 4,  text: "There is a 'true self' that exists independently of how others perceive me or the roles I play in society." },
+  { id: 5,  text: "It is possible for a person to survive the complete destruction of their physical body." },
+
+  // Module 2 — Cartesian Package
+  { id: 6,  text: "The mind and the body are fundamentally different kinds of things — one is physical, the other is not." },
+  { id: 7,  text: "A person's character and who they are can be fully understood without reference to their cultural background or social environment." },
+  { id: 8,  text: "Emotions are generally obstacles to clear thinking rather than aids to it." },
+  { id: 9,  text: "Human beings have free will in an absolute sense — our choices are not ultimately determined by prior causes." },
+  { id: 10, text: "The essential 'me' would remain unchanged even if I had been born into a completely different culture." },
+
+  // Module 3 — Free Will
+  { id: 11, text: "People deserve praise or blame for their actions only if they could have done otherwise." },
+  { id: 12, text: "Even if all human behavior is ultimately caused by prior events (genes, upbringing, brain chemistry), people can still be meaningfully held responsible for their actions." },
+  { id: 13, text: "When I feel resentment toward someone who has wronged me, that feeling is a morally appropriate response, not merely a product of my biochemistry." },
+  { id: 14, text: "A person raised in an abusive environment and conditioned to commit crimes deserves punishment just as much as anyone else." },
+  { id: 15, text: "If neuroscience conclusively showed that every decision is determined by brain activity before we are conscious of it, I would conclude that free will does not exist." },
+
+  // Module 4 — Social Existence
+  { id: 16, text: "Being embedded in a community, culture, and set of relationships is essential to being a person, not merely incidental to it." },
+  { id: 17, text: "A person could, in principle, exist as a fully formed human being entirely outside of any social group." },
+  { id: 18, text: "The various social roles and 'masks' I wear in different contexts (with family, at work, with friends) are all equally authentic expressions of who I am." },
+  { id: 19, text: "Social invisibility — being unseen or unrecognized by one's community — is a genuine harm to a person's existence, not merely a psychological inconvenience." },
+  { id: 20, text: "My cultural background has shaped my beliefs and values so deeply that I cannot fully step outside it to evaluate them impartially." },
+
+  // Module 5 — Emotion & Reason
+  { id: 21, text: "Strong emotions like anger or grief can sometimes give us genuine moral knowledge that purely rational analysis would miss." },
+  { id: 22, text: "When making important moral decisions, one should set aside one's emotional reactions and rely on reason alone." },
+  { id: 23, text: "The emotional responses of people who are directly affected by an injustice are more reliable guides to its wrongness than the detached analysis of uninvolved observers." },
+  { id: 24, text: "Moral judgments based primarily on emotional intuitions are less trustworthy than those derived from rational principles." },
+  { id: 25, text: "It is possible to be simultaneously rational and deeply emotionally engaged — emotion and reason are not opposites." },
+
+  // Module 6 — Extended / Embodied Mind
+  { id: 26, text: "My smartphone functions as a genuine extension of my memory and reasoning, not merely as a tool I use." },
+  { id: 27, text: "The mind is essentially private and inner — it is located within the skull and cannot literally extend into the external world." },
+  { id: 28, text: "Who I am as a thinking, feeling being is partly constituted by my body and its sensorimotor engagement with the world, not just by my inner mental states." },
+  { id: 29, text: "A person who loses access to their digital devices (phone, laptop, notes) has not lost any part of their mind — only a set of useful tools." },
+  { id: 30, text: "Two people with identical inner mental states but different physical bodies would not necessarily have identical experiences of the world." },
+];
+
+// ═══════════════════════════════════════════════════════
+// TENSION PAIRS
+// agree_A + agree_B = tension, unless noted as "disagree" 
+// type: 'AA' = tension when both agreed
+//       'DD' = tension when both disagreed
+//       'AD' = tension when A agreed and B disagreed
+//       'DA' = tension when A disagreed and B agreed
+// ═══════════════════════════════════════════════════════
+const tensionPairs = [
+  {
+    a: 1, b: 2, type: 'AA',
+    module: 'Module 1 — Personal Identity',
+    label: 'Memory vs. Narrative Identity',
+    explanation: 'Statement 1 endorses Locke\'s psychological continuity view: what makes you the same person over time is a chain of memories. Statement 2 endorses the narrative identity view (Ricoeur, Bruner): the self is a social and narrative construction, with no deeper fact beneath it. These are in tension because Locke\'s view implies there is a determinate psychological fact about identity (the memory chain), while the narrative view implies there is no such underlying fact — only the stories we construct. You cannot hold that personal identity is fixed by memory-chains while also holding that personal identity is merely a narrative construction with no deeper truth.',
+    reconcile: 'One path: argue that the "memory chain" just is a narrative — that biological memory and story-telling memory are continuous, not competing. This is roughly Paul Ricoeur\'s own position in Oneself as Another (1992), where he distinguishes idem-identity (sameness over time) from ipse-identity (narrative selfhood).'
+  },
+  {
+    a: 4, b: 16, type: 'AA',
+    module: 'Modules 1 & 4 — Self and Society',
+    label: 'True Self vs. Constitutive Sociality',
+    explanation: 'Statement 4 asserts a context-independent "true self" — something you are beneath or behind your social roles. Statement 16 asserts that social embeddedness is essential to personhood, not incidental. These pull in opposite directions. If being embedded in community, culture, and relationship is essential to being a person at all, then there is no "true self" that exists independently of these conditions — the self is constituted through them. This is precisely the tension between the Cartesian Package (Module 2) and the social existence view (Module 4).',
+    reconcile: 'Goffman himself allows for a self "behind the masks" — but it is thin and undefined without performance. Bruner\'s narrative view gives you a substantive self that is genuinely yours while being socially constituted. The reconciliation requires showing how something can be authentically yours without being independent of the social conditions that made it possible.'
+  },
+  {
+    a: 5, b: 28, type: 'AA',
+    module: 'Modules 1 & 6 — Identity and Embodiment',
+    label: 'Surviving Without a Body vs. Constitutive Embodiment',
+    explanation: 'Statement 5 says a person can survive the complete destruction of their physical body — implying the person is essentially non-physical. Statement 28 says who you are as a thinking, feeling being is partly constituted by your body and its sensorimotor engagement with the world. If embodiment is constitutive of your thinking and feeling self, then destroying your body does not merely remove a vessel — it partially destroys the very subject of your experience. You cannot coherently hold both that the body is constitutive of your experiential self and that you could survive without it.',
+    reconcile: 'One option: accept a weaker version of embodiment — the body shapes and influences (rather than constitutes) experience. Or accept that "survival" means something different: not the survival of the same experiential self, but the survival of some psychological core that could in principle be re-embodied differently.'
+  },
+  {
+    a: 6, b: 26, type: 'AA',
+    module: 'Modules 2 & 6 — Mind and Extension',
+    label: 'Mind-Body Dualism vs. Extended Mind',
+    explanation: 'Statement 6 endorses mind-body dualism: mind and body are fundamentally different kinds of things. Statement 26 endorses the extended mind thesis: your smartphone is a genuine extension of your memory and reasoning. But if the mind is non-physical and essentially inner (dualism), how could it literally extend into a physical smartphone? Clark and Chalmers\'s extended mind thesis presupposes a functionalist or physicalist view of mind — that what makes something mental is the functional role it plays, not what it is made of. Dualism and the extended mind thesis are difficult to hold simultaneously.',
+    reconcile: 'One option: treat "extension" metaphorically — the phone is part of your cognitive system in a loose sense, but not literally part of the non-physical mind. This saves dualism but weakens the extended mind claim considerably.'
+  },
+  {
+    a: 7, b: 20, type: 'AA',
+    module: 'Modules 2 & 4 — Asocial Self vs. Cultural Embeddedness',
+    label: 'Culture-Independent Self vs. Deep Cultural Shaping',
+    explanation: 'Statement 7 says a person\'s character can be understood without reference to cultural background — implying that culture is superficial to who you are. Statement 20 says your cultural background has shaped your beliefs and values so deeply that you cannot step fully outside it to evaluate them impartially. These are in direct tension: if you cannot step outside your culture even in imagination, then understanding anyone fully without reference to their culture is impossible. Descartes assumed the rational "I" that could strip away all particularity; contemporary philosophy of mind and social theory (Bruner, Goffman, Arola) have broadly rejected this assumption.',
+    reconcile: 'The standard move is to distinguish levels of cultural influence: your deep cognitive structures (what counts as evidence, what emotional responses feel natural) may be culturally shaped and inescapable, while your explicit beliefs and surface-level values may be more revisable. But this requires giving up the strong version of Statement 7.'
+  },
+  {
+    a: 8, b: 21, type: 'AA',
+    module: 'Modules 2 & 5 — Emotion as Obstacle vs. Epistemic Resource',
+    label: 'Emotions as Obstacles vs. Emotions as Knowledge',
+    explanation: 'Statement 8 endorses the Cartesian view: emotions are generally obstacles to clear thinking. Statement 21 endorses Jaggar\'s view: emotions can give us genuine moral knowledge that pure rational analysis would miss. These are incompatible as stated. If emotions are generally obstacles to clear thinking, they cannot simultaneously be reliable sources of moral knowledge. Jaggar\'s entire argument in "Love and Knowledge" (1989) is a direct challenge to the Cartesian assumption encoded in Statement 8.',
+    reconcile: 'Aristotle offers the classic reconciliation: emotions are not inherently obstacles or inherently reliable — it depends on whether they are well-educated. The virtuous person\'s emotions track what matters morally; the vicious or undeveloped person\'s do not. This requires giving up "generally" in Statement 8 and "sometimes" in Statement 21 in favor of a more nuanced conditional claim.'
+  },
+  {
+    a: 9, b: 12, type: 'AA',
+    module: 'Module 3 — Free Will and Responsibility',
+    label: 'Absolute Free Will vs. Compatibilist Responsibility',
+    explanation: 'Statement 9 asserts that choices are not ultimately determined by prior causes — the libertarian free will position. Statement 12 asserts that even if behavior is caused by prior events, people can still be meaningfully held responsible — the compatibilist position. Compatibilism is specifically the view that determinism does not threaten responsibility; it is a response to the concern that free will requires indeterminism. Agreeing with both statements blurs a crucial philosophical distinction: if you already think choices are undetermined (Statement 9), you do not need the compatibilist argument (Statement 12). And accepting the compatibilist argument weakens the motivation for Statement 9.',
+    reconcile: 'The cleanest resolution is to pick a lane: either endorse libertarian free will (undetermined choices ground responsibility) or endorse compatibilism (determined choices can still ground responsibility in the relevant sense). P.F. Strawson\'s "Freedom and Resentment" (1962) offers the most influential compatibilist case.'
+  },
+  {
+    a: 11, b: 13, type: 'AA',
+    module: 'Module 3 — Responsibility and Reactive Attitudes',
+    label: '"Could Have Done Otherwise" vs. Reactive Attitudes',
+    explanation: 'Statement 11 says praise and blame are only appropriate if the person could have done otherwise — a classic condition for moral responsibility that seems to require the falsity of determinism. Statement 13 says resentment toward someone who wrongs you is a morally appropriate response, not merely a product of biochemistry. Strawson\'s argument in "Freedom and Resentment" is that reactive attitudes like resentment do not depend on the metaphysical question of whether the agent could have done otherwise — they are part of the human form of life. If you agree with Statement 13 (resentment is appropriate regardless of metaphysics), you are implicitly endorsing a position that does not require the "could have done otherwise" condition in Statement 11.',
+    reconcile: 'Strawson\'s own resolution: the "participant stance" — the stance of engaging with others as moral agents, including feeling resentment — does not require resolving the metaphysical free will debate. Resentment is appropriate because of the quality of will the agent expressed, not because of whether they could have done otherwise.'
+  },
+  {
+    a: 14, b: 20, type: 'AA',
+    module: 'Modules 3 & 4 — Responsibility and Cultural Shaping',
+    label: 'Uniform Desert vs. Deep Cultural Determination',
+    explanation: 'Statement 14 says a person raised in an abusive environment and conditioned to commit crimes deserves punishment as much as anyone else. Statement 20 says your cultural background has shaped you so deeply that you cannot step fully outside it to evaluate your own beliefs and values impartially. If deep cultural and environmental shaping is real enough that even you cannot escape it to evaluate your own values (Statement 20), then it seems arbitrary to hold someone raised in a severely damaging environment fully responsible for the character that environment produced (Statement 14). These two beliefs are in considerable tension.',
+    reconcile: 'One option: accept that desert-based punishment should be modulated by the conditions of upbringing — as many criminal justice reformers argue — while retaining some notion of responsibility for forward-looking reasons (deterrence, incapacitation). This softens Statement 14 rather than abandoning responsibility entirely.'
+  },
+  {
+    a: 15, b: 13, type: 'AA',
+    module: 'Module 3 — Neuroscience and Reactive Attitudes',
+    label: 'Neuroscientific Determinism vs. Resentment as Appropriate',
+    explanation: 'Statement 15 says that if neuroscience showed decisions are determined before consciousness, you would conclude free will does not exist. Statement 13 says resentment toward someone who wrongs you is a morally appropriate response, not merely a product of biochemistry. If free will does not exist (Statement 15\'s conclusion), it becomes difficult to maintain that resentment is morally appropriate (Statement 13) rather than merely a natural but ultimately unwarranted emotional response. This is precisely the hard incompatibilist\'s challenge: if we follow the neuroscience to its conclusion, our reactive attitudes are themselves just products of prior causes — "merely biochemistry" in exactly the sense Statement 13 rejects.',
+    reconcile: 'Strawson\'s reply: the reactive attitudes do not depend on a metaphysical verdict about free will — they are constitutive of what it means to inhabit the human form of life. Even if neuroscience showed full determinism, we could not — and should not try to — abandon the participant stance entirely. This requires rejecting the conditional in Statement 15.'
+  },
+  {
+    a: 16, b: 17, type: 'AA',
+    module: 'Module 4 — Social Existence',
+    label: 'Essential Sociality vs. Pre-Social Self',
+    explanation: 'Statement 16 says social embeddedness is essential to being a person. Statement 17 says a person could in principle exist as a fully formed human being entirely outside any social group. These are direct contradictions. If sociality is essential — not merely helpful, not merely incidental, but constitutive — then a human being entirely outside social life is not a fully formed person by definition. This is Aristotle\'s famous claim: the human being is a naturally political animal, and anyone who could live outside the polis is either a beast or a god. Statement 17 asserts the possibility Aristotle denies.',
+    reconcile: 'The most common move is to distinguish biological humanity from personhood: a biologically human organism could perhaps survive outside social groups (feral children are sometimes cited), but it would not develop the cognitive, linguistic, and emotional capacities that constitute full personhood. This softens Statement 17 considerably.'
+  },
+  {
+    a: 18, b: 4, type: 'AA',
+    module: 'Modules 1 & 4 — Authentic Self and Social Masks',
+    label: 'All Masks Are Authentic vs. True Self Exists',
+    explanation: 'Statement 18 says all social masks are equally authentic — implying there is no privileged "real" self behind them. Statement 4 says there is a true self that exists independently of how others perceive you. These are in tension. If all masks are equally authentic, what is the "true self" in Statement 4 pointing to? If there is a true self independent of social perception, it would seem to have priority over the various masks — making some performances more authentic than others. Goffman\'s own view is closer to Statement 18: the "real" self is thin or empty, defined by its performances. Statement 4 sounds more Cartesian.',
+    reconcile: 'Narrative identity theory offers a middle path: there is a real self, but it is constituted by the narrative coherence of one\'s performances over time — not prior to or independent of them. The "true self" is not behind the masks but is the ongoing story that links them.'
+  },
+  {
+    a: 22, b: 25, type: 'AA',
+    module: 'Module 5 — Emotion and Reason',
+    label: 'Set Aside Emotion vs. Emotion and Reason Are Compatible',
+    explanation: 'Statement 22 says one should set aside emotional reactions and rely on reason alone for important moral decisions. Statement 25 says it is possible to be simultaneously rational and deeply emotionally engaged — emotion and reason are not opposites. These are in tension. If emotion and reason are genuinely compatible and can work together, then setting emotion aside is not a requirement for sound moral reasoning — it may even impoverish it. Statement 22 presupposes the Cartesian picture of emotion as an obstacle; Statement 25 challenges that picture. You cannot simultaneously hold that you should remove emotion for clear thinking and that emotional engagement is compatible with — even enhancing of — rational clarity.',
+    reconcile: 'Aristotle\'s account of practical wisdom (phronesis) is the classical reconciliation: the emotionally educated person\'s feelings track what is morally salient and are indispensable guides to perception, motivation, and action. The practically wise person does not set emotion aside; they feel the right things in the right contexts.'
+  },
+  {
+    a: 26, b: 27, type: 'AA',
+    module: 'Module 6 — Extended Mind',
+    label: 'Smartphone as Cognitive Extension vs. Mind as Inner',
+    explanation: 'Statement 26 endorses Clark and Chalmers\'s Extended Mind Thesis: the smartphone is a genuine part of your memory and reasoning. Statement 27 says the mind is essentially private and inner, located within the skull. These are direct contradictions. The Extended Mind Thesis (1998) is specifically a challenge to the assumption in Statement 27 — the thesis that the skull is the relevant boundary for cognition. You cannot coherently hold that the mind cannot extend beyond the skull (Statement 27) and simultaneously that your smartphone is literally part of that mind (Statement 26).',
+    reconcile: 'The most common resolution is to accept a weaker claim: the phone is part of your extended cognitive system in a functional sense, without being literally part of your mind. This preserves the intuition in Statement 27 while acknowledging the functional reality of digital scaffolding. Clark and Chalmers would say this distinction — between cognitive system and mind — is arbitrary.'
+  },
+  {
+    a: 29, b: 28, type: 'AA',
+    module: 'Module 6 — Embodied and Extended Mind',
+    label: 'Devices Are Mere Tools vs. Self Is Bodily-Extended',
+    explanation: 'Statement 29 says losing your devices is losing only tools, not any part of your mind. Statement 28 says who you are as a thinking, feeling being is partly constituted by your body and its sensorimotor engagement with the world. Statement 28 accepts a version of embodied cognition — the view that the body and its interactions with the world are constitutive of thought and experience. If you accept this embodied extension inward (your body constitutes your mind), the question arises: why does extension stop at the skin? Clark and Chalmers\'s parity principle applies: if the notebook or phone does the same job as biological memory, there is no principled reason to treat one as constitutive and the other as merely instrumental. Statement 29 draws a sharp line at the skin that Statement 28\'s logic does not obviously support.',
+    reconcile: 'One response: mark the constitutive/causal distinction more carefully. The body is constitutive of experience in a way that external devices are not — because embodiment involves phenomenal consciousness in a way that device-use does not. Whether this line can be held consistently is one of the deepest open questions in philosophy of mind.'
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// QUIZ STATE
+// ═══════════════════════════════════════════════════════
+let answers = {}; // { statementId: 'agree' | 'disagree' }
+let currentQ = 0;
+
+function startQuiz() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  buildQuiz();
+  showQ(0);
+}
+
+function buildQuiz() {
+  const body = document.getElementById('quiz-body');
+  // Remove old cards if any
+  body.querySelectorAll('.statement-card').forEach(c => c.remove());
+
+  statements.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = 'statement-card';
+    card.id = `card-${idx}`;
+    card.innerHTML = `
+      <div class="statement-number">Statement ${s.id} of 30</div>
+      <div class="statement-text">${s.text}</div>
+      <div class="answer-btns">
+        <button class="answer-btn agree-btn" onclick="selectAnswer(${idx}, 'agree')">Agree</button>
+        <button class="answer-btn disagree-btn" onclick="selectAnswer(${idx}, 'disagree')">Disagree</button>
+      </div>
+    `;
+    body.insertBefore(card, document.getElementById('nav-row'));
+  });
+
+  document.getElementById('nav-row').style.display = 'flex';
+}
+
+function showQ(idx) {
+  currentQ = idx;
+  document.querySelectorAll('.statement-card').forEach(c => c.classList.remove('active'));
+  document.getElementById(`card-${idx}`).classList.add('active');
+
+  // Restore selected state
+  const s = statements[idx];
+  const card = document.getElementById(`card-${idx}`);
+  card.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+  if (answers[s.id]) {
+    const target = answers[s.id] === 'agree' ? card.querySelector('.agree-btn') : card.querySelector('.disagree-btn');
+    target.classList.add('selected');
+  }
+
+  // Progress
+  document.getElementById('progress-text').textContent = `${idx + 1} of 30`;
+  document.getElementById('progress-fill').style.width = `${((idx + 1) / 30) * 100}%`;
+
+  // Next / submit button
+  const nextBtn = document.getElementById('next-btn');
+  const submitBtn = document.getElementById('submit-btn');
+
+  if (idx === statements.length - 1) {
+    nextBtn.style.display = 'none';
+    submitBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'block';
+    submitBtn.style.display = 'none';
+  }
+
+  updateNextReady();
+}
+
+function updateNextReady() {
+  const s = statements[currentQ];
+  const ready = !!answers[s.id];
+  document.getElementById('next-btn').classList.toggle('ready', ready);
+  document.getElementById('submit-btn').style.opacity = ready ? '1' : '0.4';
+  document.getElementById('submit-btn').style.pointerEvents = ready ? 'all' : 'none';
+}
+
+function selectAnswer(idx, val) {
+  const s = statements[idx];
+  answers[s.id] = val;
+  const card = document.getElementById(`card-${idx}`);
+  card.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+  const target = val === 'agree' ? card.querySelector('.agree-btn') : card.querySelector('.disagree-btn');
+  target.classList.add('selected');
+  updateNextReady();
+
+  // Auto-advance after short delay
+  if (currentQ < statements.length - 1) {
+    setTimeout(() => nextQ(), 320);
+  }
+}
+
+function nextQ() {
+  if (currentQ < statements.length - 1) showQ(currentQ + 1);
+}
+
+function prevQ() {
+  if (currentQ > 0) showQ(currentQ - 1);
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════
+function submitQuiz() {
+  const unanswered = statements.filter(s => !answers[s.id]);
+  if (unanswered.length > 0) {
+    // Fill any unanswered with a neutral — show which ones
+    alert(`You have ${unanswered.length} unanswered statement(s). Please go back and answer all 30 for accurate results. Use the Back button to navigate.`);
+    showQ(statements.findIndex(s => !answers[s.id]));
+    return;
+  }
+
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  renderResults();
+  window.scrollTo(0, 0);
+}
+
+function renderResults() {
+  const foundTensions = [];
+
+  tensionPairs.forEach(pair => {
+    const ansA = answers[pair.a];
+    const ansB = answers[pair.b];
+    if (!ansA || !ansB) return;
+
+    let tension = false;
+    if (pair.type === 'AA' && ansA === 'agree' && ansB === 'agree') tension = true;
+    if (pair.type === 'DD' && ansA === 'disagree' && ansB === 'disagree') tension = true;
+    if (pair.type === 'AD' && ansA === 'agree' && ansB === 'disagree') tension = true;
+    if (pair.type === 'DA' && ansA === 'disagree' && ansB === 'agree') tension = true;
+
+    if (tension) foundTensions.push({ ...pair, ansA, ansB });
+  });
+
+  const tq = Math.round((foundTensions.length / tensionPairs.length) * 100);
+
+  // Ring animation
+  const ring = document.getElementById('tq-ring-fill');
+  const circumference = 251.2;
+  const fill = (tq / 100) * circumference;
+  const ringColor = tq === 0 ? '#3d5a3e' : tq < 34 ? '#b8860b' : tq < 67 ? '#c06020' : '#8b2e12';
+  ring.style.stroke = ringColor;
+  setTimeout(() => {
+    ring.style.strokeDashoffset = circumference - fill;
+  }, 100);
+
+  document.getElementById('tq-number').textContent = tq + '%';
+
+  const verdicts = [
+    [0, 0, 'Your beliefs show no detectable tensions. You are an admirably consistent thinker.'],
+    [1, 2, 'A small number of tensions detected — philosophical work worth doing, but your views are broadly coherent.'],
+    [3, 5, 'Several tensions in your beliefs. Each one is an invitation to think more carefully.'],
+    [6, 9, 'Significant tensions detected. You hold beliefs that pull against each other in important ways.'],
+    [10, 15, 'Your beliefs contain many tensions — a sign of intellectual complexity, and an excellent starting point for philosophical growth.'],
+  ];
+  const v = verdicts.find(([min, max]) => foundTensions.length >= min && foundTensions.length <= max);
+  document.getElementById('tq-verdict').textContent = v ? v[2] : '';
+
+  // Module tension chart
+  const moduleNames = ['Module 1 — Identity', 'Module 2 — Cartesian', 'Module 3 — Free Will', 'Module 4 — Social Existence', 'Module 5 — Emotion & Reason', 'Module 6 — Extended Mind'];
+  const moduleTensionCounts = {};
+  moduleNames.forEach(m => moduleTensionCounts[m] = 0);
+
+  foundTensions.forEach(t => {
+    const key = moduleNames.find(m => t.module.includes(m.split('—')[0].trim())) ||
+      moduleNames.find(m => t.module.startsWith(m.split(' ')[0])) ||
+      t.module;
+    // Count by first module mentioned
+    const match = moduleNames.find(m => t.module.includes(m.replace('Module ', 'Module ')));
+    if (match) moduleTensionCounts[match]++;
+    else {
+      // Try partial
+      const partial = moduleNames.find(m => t.module.includes(m.split('—')[0].trim()));
+      if (partial) moduleTensionCounts[partial]++;
+    }
+  });
+
+  const maxPossiblePerModule = [3, 3, 3, 3, 2, 3]; // approx pairs per module
+  const chartHtml = `
+    <h3>Tensions by topic area</h3>
+    ${moduleNames.map((m, i) => {
+      const count = foundTensions.filter(t => t.module.includes(m.split('—')[0].trim())).length;
+      const max = maxPossiblePerModule[i];
+      const pct = max > 0 ? (count / max) * 100 : 0;
+      return `
+        <div class="module-tension-row">
+          <div class="module-tension-label">${m}</div>
+          <div class="module-tension-bar-wrap">
+            <div class="module-tension-bar" style="width:${pct}%"></div>
+          </div>
+          <div class="module-tension-count">${count}</div>
+        </div>`;
+    }).join('')}
+  `;
+  document.getElementById('overall-chart').innerHTML = chartHtml;
+
+  // Tensions list
+  const heading = document.getElementById('tensions-heading');
+  const container = document.getElementById('tensions-container');
+
+  if (foundTensions.length === 0) {
+    heading.textContent = 'No tensions detected';
+    container.innerHTML = `
+      <div class="no-tensions">
+        The Philosophical Health Test has detected no tensions in your stated beliefs. Your responses are mutually consistent across all 15 pairs tested. This is a noteworthy result — it means you hold a coherent philosophical worldview, at least with respect to the pairs this test examines. Note that the test checks only pre-selected pairs; there may be additional tensions between beliefs not covered here.
+      </div>`;
+  } else {
+    heading.textContent = `${foundTensions.length} tension${foundTensions.length > 1 ? 's' : ''} detected`;
+    container.innerHTML = foundTensions.map((t, i) => {
+      const stmtA = statements.find(s => s.id === t.a);
+      const stmtB = statements.find(s => s.id === t.b);
+      return `
+        <div class="tension-card">
+          <div class="tension-pair-label">Tension ${i + 1} — Statements ${t.a} &amp; ${t.b}</div>
+          <div class="tension-module-tag">${t.module}</div>
+          <div class="tensions-statements" style="margin-bottom:0.75rem;">
+            <div class="tension-stmt">
+              <div class="tension-stmt-num">#${t.a}</div>
+              <div class="tension-stmt-text">${stmtA.text} <span class="tension-stmt-answer ${t.ansA === 'agree' ? 'ans-agree' : 'ans-disagree'}">${t.ansA.toUpperCase()}</span></div>
+            </div>
+            <div class="tension-stmt" style="margin-top:0.5rem;">
+              <div class="tension-stmt-num">#${t.b}</div>
+              <div class="tension-stmt-text">${stmtB.text} <span class="tension-stmt-answer ${t.ansB === 'agree' ? 'ans-agree' : 'ans-disagree'}">${t.ansB.toUpperCase()}</span></div>
+            </div>
+          </div>
+          <div class="tension-explanation">
+            <strong>${t.label}.</strong> ${t.explanation}
+            <div class="reconcile-hint"><strong>One way to reconcile:</strong> ${t.reconcile}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+}
+
+function retake() {
+  answers = {};
+  currentQ = 0;
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('intro-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function copyText(btn) {
+  const ta = btn.previousElementSibling;
+  ta.select();
+  document.execCommand('copy');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 2000);
+}
+</script>
+</body>
+</html>
