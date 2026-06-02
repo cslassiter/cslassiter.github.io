@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html$if(lang)$ lang="$lang$"$else$ lang="en"$endif$>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$if(title)$$title$ — $endif$Charles Lassiter</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    main { padding-top: 2.25rem; }
+    .post-body h1 {
+      font-family: "EB Garamond", Georgia, serif;
+      font-size: 1.45rem; font-weight: 400; color: #1a1a2e;
+      border-left: 3px solid #8B0000; padding-left: 0.65rem;
+      margin: 2.4rem 0 1.2rem;
+    }
+    .post-body h1:first-child { margin-top: 0; }
+    .post-body h3 { margin-top: 1.8rem; }
+    .post-body img { max-width: 100%; height: auto; display: block; margin: 1.75rem auto; }
+    .post-body p { margin-bottom: 1rem; }
+    .post-body ul, .post-body ol { margin: 1rem 0 1rem 1.5rem; }
+    /* Tables (kableExtra renders Bootstrap classes; theme is off, so style here) */
+    table { border-collapse: collapse; margin: 1.5rem 0; background: #fff;
+            font-family: "Inter", Arial, sans-serif; font-size: 0.82rem; line-height: 1.5; }
+    table caption { caption-side: top; text-align: left; font-style: italic;
+                    color: #555; font-size: 0.82rem; margin-bottom: 0.5rem; }
+    th, td { border: 1px solid #e0ddd8; padding: 0.35rem 0.65rem; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    thead th { background: #1a1a2e; color: #fff; font-weight: 500; }
+    tbody tr:nth-child(even) td { background: #f7f6f2; }
+    .footnote, .footnotes { font-size: 0.78rem; color: #555; }
+  </style>
+$for(css)$  <link rel="stylesheet" href="$css$" />
+$endfor$
+$for(header-includes)$  $header-includes$
+$endfor$
+</head>
+<body>
+  <div class="site-header">
+    <div class="container">
+      <h1>Charles Lassiter</h1>
+      <p class="tagline">Professor of Philosophy · Gonzaga University</p>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../research.html">Research</a>
+        <a href="../teaching.html">Teaching</a>
+        <a href="../cv.html">CV</a>
+        <a href="../blog.html" class="active">Blog</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <main>
+$if(date)$      <p class="blog-date">$date$</p>
+$endif$      <div class="post-body">
+$body$
+      </div>
+      <p><a href="../blog.html">&larr; Back to Blog</a></p>
+    </main>
+    <footer>
+      <div class="container">
+        <span>&copy; 2026 Charles Lassiter</span>
+        <span><a href="mailto:charles.lassiter@gmail.com">charles.lassiter@gmail.com</a></span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
