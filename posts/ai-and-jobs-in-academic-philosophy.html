@@ -289,9 +289,9 @@ fall into multiple AOS, the percentages summing to over 100%.</p>
   AI content, as well as nine individual false positives from unrelated positions (a dean search,
   a community-college adjunct, an Asian philosophy hire, and others). All 27 were removed. The 
   estimated residual false-positive rate after correction is approximately 11% (95% Wilson CI: 6%–19%),
-  suggesting the dataset remains slightly inflated in absolute terms.
+  suggesting the dataset remains slightly inflated in absolute terms. </p>
 
-  False-negative audit: A sample of 643 non-AI-flagged jobs drawn from the phil-tech recall analysis 
+<p>False-negative audit: A sample of 643 non-AI-flagged jobs drawn from the phil-tech recall analysis 
   was re-fetched and checked with the same verification regex. Fourteen jobs (2.2%; 95% CI: 1.3%–3.6%) 
   matched AI-related terms and were added to the dataset. Two categories of terms drove most misses: 
   *robotics* positions (not in the original keyword list) and ads using the phrase *ethics of AI* in body text 
@@ -299,18 +299,18 @@ fall into multiple AOS, the percentages summing to over 100%.</p>
   (*language model*, *robotics philosophy*, *ethics artificial intelligence*, *autonomous systems*, *foundation model*,
   *generative model*) identified 18 additional confirmed AI jobs. Combined, 32 confirmed false negatives were added. 
   The estimated residual false-negative rate is approximately 2% (95% CI: 1%–4%), meaning the dataset is on balance 
-  conservative — it undercounts slightly more than it overcounts.
+  conservative — it undercounts slightly more than it overcounts.</p>  
 
-  Institution name normalization: Institution names extracted from PhilJobs job pages contained several systematic artifacts: 
+  <p>Institution name normalization: Institution names extracted from PhilJobs job pages contained several systematic artifacts: 
   (1) the h2 parsing algorithm captured only the last comma-delimited segment for multi-campus institutions, yielding city or 
   country names ("Madison," "Hong Kong," "Sweden") rather than full institution names; (2) character-encoding errors produced 
   garbled characters in non-ASCII names (e.g., "Ume? University"); (3) variant spellings existed for several institutions 
   (e.g., "Technical University of Eindhoven" vs. "Eindhoven University of Technology"; "Oxford" vs. "University of Oxford"). 
   Partial names were resolved by re-fetching the page `<title>` element; encoding artifacts were corrected by replacement 
   mapping; and variant names were merged to a canonical form. After normalization, the dataset contains institutions from 
-  37 countries.
+  37 countries.</p>
 
-  All terms used in the search:  "artificial intelligence", "machine learning", "deep learning", "neural network", 
+  <p>All terms used in the search:  "artificial intelligence", "machine learning", "deep learning", "neural network", 
   "large language model", "language model", (catches broader LLM reference), "natural language processing", "algorithmic bias", 
   "machine ethics", "computational intelligence", "robotics philosophy", "ethics artificial intelligence", 
   "ethics of AI" (without stop words), "autonomous systems", "foundation model", "generative model". Regular expressions were 
