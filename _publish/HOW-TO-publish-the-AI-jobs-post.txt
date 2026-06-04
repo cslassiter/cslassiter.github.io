@@ -1,0 +1,76 @@
+===========================================================
+ HOW TO UPDATE & PUBLISH THE "AI AND JOBS" BLOG POST
+===========================================================
+
+You work with ONE source file and TWO helper scripts:
+
+  SOURCE you edit:
+    C:\Users\lassiter\OneDrive - Gonzaga University\R data\PhilJobs_annual_data\AI-jobs.Rmd
+
+  HELPER SCRIPTS (in this _publish folder):
+    render_ai-jobs.R    -> builds the post (safe, nothing goes public)
+    publish_ai-jobs.R   -> puts it live on the website
+
+Big picture:
+  EDIT Rmd  ->  RENDER  ->  LOOK at the HTML  ->  PUBLISH
+ (writing)    (build)     (your safety check)   (go live)
+
+
+-----------------------------------------------------------
+ THE ROUTINE (do this in the RStudio Console)
+-----------------------------------------------------------
+
+STEP 1 - EDIT
+  Open AI-jobs.Rmd in RStudio, make your changes, and SAVE it (Ctrl+S).
+  This is the only file you ever edit by hand.
+
+STEP 2 - RENDER  (build the post into the website folder)
+  In the RStudio Console, type this and press Enter:
+
+    source("C:/Users/lassiter/vscode101/cslassiter.github.io/_publish/render_ai-jobs.R")
+
+  When it finishes, the Console prints the path to the finished HTML.
+  Nothing is public yet.
+
+STEP 3 - LOOK
+  Open that HTML file in a web browser and check it looks right
+  (figures correct, text good). This is your last check before it goes live.
+
+STEP 4 - PUBLISH  (go live)
+  Happy with it? In the RStudio Console:
+
+    source("C:/Users/lassiter/vscode101/cslassiter.github.io/_publish/publish_ai-jobs.R")
+
+  This stages, commits, and pushes for you. The Console prints "Published!"
+  The live site updates in about a minute:  https://cslassiter.github.io/
+
+
+-----------------------------------------------------------
+ OPTIONS ON THE PUBLISH STEP
+-----------------------------------------------------------
+
+* Don't care about the commit message?
+  Just run the publish line above. It auto-labels with today's date/time.
+
+* Want your own message? Type this FIRST, then run the publish line:
+
+    msg <- "Updated the salary figures"
+    source("C:/Users/lassiter/vscode101/cslassiter.github.io/_publish/publish_ai-jobs.R")
+
+
+-----------------------------------------------------------
+ GOOD TO KNOW
+-----------------------------------------------------------
+
+* Where do I type the source(...) lines?  The RStudio Console (bottom-left pane).
+
+* render_  = BUILD. Run it as often as you like; it never publishes anything.
+  publish_ = GO LIVE. This is the only step that puts things on the internet.
+
+* Re-running publish when nothing changed is safe - it just says
+  "Nothing new to publish" and stops.
+
+* You normally never touch git by hand anymore - the publish script does it.
+  If something ever looks off, open a terminal in the
+  cslassiter.github.io folder and run:  git status
+  (That command only reports the situation; it changes nothing.)

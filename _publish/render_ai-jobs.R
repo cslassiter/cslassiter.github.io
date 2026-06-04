@@ -27,4 +27,8 @@ rmarkdown::render(
   envir = new.env()           # render in a clean environment
 )
 
-message("\nDone. Open in a browser to check:\n  ", out)
+message(
+  "\nDone. Open in a browser to check:\n  ", out,
+  "\n\nWhen it looks right, publish it to the live site by sourcing:\n",
+  "  source(\"C:/Users/lassiter/vscode101/cslassiter.github.io/_publish/publish_ai-jobs.R\")"
+)
