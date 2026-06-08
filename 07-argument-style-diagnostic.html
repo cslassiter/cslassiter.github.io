@@ -299,7 +299,9 @@
   .ss-box { border-radius: 8px; padding: 0.7rem 0.85rem; font-size: 0.8rem; line-height: 1.55; }
   .ss-strength { background: #eef6f4; border-left: 3px solid var(--teal); color: #134a44; }
   .ss-shadow { background: #fbf0eb; border-left: 3px solid var(--rust); color: #6a2814; }
-  .ss-box b { display: block; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+  .ss-box b { display: block; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .ss-row { display: block; margin-top: 0.25rem; }
+  .ss-tag { font-weight: 700; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 0.4rem; opacity: 0.8; }
 
   .exercise {
     background: var(--surface);
@@ -830,8 +832,8 @@ function renderSpectrum(r) {
     ${leanHtml}
     ${cueHtml}
     <div class="strength-shadow">
-      <div class="ss-box ss-strength"><b>${dim.left.name} — gift</b>${dim.left.strength}. <i>Shadow:</i> ${dim.left.shadow}.</div>
-      <div class="ss-box ss-shadow"><b>${dim.right.name} — gift</b>${dim.right.strength}. <i>Shadow:</i> ${dim.right.shadow}.</div>
+      <div class="ss-box ss-strength"><b>${dim.left.name}</b><span class="ss-row"><span class="ss-tag">Gift</span>${dim.left.strength}.</span><span class="ss-row"><span class="ss-tag">Shadow</span>${dim.left.shadow}.</span></div>
+      <div class="ss-box ss-shadow"><b>${dim.right.name}</b><span class="ss-row"><span class="ss-tag">Gift</span>${dim.right.strength}.</span><span class="ss-row"><span class="ss-tag">Shadow</span>${dim.right.shadow}.</span></div>
     </div>
   `;
   return el;
