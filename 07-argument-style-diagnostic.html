@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argument-Style Diagnostic — Phil 101</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f4ee;
+    --surface: #efeadf;
+    --border: #d8cdb6;
+    --ink: #14110a;
+    --muted: #756a55;
+    --indigo: #2e3a6b;
+    --teal: #1d6b63;
+    --rust: #9c3a1e;
+    --gold: #b07d12;
+    --shadow: 0 4px 22px rgba(20,17,10,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+    line-height: 1.5;
+  }
+
+  .container { max-width: 820px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 2.25rem; }
+
+  .course-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.3rem);
+    line-height: 1.05;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+  h1 em { font-style: italic; color: var(--indigo); }
+
+  .subtitle { color: var(--muted); font-size: 0.98rem; max-width: 620px; margin: 0 auto; }
+
+  .panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .panel h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .panel p.lead { font-size: 0.95rem; color: #463b29; line-height: 1.7; margin-bottom: 1rem; }
+  .panel p.lead:last-of-type { margin-bottom: 0; }
+
+  .note {
+    background: var(--surface);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: #5a4a2c;
+    margin-top: 1rem;
+  }
+
+  textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    min-height: 220px;
+    resize: vertical;
+    color: var(--ink);
+    line-height: 1.7;
+    background: #fcfbf7;
+  }
+  textarea:focus { outline: 2px solid var(--indigo); border-color: transparent; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .wordcount { font-size: 0.82rem; color: var(--muted); margin-right: auto; }
+  .wordcount.short { color: var(--rust); font-weight: 500; }
+
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.7rem 1.4rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--indigo); }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .btn-primary:hover { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    border: 1px dashed var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .file-label:hover { border-color: var(--indigo); color: var(--indigo); }
+  input[type=file] { display: none; }
+
+  .sample-link {
+    background: none; border: none; color: var(--indigo);
+    font-size: 0.82rem; cursor: pointer; text-decoration: underline;
+    font-family: 'Inter', sans-serif; padding: 0;
+  }
+
+  /* ── RESULTS ── */
+  #results { display: none; }
+
+  .results-head {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .results-head .signature {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    color: var(--indigo);
+    line-height: 1.3;
+    margin-top: 0.4rem;
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, #1b2140, #2e3a6b);
+    color: #eef0fa;
+    border-radius: 14px;
+    padding: 1.6rem 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .summary-card h3 {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: #aeb6e0; margin-bottom: 0.75rem;
+  }
+  .summary-card p { font-size: 0.96rem; line-height: 1.7; color: #e2e5f6; margin-bottom: 0.75rem; }
+  .summary-card p:last-child { margin-bottom: 0; }
+  .summary-card strong { color: #fff; }
+
+  .spectrum {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1.1rem;
+    box-shadow: var(--shadow);
+  }
+
+  .spectrum-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    margin-bottom: 0.15rem;
+  }
+  .spectrum-citation { font-size: 0.76rem; color: var(--muted); font-style: italic; margin-bottom: 1rem; }
+
+  .poles {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .pole-left { color: var(--rust); }
+  .pole-right { color: var(--teal); }
+
+  .track {
+    position: relative;
+    height: 12px;
+    background: linear-gradient(90deg, #f1d9cf 0%, #efeadf 50%, #cfe6e1 100%);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+  }
+  .track .midline {
+    position: absolute; left: 50%; top: -3px; bottom: -3px;
+    width: 1px; background: var(--border);
+  }
+  .marker {
+    position: absolute;
+    top: 50%;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    transform: translate(-50%, -50%);
+    transition: left 1s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .lean-text { font-size: 0.86rem; color: #463b29; line-height: 1.6; margin-top: 0.6rem; }
+  .lean-text .verdict { font-weight: 600; }
+
+  .confidence {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .conf-dots { display: inline-flex; gap: 3px; }
+  .conf-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
+  .conf-dot.on { background: var(--gold); }
+
+  .cues {
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .cue-pill {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.12rem 0.6rem;
+    margin: 0.15rem 0.2rem 0 0;
+    font-size: 0.72rem;
+  }
+  .cue-pill.left { color: var(--rust); border-color: #e3c4b8; }
+  .cue-pill.right { color: var(--teal); border-color: #bcdbd5; }
+
+  .strength-shadow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 0.85rem;
+  }
+  @media (max-width: 520px) { .strength-shadow { grid-template-columns: 1fr; } }
+  .ss-box { border-radius: 8px; padding: 0.7rem 0.85rem; font-size: 0.8rem; line-height: 1.55; }
+  .ss-strength { background: #eef6f4; border-left: 3px solid var(--teal); color: #134a44; }
+  .ss-shadow { background: #fbf0eb; border-left: 3px solid var(--rust); color: #6a2814; }
+  .ss-box b { display: block; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+
+  .exercise {
+    background: var(--surface);
+    border: 1px dashed var(--gold);
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+    margin: 1.75rem 0;
+  }
+  .exercise h3 { font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .exercise p { font-size: 0.9rem; line-height: 1.7; color: #5a4a2c; }
+  .exercise .copy-btn { margin-top: 0.6rem; }
+
+  .actions-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+  .copy-btn {
+    background: var(--ink); color: var(--bg); border: none;
+    padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 0.82rem;
+  }
+  .copy-btn:hover { background: var(--gold); color: var(--ink); }
+
+  .cross-link {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.88rem;
+    color: var(--indigo);
+  }
+  .cross-link a { color: var(--indigo); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
+    <h1>Argument-Style <em>Diagnostic</em></h1>
+    <p class="subtitle">Paste a piece of your own argumentative writing and discover the
+      intellectual <em>temperament</em> it reveals — across six dimensions of legitimate, borrowable style.</p>
+  </header>
+
+  <!-- INPUT -->
+  <div id="input-screen">
+    <div class="panel">
+      <h2>Feed it your writing</h2>
+      <p class="lead">Paste a few paragraphs of something you wrote that <em>makes a case</em> — an essay,
+        an op-ed, a discussion-board post, a cover letter, even a long text where you argued a point.
+        The more argumentative the writing, the sharper the read. Aim for <strong>150 words or more</strong>.</p>
+      <textarea id="text-input" placeholder="Paste your writing here (from Word, Google Docs, anywhere)…" oninput="updateCount()"></textarea>
+      <div class="toolbar">
+        <span class="wordcount" id="wordcount">0 words</span>
+        <button class="sample-link" onclick="loadSample()">Try a sample text</button>
+        <label class="file-label">
+          📄 Upload .txt / .md
+          <input type="file" id="file-input" accept=".txt,.md,text/plain" onchange="loadFile(event)">
+        </label>
+        <button class="btn btn-primary" onclick="analyze()">Analyze my style →</button>
+      </div>
+      <div class="note">
+        <strong>How to read this honestly.</strong> This tool scans for <em>surface signals</em> —
+        the words and connectives that tend to accompany each style. It is a mirror, not a verdict.
+        No style is the right one to be: each is a virtue with a characteristic excess, good when used
+        <em>at the right time and to the right degree</em> (Aristotle; Walton). Treat the result as a
+        conversation-starter about your default voice — and a menu of moves you can borrow.
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-head">
+      <div class="course-tag">Your argumentative temperament</div>
+      <div class="signature" id="signature"></div>
+    </div>
+
+    <div class="summary-card">
+      <h3>What your writing leans toward</h3>
+      <div id="summary-body"></div>
+    </div>
+
+    <div id="spectra-container"></div>
+
+    <div class="exercise">
+      <h3>✍ The range-building exercise</h3>
+      <p id="exercise-text"></p>
+      <textarea id="exercise-journal" style="min-height:90px; margin-top:0.75rem;" placeholder="Draft your re-argument, or your reflection, here…"></textarea>
+      <button class="copy-btn" onclick="copyFrom('exercise-journal', this)">Copy</button>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-primary" onclick="reset()">Analyze another text</button>
+      <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <p class="cross-link">
+      Want to test what you’re <em>drawn to</em>, not just what you do?
+      Try the <a href="08-argument-style-duel.html">Argument-Style Duel →</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  THE SIX SPECTRA
+//  Each dimension has a left pole and a right pole, each with a
+//  set of surface "cues" (regex-safe lowercase tokens / phrases).
+//  Scoring counts cue hits per pole, normalised by text length.
+// ════════════════════════════════════════════════════════════
+const DIMENSIONS = [
+  {
+    key: 'hedgehog',
+    title: 'Hedgehog vs. Fox',
+    citation: 'Berlin, The Hedgehog and the Fox (1953); Tetlock, Expert Political Judgment (2005).',
+    left:  { name: 'Hedgehog', gloss: 'unifies everything under one central idea',
+             strength: 'depth and explanatory reach', shadow: 'forcing messy data to fit one idea' },
+    right: { name: 'Fox', gloss: 'holds many small, loosely-linked models',
+             strength: 'calibration and flexibility', shadow: 'lacking a through-line and dithering' },
+    leftCues: ['fundamentally','ultimately','at bottom','the key is','the central','the core','in essence',
+               'the heart of','boils down to','comes down to','the one thing','the real issue','underlying',
+               'the single','everything','the whole point','the essential','first and foremost','above all',
+               'the fundamental','one big','the main thing'],
+    rightCues: ['it depends','on the other hand','on one hand','in some cases','in other cases','sometimes',
+                'depends on','varies','it varies','context','contextual','to some extent','partly','in part',
+                'multiple factors','several factors','a number of factors','different situations','case by case',
+                'on balance','that said','then again','in certain']
+  },
+  {
+    key: 'chain',
+    title: 'Chain vs. Cable',
+    citation: 'Newman, An Essay in Aid of a Grammar of Assent (1870).',
+    left:  { name: 'Chain', gloss: 'one tight deductive line',
+             strength: 'rigour and transparency', shadow: 'being only as strong as the weakest premise' },
+    right: { name: 'Cable', gloss: 'many independent strands converging',
+             strength: 'robustness; handles messiness', shadow: 'feeling hand-wavy, hard to pin down' },
+    leftCues: ['therefore','thus','hence','it follows','follows that','consequently','as a result','so that',
+               'if and only','must','necessarily','entails','implies','given that','from this','from which',
+               'premise','the conclusion','it must be','this proves','deductively','logically follows',
+               'leads inevitably','this means that'],
+    rightCues: ['moreover','furthermore','in addition','additionally','besides','for one thing','another reason',
+                'a second','a third','secondly','thirdly','also,','what is more','not only','taken together',
+                'cumulatively','converge','many reasons','several reasons','a number of reasons','independently',
+                'each of these','on top of that','add to that']
+  },
+  {
+    key: 'principle',
+    title: 'Principle-first vs. Case-first',
+    citation: 'Jonsen & Toulmin, The Abuse of Casuistry (1988).',
+    left:  { name: 'Principle-first', gloss: 'derives from a top rule',
+             strength: 'consistency and generality', shadow: 'rigidity; missing the morally relevant detail' },
+    right: { name: 'Case-first', gloss: 'reasons outward from paradigm cases',
+             strength: 'sensitivity to particulars', shadow: 'looking ad hoc' },
+    leftCues: ['the principle','in principle','as a rule','as a general rule','generally speaking','by definition',
+               'the rule is','we should always','one should always','the standard is','universal','universally',
+               'categorically','in general','the general principle','axiom','it is always','always wrong',
+               'always right','on principle','the criterion'],
+    rightCues: ['for example','for instance','e.g.','such as','consider the case','take the case','take the example',
+                'imagine','suppose','suppose that','in the case of','a real','concretely','specifically','case study',
+                'to illustrate','picture this','say that','like when','think of','one example','a particular']
+  },
+  {
+    key: 'lumper',
+    title: 'Lumper vs. Splitter',
+    citation: 'Simpson, "The Principles of Classification…" (1945).',
+    left:  { name: 'Lumper', gloss: 'reaches for the unifying category',
+             strength: 'sees structure and parsimony', shadow: 'blurring real differences' },
+    right: { name: 'Splitter', gloss: 'reaches for the fine distinction',
+             strength: 'precision', shadow: 'losing the forest; stalling in taxonomy' },
+    leftCues: ['essentially the same','all of these','broadly','a kind of','a type of','a form of','fall under',
+               'falls under','the same category','share a','have in common','in common','at heart','just another',
+               'really just','nothing more than','a version of','boils down','umbrella','lump together','the same basic',
+               'fundamentally similar','all amount to'],
+    rightCues: ['the distinction','distinguish','we must distinguish','a distinction between','differs from','differ from',
+                'different from','crucially different','the difference','nuance','subtle','strictly speaking','more precisely',
+                'to be precise','to be clear','two senses','in one sense','not to be confused','as opposed to','unlike',
+                'whereas','by contrast','there are two kinds','several types']
+  },
+  {
+    key: 'bold',
+    title: 'Bold conjecture vs. Cautious qualification',
+    citation: 'Popper, Conjectures and Refutations (1963); Toulmin, The Uses of Argument (1958).',
+    left:  { name: 'Bold conjecture', gloss: 'states a strong, testable claim',
+             strength: 'advances inquiry by being falsifiable', shadow: 'overclaiming' },
+    right: { name: 'Cautious qualification', gloss: 'hedges carefully',
+             strength: 'honest about uncertainty', shadow: 'dissolving into saying nothing pinnable' },
+    leftCues: ['clearly','obviously','undoubtedly','certainly','definitely','without doubt','without question',
+               'no question','there is no doubt','i claim','i argue that','the truth is','in fact','indeed','plainly',
+               'it is certain','must be','always','never','proves','demonstrates','decisively','surely','of course',
+               'beyond doubt','the fact is'],
+    rightCues: ['perhaps','maybe','might','may well','could be','possibly','it seems','seems to','appears to','arguably',
+                'i think','i suspect','in my view','to some degree','somewhat','tends to','tend to','often','usually',
+                'generally','it could be argued','presumably','likely','probably','one might','it is possible','to an extent',
+                'in many cases','more or less']
+  },
+  {
+    key: 'refuter',
+    title: 'Refuter vs. Builder',
+    citation: 'On the Socratic elenchus: Vlastos, Socrates: Ironist and Moral Philosopher (1991).',
+    left:  { name: 'Refuter', gloss: 'tests a view by trying to break it',
+             strength: 'sharpens and clears the ground', shadow: 'leaving only rubble' },
+    right: { name: 'Builder', gloss: 'constructs and extends a position',
+             strength: 'synthesises', shadow: 'waving away genuine objections' },
+    leftCues: ['however','but ','the objection','an objection','counterexample','counter-example','this fails','fails to',
+               'is wrong','is mistaken','the problem with','the flaw','refute','refutes','against this','critics',
+               'the trouble is','this is false','does not follow','begs the question','contradiction','contradicts',
+               'undermines','this overlooks','the weakness','breaks down','cannot account'],
+    rightCues: ['build on','builds on','build upon','develop','we can develop','extend','extends','construct','i propose',
+                'i suggest','this suggests','a framework','synthesis','combine','bring together','this supports','adds to',
+                'strengthen','strengthens','expand on','in support of','constructive','lay the groundwork','together this',
+                'taken further','this opens up']
+  }
+];
+
+let lastResult = null;
+
+// ── INPUT HANDLING ──────────────────────────────────────────
+function updateCount() {
+  const w = wordCount(document.getElementById('text-input').value);
+  const el = document.getElementById('wordcount');
+  el.textContent = w + (w === 1 ? ' word' : ' words');
+  el.classList.toggle('short', w > 0 && w < 150);
+}
+
+function wordCount(t) {
+  const m = t.trim().match(/\S+/g);
+  return m ? m.length : 0;
+}
+
+function loadFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('text-input').value = e.target.result;
+    updateCount();
+  };
+  reader.readAsText(file);
+}
+
+const SAMPLE = `Schools should drop letter grades entirely, and the reason is simple: grades measure the wrong thing. A letter grade tries to compress a student's whole relationship to a subject into a single symbol, but learning is not a single quantity. Therefore any system built on that compression must distort what it claims to measure.
+
+Consider a student who fails three quizzes while teaching herself to code, and finally builds something that works. The transcript records the failures and erases the breakthrough. The grade, in other words, is not just imprecise — it is actively misleading, because it rewards the steady performer over the genuine learner.
+
+Defenders of grading say it motivates effort. But this confuses fear with motivation. If the only thing keeping a student working is dread of a C, we have not taught them to value the work; we have taught them to fear the symbol. Remove the threat and the supposed motivation collapses, which shows it was never really there.`;
+
+function loadSample() {
+  document.getElementById('text-input').value = SAMPLE;
+  updateCount();
+}
+
+// ── ANALYSIS ────────────────────────────────────────────────
+function countCues(haystack, cues) {
+  let total = 0;
+  const hits = [];
+  cues.forEach(cue => {
+    // word-boundary-ish matching on a space-padded lowercased string
+    const needle = cue.toLowerCase();
+    let idx = 0, n = 0;
+    while ((idx = haystack.indexOf(needle, idx)) !== -1) { n++; idx += needle.length; }
+    if (n > 0) { total += n; hits.push({ cue: cue.trim(), n }); }
+  });
+  hits.sort((a, b) => b.n - a.n);
+  return { total, hits };
+}
+
+function analyze() {
+  const raw = document.getElementById('text-input').value;
+  const words = wordCount(raw);
+  if (words < 40) {
+    alert('Please paste at least ~40 words (150+ is ideal) so the diagnostic has enough to read.');
+    return;
+  }
+  // pad with spaces so leading/trailing phrase cues match
+  const hay = ' ' + raw.toLowerCase().replace(/\s+/g, ' ') + ' ';
+
+  const results = DIMENSIONS.map(dim => {
+    const L = countCues(hay, dim.leftCues);
+    const R = countCues(hay, dim.rightCues);
+    const totalHits = L.total + R.total;
+    // position: -100 (full left pole) … +100 (full right pole). 0 = balanced / no signal.
+    let position = 0;
+    if (totalHits > 0) position = ((R.total - L.total) / totalHits) * 100;
+    // confidence from raw signal density (hits per 100 words), capped
+    const density = (totalHits / words) * 100;
+    const confidence = Math.max(0, Math.min(4, Math.round(density * 1.3)));
+    return { dim, L, R, totalHits, position, confidence };
+  });
+
+  lastResult = results;
+  renderResults(results, words);
+}
+
+// ── RENDER ──────────────────────────────────────────────────
+function renderResults(results, words) {
+  document.getElementById('input-screen').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  // Rank dimensions by |position| weighted by confidence to find the signature
+  const ranked = results
+    .map(r => ({ r, force: Math.abs(r.position) * (r.confidence + 0.5) }))
+    .sort((a, b) => b.force - a.force);
+
+  const top = ranked.slice(0, 2).map(x => x.r).filter(r => r.totalHits > 0 && Math.abs(r.position) > 12);
+
+  // Signature line
+  let sig;
+  if (top.length === 0) {
+    sig = 'A balanced, hard-to-pigeonhole voice';
+  } else {
+    sig = top.map(r => poleName(r)).join(' · ');
+  }
+  document.getElementById('signature').textContent = sig;
+
+  // Summary
+  const sb = document.getElementById('summary-body');
+  if (top.length === 0) {
+    sb.innerHTML = `<p>Across all six dimensions your writing sits close to the middle: no single
+      temperament dominates the sample you gave. That can mean a genuinely flexible voice — or simply
+      that this particular passage didn't lean hard enough for the signals to register. Try a more
+      argumentative piece, or read the six spectra below to see where you tilt.</p>`;
+  } else {
+    const parts = top.map(r => {
+      const p = r.position < 0 ? r.dim.left : r.dim.right;
+      return `a <strong>${p.name.toLowerCase()}</strong> (${p.gloss})`;
+    });
+    sb.innerHTML = `<p>Your strongest signal is ${parts.join(', and ')}. Below, all six dimensions are
+      laid out as spectra — each a pair of <em>legitimate</em> temperaments. Remember: the goal isn't to
+      land in the "right" spot. It's to know your default, and to learn to borrow the opposite pole when
+      the argument calls for it.</p>`;
+  }
+
+  // Spectra
+  const container = document.getElementById('spectra-container');
+  container.innerHTML = '';
+  results.forEach(r => container.appendChild(renderSpectrum(r)));
+
+  // Exercise: pick the strongest-leaning dimension
+  const strongest = top[0] || ranked[0].r;
+  const home = strongest.position <= 0 ? strongest.dim.left : strongest.dim.right;
+  const away = strongest.position <= 0 ? strongest.dim.right : strongest.dim.left;
+  document.getElementById('exercise-text').innerHTML =
+    `Take a position you actually hold. First argue it in your home style — as
+     <strong>${home.name.toLowerCase()}</strong> as you can (${home.gloss}). Then re-argue the very same
+     position as a <strong>${away.name.toLowerCase()}</strong> (${away.gloss}). This is the argument-style
+     analogue of asking a writer to imitate a sentence rhythm that isn't theirs. Notice what the unfamiliar
+     style lets you see — and what it costs you.`;
+
+  // animate markers after paint
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.marker').forEach(m => {
+      m.style.left = m.dataset.left;
+    });
+  });
+
+  window.scrollTo(0, 0);
+}
+
+function poleName(r) {
+  return (r.position < 0 ? r.dim.left.name : r.dim.right.name);
+}
+
+function renderSpectrum(r) {
+  const { dim, L, R, position, confidence, totalHits } = r;
+  const el = document.createElement('div');
+  el.className = 'spectrum';
+
+  // marker position: map -100..100 to 4%..96%
+  const pct = 50 + (position / 100) * 46;
+
+  const leaning = Math.abs(position) < 12 || totalHits === 0
+    ? null
+    : (position < 0 ? dim.left : dim.right);
+  const off    = leaning && (leaning === dim.left ? dim.right : dim.left);
+
+  let leanHtml;
+  if (!leaning) {
+    leanHtml = `<div class="lean-text"><span class="verdict">Balanced.</span> This passage doesn't
+      lean clearly toward either pole — you draw on both as needed.</div>`;
+  } else {
+    const strength = Math.abs(position) > 55 ? 'a strong' : (Math.abs(position) > 30 ? 'a clear' : 'a slight');
+    leanHtml = `<div class="lean-text"><span class="verdict">${strength} ${leaning.name.toLowerCase()} lean.</span>
+      Your default here is to ${leaning.gloss}. Its gift is <em>${leaning.strength}</em>; its shadow is
+      <em>${leaning.shadow}</em>. The move worth borrowing: the ${off.name.toLowerCase()}'s knack for
+      ${off.strength}.</div>`;
+  }
+
+  // confidence dots
+  let dots = '';
+  for (let i = 0; i < 4; i++) dots += `<span class="conf-dot ${i < confidence ? 'on' : ''}"></span>`;
+
+  // cue pills (top few per side)
+  const leftPills = L.hits.slice(0, 4).map(h =>
+    `<span class="cue-pill left">${h.cue}${h.n > 1 ? ' ×' + h.n : ''}</span>`).join('');
+  const rightPills = R.hits.slice(0, 4).map(h =>
+    `<span class="cue-pill right">${h.cue}${h.n > 1 ? ' ×' + h.n : ''}</span>`).join('');
+  const cueHtml = (totalHits > 0)
+    ? `<div class="cues"><strong>Signals found:</strong> ${leftPills}${rightPills || (leftPills ? '' : '—')}</div>`
+    : `<div class="cues">No strong signals for this dimension in your sample.</div>`;
+
+  el.innerHTML = `
+    <div class="spectrum-title">${dim.title}</div>
+    <div class="spectrum-citation">${dim.citation}</div>
+    <div class="poles">
+      <span class="pole-left">◀ ${dim.left.name}</span>
+      <span class="pole-right">${dim.right.name} ▶</span>
+    </div>
+    <div class="track">
+      <div class="midline"></div>
+      <div class="marker" data-left="${pct}%" style="left:50%"></div>
+    </div>
+    <div class="confidence">signal strength <span class="conf-dots">${dots}</span></div>
+    ${leanHtml}
+    ${cueHtml}
+    <div class="strength-shadow">
+      <div class="ss-box ss-strength"><b>${dim.left.name} — gift</b>${dim.left.strength}. <i>Shadow:</i> ${dim.left.shadow}.</div>
+      <div class="ss-box ss-shadow"><b>${dim.right.name} — gift</b>${dim.right.strength}. <i>Shadow:</i> ${dim.right.shadow}.</div>
+    </div>
+  `;
+  return el;
+}
+
+function reset() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('input-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function copyFrom(id, btn) {
+  const ta = document.getElementById(id);
+  ta.select();
+  document.execCommand('copy');
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = orig, 1800);
+}
+</script>
+</body>
+</html>

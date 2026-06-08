@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argument-Style Duel — Phil 101</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f4ee;
+    --surface: #efeadf;
+    --border: #d8cdb6;
+    --ink: #14110a;
+    --muted: #756a55;
+    --indigo: #2e3a6b;
+    --teal: #1d6b63;
+    --rust: #9c3a1e;
+    --gold: #b07d12;
+    --shadow: 0 4px 22px rgba(20,17,10,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+    line-height: 1.5;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 2.25rem; }
+  .course-tag {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.3rem);
+    line-height: 1.05; font-weight: 300; margin-bottom: 0.5rem;
+  }
+  h1 em { font-style: italic; color: var(--indigo); }
+  .subtitle { color: var(--muted); font-size: 0.98rem; max-width: 640px; margin: 0 auto; }
+
+  .panel {
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: var(--shadow);
+  }
+  .panel h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.4rem; margin-bottom: 0.75rem; }
+  .panel p.lead { font-size: 0.95rem; color: #463b29; line-height: 1.7; margin-bottom: 1rem; }
+  .panel p.lead:last-of-type { margin-bottom: 0; }
+
+  .note {
+    background: var(--surface); border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem;
+    font-size: 0.86rem; line-height: 1.65; color: #5a4a2c; margin-top: 1rem;
+  }
+
+  .btn {
+    font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500;
+    border-radius: 8px; padding: 0.8rem 1.6rem; cursor: pointer;
+    border: 1px solid var(--ink); background: var(--ink); color: var(--bg); transition: all 0.15s;
+  }
+  .btn:hover { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+  .btn-ghost { background: white; color: var(--ink); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--surface); color: var(--ink); border-color: var(--indigo); }
+
+  /* ── QUIZ ── */
+  #quiz-screen { display: none; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .progress-text { font-size: 0.78rem; color: var(--muted); font-weight: 500; white-space: nowrap; }
+  .progress-bar { flex: 1; height: 5px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); border-radius: 3px; width: 0%; transition: width 0.4s ease; }
+
+  .round-topic {
+    text-align: center; margin-bottom: 0.4rem;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .round-question {
+    font-family: 'Fraunces', serif; font-size: clamp(1.4rem, 3.6vw, 1.9rem);
+    font-weight: 400; text-align: center; line-height: 1.35; margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+  .round-instruction { text-align:center; color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .duel { grid-template-columns: 1fr; } }
+
+  .arg-card {
+    background: white; border: 2px solid var(--border); border-radius: 12px;
+    padding: 1.4rem 1.5rem; cursor: pointer; transition: all 0.18s;
+    display: flex; flex-direction: column;
+  }
+  .arg-card:hover { border-color: var(--indigo); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .arg-card.chosen { border-color: var(--indigo); background: #f0f2fb; }
+  .arg-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--indigo); margin-bottom: 0.7rem;
+  }
+  .arg-text {
+    font-family: 'Fraunces', serif; font-size: 1.02rem; line-height: 1.6;
+    color: #2a2114; font-weight: 300; flex: 1;
+  }
+  .arg-pick {
+    margin-top: 1rem; text-align: center; font-size: 0.8rem; font-weight: 600;
+    color: var(--muted); border-top: 1px dashed var(--border); padding-top: 0.7rem;
+  }
+  .arg-card:hover .arg-pick { color: var(--indigo); }
+
+  .skip-row { text-align: center; margin-top: 1.5rem; }
+  .skip-btn { background:none; border:none; color: var(--muted); font-size: 0.82rem; cursor:pointer; text-decoration: underline; font-family:'Inter',sans-serif; }
+
+  /* reveal after choosing */
+  .reveal { display: none; margin-top: 1.25rem; animation: fadeUp 0.35s ease; }
+  .reveal.show { display: block; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+  .reveal-inner {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.4rem;
+  }
+  .reveal-inner h4 {
+    font-family:'Fraunces',serif; font-weight:400; font-size:1.1rem; margin-bottom:0.5rem; color: var(--indigo);
+  }
+  .reveal-inner p { font-size: 0.88rem; line-height: 1.65; color:#463b29; margin-bottom: 0.6rem; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+  .reveal-tags { display:flex; gap:0.5rem; flex-wrap:wrap; margin: 0.5rem 0 0.8rem; }
+  .reveal-tag { font-size:0.72rem; font-weight:600; padding:0.2rem 0.7rem; border-radius:20px; border:1px solid; }
+  .tag-left { color: var(--rust); border-color:#e3c4b8; background:#fbf0eb; }
+  .tag-right { color: var(--teal); border-color:#bcdbd5; background:#eef6f4; }
+  .reveal-next { text-align:right; margin-top: 1rem; }
+
+  /* ── RESULTS ── */
+  #results-screen { display: none; }
+  .results-head { text-align:center; margin-bottom: 1.75rem; }
+  .results-head .signature {
+    font-family:'Fraunces',serif; font-style:italic; color: var(--indigo);
+    font-size: clamp(1.5rem, 4vw, 2.1rem); line-height:1.3; margin-top:0.4rem;
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, #1b2140, #2e3a6b); color:#eef0fa;
+    border-radius:14px; padding:1.6rem 1.75rem; margin-bottom:1.75rem;
+  }
+  .summary-card h3 { font-size:0.7rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:#aeb6e0; margin-bottom:0.75rem; }
+  .summary-card p { font-size:0.96rem; line-height:1.7; color:#e2e5f6; margin-bottom:0.6rem; }
+  .summary-card p:last-child { margin-bottom:0; }
+  .summary-card strong { color:#fff; }
+
+  .dim-result {
+    background:white; border:1px solid var(--border); border-radius:12px;
+    padding:1.2rem 1.4rem; margin-bottom:1rem; box-shadow: var(--shadow);
+  }
+  .dim-result h4 { font-family:'Fraunces',serif; font-weight:400; font-size:1.1rem; margin-bottom:0.6rem; }
+  .dim-bar-wrap { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.5rem; }
+  .dim-pole { font-size:0.76rem; font-weight:600; width:110px; flex-shrink:0; }
+  .dim-pole.l { color:var(--rust); text-align:right; }
+  .dim-pole.r { color:var(--teal); }
+  .dim-bar { flex:1; height:22px; background: var(--surface); border-radius:6px; overflow:hidden; display:flex; border:1px solid var(--border); }
+  .dim-bar .seg-l { background: #d98b6e; height:100%; transition: width 0.8s ease; }
+  .dim-bar .seg-r { background: #5fb3a8; height:100%; transition: width 0.8s ease; }
+  .dim-verdict { font-size:0.85rem; line-height:1.6; color:#463b29; }
+  .dim-verdict .v { font-weight:600; }
+
+  .exercise {
+    background: var(--surface); border:1px dashed var(--gold); border-radius:12px;
+    padding:1.4rem 1.5rem; margin:1.75rem 0;
+  }
+  .exercise h3 { font-family:'Fraunces',serif; font-size:1.25rem; color:var(--gold); margin-bottom:0.5rem; }
+  .exercise p { font-size:0.9rem; line-height:1.7; color:#5a4a2c; }
+  textarea {
+    width:100%; border:1px solid var(--border); border-radius:8px; padding:0.85rem 1rem;
+    font-family:'Inter',sans-serif; font-size:0.92rem; min-height:90px; resize:vertical;
+    color:var(--ink); background:#fcfbf7; line-height:1.6; margin-top:0.75rem;
+  }
+  textarea:focus { outline:2px solid var(--indigo); border-color:transparent; }
+  .copy-btn { margin-top:0.6rem; background:var(--ink); color:var(--bg); border:none; padding:0.5rem 1.2rem; border-radius:6px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.82rem; }
+  .copy-btn:hover { background:var(--gold); color:var(--ink); }
+
+  .actions-row { display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1.5rem; }
+  .cross-link { display:block; text-align:center; margin-top:2rem; font-size:0.88rem; color:var(--indigo); }
+  .cross-link a { color:var(--indigo); font-weight:500; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
+    <h1>Argument-Style <em>Duel</em></h1>
+    <p class="subtitle">Twelve rounds. Each pits two equally legitimate ways of making the same case.
+      Pick whichever <em>you</em> find more convincing — and discover the argument styles you’re drawn to.</p>
+  </header>
+
+  <!-- INTRO -->
+  <div id="intro-screen">
+    <div class="panel">
+      <h2>How it works</h2>
+      <p class="lead">You’ll see <strong>twelve pairs of arguments</strong>. The two arguments in each pair
+        defend the <em>same</em> conclusion, but in different styles — one from each of the six pairs of
+        temperaments in this unit. Just choose the one that lands better for you. There are no right answers.</p>
+      <p class="lead">After each choice, you’ll see which style you picked and why it works. At the end you’ll
+        get a profile of the styles you gravitate toward as a <em>reader</em> — your argumentative taste.</p>
+      <div class="note">
+        <strong>Why “no right answer” is the whole point.</strong> Which style is best depends on the goal of
+        the exchange (Walton &amp; Krabbe, <em>Commitment in Dialogue</em>, 1995). A tight deductive chain is
+        perfect for a proof and wrong for a eulogy. So the duel isn’t testing whether you can spot the “good”
+        argument — it’s surfacing the moves you instinctively trust, so you can notice them and, later, borrow
+        the others.
+      </div>
+      <div style="margin-top:1.25rem; text-align:center;">
+        <button class="btn" onclick="startQuiz()">Begin the duel →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="progress-wrap">
+      <span class="progress-text" id="progress-text">Round 1 of 12</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="round-topic" id="round-topic"></div>
+    <div class="round-question" id="round-question"></div>
+    <div class="round-instruction">Which argument do you find more convincing?</div>
+
+    <div class="duel">
+      <div class="arg-card" id="card-A" onclick="choose('A')">
+        <div class="arg-label">Argument A</div>
+        <div class="arg-text" id="text-A"></div>
+        <div class="arg-pick">▶ Choose A</div>
+      </div>
+      <div class="arg-card" id="card-B" onclick="choose('B')">
+        <div class="arg-label">Argument B</div>
+        <div class="arg-text" id="text-B"></div>
+        <div class="arg-pick">▶ Choose B</div>
+      </div>
+    </div>
+
+    <div class="reveal" id="reveal">
+      <div class="reveal-inner">
+        <h4 id="reveal-title"></h4>
+        <div class="reveal-tags" id="reveal-tags"></div>
+        <p id="reveal-body"></p>
+        <div class="reveal-next">
+          <button class="btn" id="next-btn" onclick="nextRound()">Next round →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="skip-row">
+      <button class="skip-btn" onclick="skipRound()">No preference — skip this one</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen">
+    <div class="results-head">
+      <div class="course-tag">Your argumentative taste</div>
+      <div class="signature" id="signature"></div>
+    </div>
+
+    <div class="summary-card">
+      <h3>What you’re drawn to as a reader</h3>
+      <div id="summary-body"></div>
+    </div>
+
+    <div id="dims-container"></div>
+
+    <div class="exercise">
+      <h3>✍ Notice the gap</h3>
+      <p id="exercise-text"></p>
+      <textarea id="journal" placeholder="Your reflection here…"></textarea>
+      <button class="copy-btn" onclick="copyJournal(this)">Copy</button>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn" onclick="restart()">Take it again</button>
+      <button class="btn btn-ghost" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <p class="cross-link">
+      Now compare your <em>taste</em> with what you actually <em>do</em>:
+      run a piece of your writing through the <a href="07-argument-style-diagnostic.html">Argument-Style Diagnostic →</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  THE SIX PAIRS — metadata
+// ════════════════════════════════════════════════════════════
+const PAIRS = {
+  hedgehog:  { title:'Hedgehog vs. Fox',            left:'Hedgehog',  right:'Fox' },
+  chain:     { title:'Chain vs. Cable',             left:'Chain',     right:'Cable' },
+  principle: { title:'Principle-first vs. Case-first', left:'Principle-first', right:'Case-first' },
+  lumper:    { title:'Lumper vs. Splitter',         left:'Lumper',    right:'Splitter' },
+  bold:      { title:'Bold conjecture vs. Cautious qualification', left:'Bold conjecture', right:'Cautious qualification' },
+  refuter:   { title:'Refuter vs. Builder',         left:'Refuter',   right:'Builder' }
+};
+
+// Each round: a shared topic/question, two arguments (A & B).
+// `side` records which pole each option embodies: 'left' or 'right'.
+// The on-screen A/B order is shuffled at runtime so position carries no signal.
+const ROUNDS = [
+  // ── 1. HEDGEHOG vs FOX ──
+  {
+    dim:'hedgehog', topic:'What makes a life go well',
+    question:'What is the key to a flourishing life?',
+    optLeft:{  side:'left',  text:'At bottom there is a single thing: meaningful relationships. Health, money, work, even hobbies are all just ways of feeding or starving our bonds with other people. Get the relationships right and everything else falls into place; get them wrong and no amount of success will compensate.' },
+    optRight:{ side:'right', text:'There’s no master key. A good life is more like a balanced portfolio — some close relationships, some meaningful work, some health, some play, a little money for security. The mix that works depends on the person and the season of life, and over-investing in any one of them tends to backfire.' },
+    leftWhy:'This is a <strong>hedgehog</strong>: it unifies everything under one central idea (relationships) and reads all other goods through it. Its gift is depth and explanatory reach; its shadow is forcing messy data to fit the one idea.',
+    rightWhy:'This is a <strong>fox</strong>: many small, loosely-linked goods, with the right balance depending on context. Its gift is calibration and flexibility; its shadow is lacking a through-line and dithering.'
+  },
+  // ── 2. CHAIN vs CABLE ──
+  {
+    dim:'chain', topic:'A campus policy',
+    question:'Should the university make lecture recordings mandatory?',
+    optLeft:{  side:'left',  text:'Education exists to maximize learning. Recordings demonstrably increase learning, because students can review hard material until they understand it. Whatever demonstrably increases learning, a university committed to its mission must adopt. Therefore the university must make recordings mandatory.' },
+    optRight:{ side:'right', text:'Several considerations point the same way. Recordings help students who miss class for illness. They help non-native speakers re-listen. They help everyone during exams. They cost almost nothing once lecture halls are equipped. No single reason is decisive, but together they make a strong case for recording.' },
+    leftWhy:'This is a <strong>chain</strong>: one tight deductive line where each step locks into the next to a conclusion. Its gift is rigor and transparency; its shadow is that it’s only as strong as its weakest premise.',
+    rightWhy:'This is a <strong>cable</strong>: many independent strands, no one of them decisive, converging on a probable conclusion. Its gift is robustness; its shadow is feeling hand-wavy and hard to pin down.'
+  },
+  // ── 3. PRINCIPLE vs CASE ──
+  {
+    dim:'principle', topic:'An ethics question',
+    question:'Is it wrong to download a textbook you can’t afford?',
+    optLeft:{  side:'left',  text:'Start from the principle: taking the product of someone’s labor without consent or payment is theft, and theft is wrong. A digital textbook is the product of an author’s and publisher’s labor. Downloading it without paying takes that product without consent. So it falls under the rule against theft, and is wrong.' },
+    optRight:{ side:'right', text:'Think about the clear cases first. Shoplifting a physical book from a struggling local store: clearly wrong. Photocopying a page for class: clearly fine. A student who would never have bought a $300 book downloading it to pass a required course sits much closer to the photocopy than the theft — so condemning it as straightforward stealing misreads the case.' },
+    leftWhy:'This is <strong>principle-first</strong>: it derives the verdict by subsuming the case under a top rule (“theft is wrong”). Its gift is consistency and generality; its shadow is rigidity and missing the morally relevant detail.',
+    rightWhy:'This is <strong>case-first</strong>: it reasons outward from paradigm cases and locates the new case between them. Its gift is sensitivity to particulars; its shadow is looking ad hoc.'
+  },
+  // ── 4. LUMPER vs SPLITTER ──
+  {
+    dim:'lumper', topic:'A definition dispute',
+    question:'Are video games art?',
+    optLeft:{  side:'left',  text:'Yes — and the debate only seems hard because we forget what art is. Art is the deliberate shaping of a medium to create an experience that moves us. Painting shapes pigment, film shapes image and sound, games shape image, sound, and choice. They all fall under the same umbrella. A game is simply art with one more dimension added.' },
+    optRight:{ side:'right', text:'We need to distinguish senses of “art” before answering. If “art” means “a craft made with skill,” games obviously qualify — so does a good knife. If it means “a work offering contemplative aesthetic experience,” some games qualify and most don’t. The blanket question hides at least two different questions with different answers.' },
+    leftWhy:'This is a <strong>lumper</strong>: it reaches for the unifying category and shows the cases share a structure. Its gift is seeing structure and parsimony; its shadow is blurring real differences.',
+    rightWhy:'This is a <strong>splitter</strong>: it insists on the fine distinction and refuses to answer until the term is divided. Its gift is precision; its shadow is losing the forest and stalling in taxonomy.'
+  },
+  // ── 5. BOLD vs CAUTIOUS ──
+  {
+    dim:'bold', topic:'A prediction',
+    question:'Will social media make the next generation lonelier?',
+    optLeft:{  side:'left',  text:'Yes, clearly. Social media replaces the embodied contact that human beings evolved to need with a thin digital substitute, and a substitute that thin cannot sustain real friendship. The result is a generation that is more connected and more alone than any before it. If loneliness measures don’t rise as these platforms spread, I’m simply wrong — but they will.' },
+    optRight:{ side:'right', text:'It might, to some degree, for some users. Heavy passive scrolling seems linked to worse mood in several studies, but active messaging with close friends may actually help. The effect probably depends on how the platforms are used, who is using them, and what they’d otherwise be doing. We should be cautious about sweeping claims in either direction.' },
+    leftWhy:'This is <strong>bold conjecture</strong>: a strong, testable claim that even names the evidence that would refute it. Its gift is that it advances inquiry precisely by being falsifiable; its shadow is overclaiming.',
+    rightWhy:'This is <strong>cautious qualification</strong>: carefully hedged, honest about what we don’t know. Its gift is honesty about uncertainty; its shadow is dissolving into saying nothing pinnable.'
+  },
+  // ── 6. REFUTER vs BUILDER ──
+  {
+    dim:'refuter', topic:'A policy debate',
+    question:'Should we trust the scientific consensus on a complex issue?',
+    optLeft:{  side:'left',  text:'The case against trusting consensus collapses under scrutiny. “Consensus has been wrong before” — yes, and it was overturned by more science, not by ignoring it. “Scientists have incentives to conform” — then explain the careers built on overturning consensus. Each objection to deferring to expert consensus, examined closely, actually gives us another reason to do it.' },
+    optRight:{ side:'right', text:'We can build a positive account of warranted trust. Consensus is reliable when it is wide, when experts argue from independent methods, and when dissent is heard rather than suppressed. Where those conditions hold, deference is rational; where they fail, it isn’t. This gives us a constructive test for when consensus has earned our trust.' },
+    leftWhy:'This is a <strong>refuter</strong>: it works by taking the opposing objections and trying to break them one by one. Its gift is that it sharpens the view and clears the ground; its shadow is leaving only rubble.',
+    rightWhy:'This is a <strong>builder</strong>: it constructs a positive framework and extends it into a usable test. Its gift is synthesis; its shadow is waving away genuine objections.'
+  },
+
+  // ════ SECOND PASS — different topics ════
+  // ── 7. HEDGEHOG vs FOX ──
+  {
+    dim:'hedgehog', topic:'Explaining a trend',
+    question:'Why do so many small businesses fail?',
+    optLeft:{  side:'left',  text:'It almost always traces back to one thing: running out of cash. Bad marketing, weak hiring, slow growth — these only matter because of how they drain the bank account. Master cash flow and a mediocre business survives long enough to improve; lose control of it and even a great idea dies. Everything else is a footnote to liquidity.' },
+    optRight:{ side:'right', text:'Failure usually has several causes tangled together — undercapitalization, a crowded market, founder burnout, a single lost client, bad timing. Different businesses die of different things, and the same factor that sinks one keeps another lean and disciplined. There’s rarely one villain in the story.' },
+    leftWhy:'A <strong>hedgehog</strong>: one central explanatory idea (cash flow) absorbs all the others. Depth and reach are its gift; forcing varied cases into one mold is its shadow.',
+    rightWhy:'A <strong>fox</strong>: multiple loosely-linked causes, varying by case. Calibration and flexibility are its gift; lacking a through-line is its shadow.'
+  },
+  // ── 8. CHAIN vs CABLE ──
+  {
+    dim:'chain', topic:'A personal decision',
+    question:'Should you keep a promise that has become inconvenient?',
+    optLeft:{  side:'left',  text:'A promise is a commitment freely made. To make a commitment just is to put your future self under an obligation. An obligation that dissolves the moment it’s inconvenient was never an obligation at all. So if you made a real promise, inconvenience cannot release you from it. You should keep it.' },
+    optRight:{ side:'right', text:'Lots of things pull toward keeping it: your friend is relying on you, your reputation is at stake, you’ll respect yourself more, and a world where promises bend to convenience is one no one can plan in. None of these alone is conclusive, but stacked together they strongly favor keeping the promise.' },
+    leftWhy:'A <strong>chain</strong>: a single deductive line from “what a promise is” to “keep it.” Rigor and transparency are its gift; one weak link breaks it.',
+    rightWhy:'A <strong>cable</strong>: several independent reasons woven together. Robustness is its gift; it can feel hand-wavy.'
+  },
+  // ── 9. PRINCIPLE vs CASE ──
+  {
+    dim:'principle', topic:'Free speech',
+    question:'Should a campus let a controversial speaker appear?',
+    optLeft:{  side:'left',  text:'Apply the principle consistently: a university’s purpose is the open pursuit of truth, which requires that ideas be answerable to argument, not to who is allowed to speak. Banning a speaker for their views violates that purpose directly. So unless the speech crosses into incitement or threat, the principle requires allowing it.' },
+    optRight:{ side:'right', text:'Look at the precedents we already accept. We platform speakers we find mistaken all the time; we’d never platform someone calling for violence against students in the room. The hard cases sit between these. The question isn’t a slogan about free speech — it’s which established case this particular invitation most resembles.' },
+    leftWhy:'<strong>Principle-first</strong>: the verdict follows from a top rule about the university’s purpose. Consistency and generality are its gift; missing the relevant particular is its shadow.',
+    rightWhy:'<strong>Case-first</strong>: it triangulates from accepted paradigm cases. Sensitivity to particulars is its gift; looking ad hoc is its shadow.'
+  },
+  // ── 10. LUMPER vs SPLITTER ──
+  {
+    dim:'lumper', topic:'A category puzzle',
+    question:'Is coding a kind of writing?',
+    optLeft:{  side:'left',  text:'Yes. Writing is composing a structured sequence of symbols to make something happen in a reader — to inform, persuade, or move. Code does exactly this; its “reader” is partly a machine and partly the next programmer. Essays, contracts, recipes, and programs are all species of the same genus: instructions in language. Coding is just writing whose reader includes a computer.' },
+    optRight:{ side:'right', text:'Calling them both “writing” hides more than it reveals. Prose tolerates ambiguity and lives on connotation; code is broken by a single misplaced character and means exactly one thing to the compiler. The skills, the failure modes, and the audiences differ so sharply that lumping them together flattens what’s distinctive about each.' },
+    leftWhy:'A <strong>lumper</strong>: it folds coding and prose into one genus. Structure and parsimony are its gift; blurring real differences is its shadow.',
+    rightWhy:'A <strong>splitter</strong>: it draws sharp lines around what differs. Precision is its gift; losing the forest is its shadow.'
+  },
+  // ── 11. BOLD vs CAUTIOUS ──
+  {
+    dim:'bold', topic:'A claim about learning',
+    question:'Does handwriting notes beat typing them?',
+    optLeft:{  side:'left',  text:'Yes — handwriting wins, full stop. Writing by hand is slower, and that slowness forces you to summarize rather than transcribe, which is what actually builds memory. Anyone who switches from laptop transcription to longhand summary will remember more a week later. If careful studies ever show typed summaries match handwritten ones, I’ll drop the claim.' },
+    optRight:{ side:'right', text:'There may be a modest advantage to handwriting, at least for some learners and some material. The often-cited study has been hard to replicate cleanly, and typing can win when speed or searchability matters. It probably comes down to whether you summarize or transcribe — which you can do in either medium.' },
+    leftWhy:'<strong>Bold conjecture</strong>: a strong claim, stated to be falsifiable. Advancing inquiry by inviting refutation is its gift; overclaiming is its shadow.',
+    rightWhy:'<strong>Cautious qualification</strong>: hedged and replication-aware. Honesty about uncertainty is its gift; saying nothing pinnable is its shadow.'
+  },
+  // ── 12. REFUTER vs BUILDER ──
+  {
+    dim:'refuter', topic:'A debate about work',
+    question:'Is remote work better for most knowledge workers?',
+    optLeft:{  side:'left',  text:'The standard case for the office doesn’t survive contact with the evidence. “Collaboration needs hallways” — yet distributed teams ship complex software daily. “People slack off at home” — output metrics say otherwise. “Culture needs presence” — then explain the strong cultures of remote-native firms. Knock out each pro-office claim and the default tips toward remote.' },
+    optRight:{ side:'right', text:'Let’s build the better model rather than just attack the office. The real variable is task type: deep, independent work thrives remotely; fast, ambiguous, trust-building work benefits from being together. A deliberate hybrid — remote for focus, in-person for the messy human parts — captures the gains of both. That’s the arrangement worth designing toward.' },
+    leftWhy:'A <strong>refuter</strong>: it advances by dismantling each opposing claim. Sharpening and clearing ground is its gift; leaving only rubble is its shadow.',
+    rightWhy:'A <strong>builder</strong>: it constructs a positive hybrid model. Synthesis is its gift; waving away objections is its shadow.'
+  }
+];
+
+// ── STATE ───────────────────────────────────────────────────
+let order = [];          // shuffled round indices
+let pos = 0;             // pointer into order
+// per-dimension tally: { left: n, right: n }
+let tally = {};
+let display = {};        // current round's A/B → option mapping
+
+function startQuiz() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  order = shuffle([...Array(ROUNDS.length).keys()]);
+  pos = 0;
+  tally = {};
+  Object.keys(PAIRS).forEach(k => tally[k] = { left: 0, right: 0 });
+  showRound();
+  window.scrollTo(0, 0);
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showRound() {
+  const r = ROUNDS[order[pos]];
+
+  document.getElementById('progress-text').textContent = `Round ${pos + 1} of ${ROUNDS.length}`;
+  document.getElementById('progress-fill').style.width = `${(pos / ROUNDS.length) * 100}%`;
+  document.getElementById('round-topic').textContent = r.topic;
+  document.getElementById('round-question').textContent = r.question;
+
+  // randomize which option is shown as A vs B
+  const flip = Math.random() < 0.5;
+  display = flip
+    ? { A: r.optLeft, B: r.optRight, AWhy: r.leftWhy, BWhy: r.rightWhy }
+    : { A: r.optRight, B: r.optLeft, AWhy: r.rightWhy, BWhy: r.leftWhy };
+
+  document.getElementById('text-A').textContent = display.A.text;
+  document.getElementById('text-B').textContent = display.B.text;
+
+  // reset card states
+  ['A','B'].forEach(k => {
+    const c = document.getElementById('card-' + k);
+    c.classList.remove('chosen');
+    c.style.pointerEvents = 'auto';
+  });
+  document.getElementById('reveal').classList.remove('show');
+}
+
+function choose(which) {
+  const r = ROUNDS[order[pos]];
+  const chosenOpt = display[which];
+  // record toward the chosen pole
+  tally[r.dim][chosenOpt.side]++;
+
+  // lock cards
+  ['A','B'].forEach(k => {
+    const c = document.getElementById('card-' + k);
+    c.style.pointerEvents = 'none';
+  });
+  document.getElementById('card-' + which).classList.add('chosen');
+
+  // reveal
+  const pair = PAIRS[r.dim];
+  document.getElementById('reveal-title').textContent =
+    `You picked the ${chosenOpt.side === 'left' ? pair.left : pair.right} — ${pair.title}`;
+  document.getElementById('reveal-tags').innerHTML =
+    `<span class="reveal-tag tag-left">${pair.left}</span>` +
+    `<span class="reveal-tag tag-right">${pair.right}</span>`;
+  document.getElementById('reveal-body').innerHTML = display[which + 'Why'];
+
+  document.getElementById('next-btn').textContent =
+    (pos === ROUNDS.length - 1) ? 'See my results →' : 'Next round →';
+
+  const rv = document.getElementById('reveal');
+  rv.classList.add('show');
+  rv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function skipRound() { advance(); }
+function nextRound() { advance(); }
+
+function advance() {
+  if (pos < ROUNDS.length - 1) {
+    pos++;
+    showRound();
+    document.getElementById('progress-fill').style.width = `${(pos / ROUNDS.length) * 100}%`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    finish();
+  }
+}
+
+// ── RESULTS ─────────────────────────────────────────────────
+function finish() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  document.getElementById('progress-fill').style.width = '100%';
+  renderResults();
+  window.scrollTo(0, 0);
+}
+
+function renderResults() {
+  const dimKeys = Object.keys(PAIRS);
+
+  // determine lean per dimension
+  const leans = dimKeys.map(k => {
+    const t = tally[k];
+    const total = t.left + t.right;
+    const net = t.right - t.left;     // + => right pole, - => left pole
+    return { k, t, total, net, abs: Math.abs(net) };
+  });
+
+  // signature: the dimensions with the clearest, most-decided lean
+  const decided = leans.filter(l => l.total > 0 && l.net !== 0)
+                       .sort((a, b) => b.abs - a.abs);
+  const top = decided.slice(0, 2);
+
+  let sig;
+  if (top.length === 0) {
+    sig = 'An even-handed reader';
+  } else {
+    sig = top.map(l => l.net > 0 ? PAIRS[l.k].right : PAIRS[l.k].left).join(' · ');
+  }
+  document.getElementById('signature').textContent = sig;
+
+  // summary
+  const sb = document.getElementById('summary-body');
+  if (top.length === 0) {
+    sb.innerHTML = `<p>Your choices split almost evenly across every pair — you don’t reliably favor one
+      pole over its partner. That’s the mark of a reader who judges each argument on its fit to the question
+      rather than on its style. Scan the breakdown below to see where, if anywhere, you tilted.</p>`;
+  } else {
+    const phrases = top.map(l => {
+      const name = (l.net > 0 ? PAIRS[l.k].right : PAIRS[l.k].left);
+      return `the <strong>${name.toLowerCase()}</strong>`;
+    });
+    sb.innerHTML = `<p>As a reader you’re most drawn to ${phrases.join(' and ')}. That’s your argumentative
+      <em>taste</em> — the moves that feel convincing to you. It isn’t better or worse than the alternatives;
+      it’s a lens. Knowing it tells you which kinds of argument will tend to <em>over</em>-persuade you, and
+      which you may undervalue and should read more charitably.</p>`;
+  }
+
+  // per-dimension bars
+  const container = document.getElementById('dims-container');
+  container.innerHTML = '';
+  leans.forEach(l => {
+    const pair = PAIRS[l.k];
+    const total = l.total || 1;
+    const lPct = (l.t.left / total) * 100;
+    const rPct = (l.t.right / total) * 100;
+
+    let verdict;
+    if (l.total === 0) {
+      verdict = `You skipped both rounds on this pair, so there’s nothing to report here.`;
+    } else if (l.net === 0) {
+      verdict = `<span class="v">Evenly split.</span> You found the <em>${pair.left.toLowerCase()}</em> and
+        the <em>${pair.right.toLowerCase()}</em> equally convincing — you take this pair case by case.`;
+    } else {
+      const fav = l.net > 0 ? pair.right : pair.left;
+      const other = l.net > 0 ? pair.left : pair.right;
+      const strength = l.abs >= 2 ? 'Both rounds' : 'On balance';
+      verdict = `<span class="v">${strength}, you leaned ${fav.toLowerCase()}.</span> The
+        <em>${other.toLowerCase()}</em> style is the one to read more charitably — and to practice writing
+        yourself, since it’s the lens you’re least likely to reach for.`;
+    }
+
+    const div = document.createElement('div');
+    div.className = 'dim-result';
+    div.innerHTML = `
+      <h4>${pair.title}</h4>
+      <div class="dim-bar-wrap">
+        <span class="dim-pole l">${pair.left}</span>
+        <div class="dim-bar">
+          <div class="seg-l" style="width:0%" data-w="${lPct}%"></div>
+          <div class="seg-r" style="width:0%" data-w="${rPct}%"></div>
+        </div>
+        <span class="dim-pole r">${pair.right}</span>
+      </div>
+      <div class="dim-verdict">${verdict}</div>`;
+    container.appendChild(div);
+  });
+
+  // animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.dim-bar .seg-l, .dim-bar .seg-r').forEach(s => {
+      s.style.width = s.dataset.w;
+    });
+  });
+
+  // exercise
+  const focus = top[0] || decided[0] || leans[0];
+  const pair = PAIRS[focus.k];
+  const least = focus.net > 0 ? pair.left : pair.right;
+  document.getElementById('exercise-text').innerHTML =
+    `Take a claim you believe and write a short paragraph defending it in your <em>least</em>-preferred
+     style from this quiz — as a <strong>${least.toLowerCase()}</strong> (${pair.title}). You picked against
+     it, so it’s the style your instincts resist. Forcing yourself to argue well in a voice you don’t trust
+     is exactly how range gets built.`;
+}
+
+function restart() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('intro-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function copyJournal(btn) {
+  const ta = document.getElementById('journal');
+  ta.select();
+  document.execCommand('copy');
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy', 1800);
+}
+</script>
+</body>
+</html>
