@@ -110,6 +110,16 @@
 
   .wordcount { font-size: 0.82rem; color: var(--muted); margin-right: auto; }
   .wordcount.short { color: var(--rust); font-weight: 500; }
+  .wordcount.long { color: var(--gold); font-weight: 500; }
+
+  .input-hint { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-top: 0.75rem; }
+  .input-hint strong { color: var(--ink); }
+  .long-hint { color: var(--gold); }
+  .long-hint:empty { display: none; }
+
+  .ref-link { margin-top: 0.85rem; font-size: 0.85rem; }
+  .ref-link a { color: var(--indigo); font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px; }
+  .ref-link a:hover { border-color: var(--indigo); }
 
   .btn {
     font-family: 'Inter', sans-serif;
@@ -185,6 +195,17 @@
   .summary-card p { font-size: 0.96rem; line-height: 1.7; color: #e2e5f6; margin-bottom: 0.75rem; }
   .summary-card p:last-child { margin-bottom: 0; }
   .summary-card strong { color: #fff; }
+
+  .warning-banner {
+    background: #fbe7d8;
+    border: 1px solid #e3b878;
+    border-left: 5px solid var(--gold);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  .warning-banner h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.18rem; color: #8a5a08; margin-bottom: 0.4rem; }
+  .warning-banner p { font-size: 0.9rem; line-height: 1.65; color: #5a4012; }
 
   .spectrum {
     background: white;
@@ -318,6 +339,7 @@
     <h1>Argument-Style <em>Diagnostic</em></h1>
     <p class="subtitle">Paste a piece of your own argumentative writing and discover the
       intellectual <em>temperament</em> it reveals — across eleven dimensions of legitimate, borrowable style.</p>
+    <p class="ref-link"><a href="argument-styles.html">📖 New to these styles? Read the full framework &amp; sources →</a></p>
   </header>
 
   <!-- INPUT -->
@@ -337,6 +359,10 @@
         </label>
         <button class="btn btn-primary" onclick="analyze()">Analyze my style →</button>
       </div>
+      <p class="input-hint">Tip: feed it <strong>one coherent piece at a time</strong> (an essay, an op-ed,
+        a discussion post), 150+ words. Blending several different pieces together tends to average their
+        styles into a muddy result. There's no upper limit, though — a very long text just takes a moment longer.</p>
+      <p class="input-hint long-hint" id="long-hint"></p>
       <div class="note">
         <strong>How to read this honestly.</strong> This tool scans for <em>surface signals</em> —
         the words and connectives that tend to accompany each style. It is a mirror, not a verdict.
@@ -356,6 +382,15 @@
     <div class="results-head">
       <div class="course-tag">Your argumentative temperament</div>
       <div class="signature" id="signature"></div>
+    </div>
+
+    <div class="warning-banner" id="arg-warning" style="display:none;">
+      <h3>⚠ This doesn’t look like an argument</h3>
+      <p>The text you submitted shows very few of the signals this tool looks for — the moves writers make
+        when they’re <em>arguing</em> a point: claiming, reasoning, drawing inferences, qualifying, objecting,
+        explaining. It reads more like description, summary, narration, or notes. The diagnostic is built to
+        analyze <strong>argumentative writing</strong>, so the profile below may not mean much. For a useful
+        read, try a piece where you <strong>take a position and defend it</strong>.</p>
     </div>
 
     <div class="summary-card">
@@ -379,7 +414,8 @@
 
     <p class="cross-link">
       Want to test what you’re <em>drawn to</em>, not just what you do?
-      Try the <a href="08-argument-style-duel.html">Argument-Style Duel →</a>
+      Try the <a href="08-argument-style-duel.html">Argument-Style Duel →</a><br>
+      Or read the full framework: <a href="argument-styles.html">The eleven argument styles →</a>
     </p>
   </div>
 
@@ -579,6 +615,9 @@ function updateCount() {
   const el = document.getElementById('wordcount');
   el.textContent = w + (w === 1 ? ' word' : ' words');
   el.classList.toggle('short', w > 0 && w < 150);
+  el.classList.toggle('long', w > 2500);
+  document.getElementById('long-hint').textContent =
+    w > 2500 ? 'That’s a long sample — it’ll still work, but the read is cleanest on one coherent piece at a time.' : '';
 }
 
 function wordCount(t) {
@@ -662,9 +701,17 @@ function renderResults(results, words) {
 
   const top = ranked.slice(0, 2).map(x => x.r).filter(r => r.totalHits > 0 && Math.abs(r.position) > 12);
 
+  // Overall argument-signal check: does the piece actually make an argument?
+  const totalSignal = results.reduce((s, r) => s + r.totalHits, 0);
+  const argDensity = words ? (totalSignal / words) * 100 : 0;
+  const looksLikeArg = argDensity >= 2.2;   // cues per 100 words; below this reads as non-argument
+  document.getElementById('arg-warning').style.display = looksLikeArg ? 'none' : 'block';
+
   // Signature line
   let sig;
-  if (top.length === 0) {
+  if (!looksLikeArg) {
+    sig = 'More description than argument';
+  } else if (top.length === 0) {
     sig = 'A balanced, hard-to-pigeonhole voice';
   } else {
     sig = top.map(r => poleName(r)).join(' · ');
@@ -673,7 +720,12 @@ function renderResults(results, words) {
 
   // Summary
   const sb = document.getElementById('summary-body');
-  if (top.length === 0) {
+  if (!looksLikeArg) {
+    sb.innerHTML = `<p>There’s very little argumentative signal in this sample — see the note above. The
+      spectra below are shown for completeness, but with so few argument moves to read, they shouldn’t be
+      taken to reveal much about your style yet. Feed the tool a piece where you stake out a claim and
+      back it up.</p>`;
+  } else if (top.length === 0) {
     sb.innerHTML = `<p>Across all eleven dimensions your writing sits close to the middle: no single
       temperament dominates the sample you gave. That can mean a genuinely flexible voice — or simply
       that this particular passage didn't lean hard enough for the signals to register. Try a more

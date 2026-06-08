@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argument Styles — A Typology of Legitimate Temperaments — Phil 101</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f4ee;
+    --surface: #efeadf;
+    --border: #d8cdb6;
+    --ink: #14110a;
+    --muted: #756a55;
+    --indigo: #2e3a6b;
+    --teal: #1d6b63;
+    --rust: #9c3a1e;
+    --gold: #b07d12;
+    --shadow: 0 4px 22px rgba(20,17,10,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .toolbar-nav {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .toolbar-nav a {
+    font-size: 0.8rem; font-weight: 500; text-decoration: none;
+    color: var(--indigo); border: 1px solid var(--border); background: white;
+    padding: 0.4rem 0.9rem; border-radius: 20px; transition: all 0.15s;
+  }
+  .toolbar-nav a:hover { border-color: var(--indigo); background: var(--surface); }
+
+  header { text-align: center; margin-bottom: 2.5rem; }
+  .course-tag {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(2rem, 5vw, 3rem); line-height: 1.08; margin-bottom: 0.5rem;
+  }
+  h1 em { font-style: italic; color: var(--indigo); }
+  .lede { color: var(--muted); font-size: 1rem; max-width: 600px; margin: 0.5rem auto 0; }
+
+  h2 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(1.5rem, 3.5vw, 2rem); color: var(--ink);
+    margin: 2.75rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.2rem; margin: 0 0 0.4rem;
+  }
+  p { margin-bottom: 1rem; font-size: 0.97rem; color: #2e2719; }
+  p.intro { font-size: 1.02rem; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: italic; }
+
+  ul { margin: 0 0 1.25rem 1.25rem; }
+  li { margin-bottom: 0.5rem; font-size: 0.95rem; color: #2e2719; }
+
+  .framing {
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.5rem 1.75rem; box-shadow: var(--shadow); margin-bottom: 1rem;
+  }
+
+  .pair {
+    background: white; border: 1px solid var(--border);
+    border-left: 4px solid var(--indigo); border-radius: 0 12px 12px 0;
+    padding: 1.25rem 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow);
+  }
+  .pair h3 { color: var(--indigo); }
+  .pair .desc { font-style: italic; color: #3a3120; margin-bottom: 0.8rem; }
+  .ss { margin-bottom: 0.5rem; font-size: 0.92rem; }
+  .lbl {
+    display: inline-block; font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 0.12rem 0.5rem;
+    border-radius: 4px; margin-right: 0.5rem; vertical-align: 1px;
+  }
+  .lbl.strength { background: #eef6f4; color: var(--teal); }
+  .lbl.shadow   { background: #fbf0eb; color: var(--rust); }
+  .cite { font-size: 0.82rem; font-style: italic; color: var(--muted); margin: 0.6rem 0 0; }
+
+  .families { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.75rem; }
+  .families ul li { margin-bottom: 0.7rem; }
+
+  .exercise {
+    background: var(--surface); border: 1px dashed var(--gold); border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+  }
+  .exercise h3 { color: var(--gold); }
+
+  .refs { font-size: 0.86rem; color: #3a3120; }
+  .refs li { margin-bottom: 0.4rem; }
+
+  .note-tip {
+    background: var(--surface); border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; font-size: 0.88rem;
+    color: #5a4a2c; margin: 1.25rem 0;
+  }
+
+  footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 0.85rem; color: var(--muted);
+  }
+  footer a { color: var(--indigo); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="toolbar-nav">
+    <a href="07-argument-style-diagnostic.html">↪ Argument-Style Diagnostic</a>
+    <a href="08-argument-style-duel.html">↪ Argument-Style Duel</a>
+    <a href="teaching.html">↪ Teaching</a>
+  </nav>
+
+  <header>
+    <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
+    <h1>Argument Styles</h1>
+    <p class="lede"><em>A typology of legitimate temperaments</em> — the framework behind the
+      diagnostic and the duel.</p>
+  </header>
+
+  <p class="intro">A teaching framework for helping students recognize and develop an
+    <em>argument style</em>, analogous to developing a writing voice.</p>
+
+  <h2>Core framing</h2>
+  <div class="framing">
+    <p>An argument style is an intellectual <strong>temperament</strong> — a virtue with a
+      characteristic excess. None is the correct one to <em>be</em>. As with writing voice, the goal is
+      to know your default and learn to borrow the others when the argument calls for it.</p>
+    <ul>
+      <li>Aristotle's "virtue in the mean" transfers cleanly: a style is good <em>used at the right time
+        and to the right degree</em>.</li>
+      <li>Walton's point that the right style depends on the <strong>goal of the exchange</strong> gives a
+        principled sense of "legitimate, but fit to purpose" (Walton &amp; Krabbe, <em>Commitment in
+        Dialogue</em>, 1995).</li>
+    </ul>
+    <p style="margin-bottom:0;">So a student who reads themselves as a natural refuter or a natural
+      hedgehog is not being diagnosed with a flaw — they are being handed a description of their voice
+      <em>and</em> a menu of borrowable moves.</p>
+  </div>
+
+  <h2>The pairs</h2>
+  <p>Each style is shown with what it does well (<strong>strength</strong>) and where it tips over
+    (<strong>shadow</strong>). The first six are the original core; pairs 7–11 were added after surveying
+    argumentative writing across three tiers (popular, semi-formal, formal) and three domains (the
+    physical sciences, social sciences, and humanities). See <em>Where these styles live</em> below for
+    how the pairs distribute across those tiers and domains.</p>
+
+  <div class="pair">
+    <h3>1 · Hedgehog vs. Fox</h3>
+    <p class="desc">Unifying everything under one central idea vs. holding many small, loosely-linked models.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>hedgehog buys depth and explanatory reach; fox buys calibration and flexibility.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>hedgehog forces messy data to fit; fox can lack a through-line and dither.</p>
+    <p class="cite">Berlin, The Hedgehog and the Fox (1953); Tetlock, Expert Political Judgment (2005).</p>
+  </div>
+
+  <div class="pair">
+    <h3>2 · Chain vs. Cable</h3>
+    <p class="desc">One tight deductive line vs. many independent strands converging on a probable conclusion.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>chain is rigorous and transparent; cable is robust and handles messiness.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>chain is only as strong as its weakest premise; cable can feel hand-wavy and resist pinning-down.</p>
+    <p class="cite">Newman, An Essay in Aid of a Grammar of Assent (1870).</p>
+  </div>
+
+  <div class="pair">
+    <h3>3 · Principle-first vs. Case-first</h3>
+    <p class="desc">Deriving from a top rule vs. reasoning outward from paradigm cases.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>principle-first gives consistency and generality; case-first gives practical sensitivity to particulars.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>principle-first risks rigidity and missing the morally relevant detail; case-first risks looking ad hoc.</p>
+    <p class="cite">Jonsen &amp; Toulmin, The Abuse of Casuistry (1988).</p>
+  </div>
+
+  <div class="pair">
+    <h3>4 · Lumper vs. Splitter</h3>
+    <p class="desc">Reaching for the unifying category vs. the fine distinction.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>lumpers see structure and parsimony; splitters get precision.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>lumpers blur real differences; splitters lose the forest and stall in taxonomy.</p>
+    <p class="cite">Simpson, "The Principles of Classification and a Classification of Mammals" (1945).</p>
+  </div>
+
+  <div class="pair">
+    <h3>5 · Bold conjecture vs. Cautious qualification</h3>
+    <p class="desc">Stating a strong, testable claim and inviting refutation vs. hedging carefully.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>bold conjecture advances inquiry precisely by being falsifiable; qualification is honest about uncertainty.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>bold conjecture overclaims; qualification can dissolve into saying nothing pinnable.</p>
+    <p class="cite">Popper, Conjectures and Refutations (1963); Toulmin, The Uses of Argument (1958), on qualifiers and rebuttals.</p>
+  </div>
+
+  <div class="pair">
+    <h3>6 · Refuter vs. Builder</h3>
+    <p class="desc">Testing a view by trying to break it vs. constructing and extending a position.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>the refuter sharpens and clears ground; the builder synthesizes.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>the refuter can leave only rubble; the builder can wave away genuine objections.</p>
+    <p class="cite">On the Socratic elenchus: Vlastos, Socrates: Ironist and Moral Philosopher (1991).</p>
+  </div>
+
+  <div class="pair">
+    <h3>7 · Narrative vs. Analytic</h3>
+    <p class="desc">Carrying the argument in a story — agents, motives, scene, sequence — vs. in explicit premises and inferences.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>narrative buys memorability, motive force, and fidelity to lived experience; analytic buys explicitness and checkability.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>narrative can smuggle its conclusion past scrutiny and resist testing; analytic can go bloodless and miss what actually moves people.</p>
+    <p class="cite">Bruner, Actual Minds, Possible Worlds (1986), on the narrative vs. paradigmatic modes of thought; Fisher, Human Communication as Narration (1987), on the narrative vs. the rational-world paradigm.</p>
+  </div>
+
+  <div class="pair">
+    <h3>8 · Empirical vs. Conceptual</h3>
+    <p class="desc">Settling the question by appeal to observation, data, and experiment vs. by appeal to concepts, definitions, intuitions, and thought experiments.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>empirical ties claims to the world and exposes them to evidence; conceptual clarifies what is even being asked and what would count as an answer.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>empirical can measure the measurable and ignore the rest; conceptual can spin frictionlessly, untethered from how things actually are.</p>
+    <p class="cite">The empiricist–rationalist tradition (Hume; Descartes); Williamson, The Philosophy of Philosophy (2007), on a priori / "armchair" method.</p>
+  </div>
+
+  <div class="pair">
+    <h3>9 · Quantitative vs. Qualitative</h3>
+    <p class="desc">Making the case in the currency of measurement — number, statistic, formal model — vs. the currency of meaning — interpretation, thick description, the telling instance.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>quantitative buys precision, comparability, and reach across many cases; qualitative buys depth, context, and access to meaning.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>quantitative can mistake what is countable for what matters; qualitative can over-read a handful of cases and resist generalization.</p>
+    <p class="cite">Lincoln &amp; Guba, Naturalistic Inquiry (1985); King, Keohane &amp; Verba, Designing Social Inquiry (1994).</p>
+  </div>
+
+  <div class="pair">
+    <h3>10 · Mechanism vs. Pattern</h3>
+    <p class="desc">Explaining by exhibiting the underlying machinery — the entities and activities that produce a phenomenon — vs. by establishing a robust regularity or correlation in the data.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>mechanism buys understanding of <em>why</em> and licenses intervention; pattern buys predictive traction even where the mechanism is unknown.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>mechanism can tell a tidy causal story that outruns the evidence; pattern can rest on a correlation it can neither explain nor trust.</p>
+    <p class="cite">Machamer, Darden &amp; Craver, "Thinking About Mechanisms" (2000); Lipton, Inference to the Best Explanation (2004).</p>
+  </div>
+
+  <div class="pair">
+    <h3>11 · Adversarial vs. Collaborative</h3>
+    <p class="desc">Advancing inquiry by contest — pressing the strongest attack on a view — vs. by cooperation — steelmanning, building on what an interlocutor gets right, seeking joint gains.</p>
+    <p class="ss"><span class="lbl strength">Strength</span>adversarial pressure quickly exposes weak points; collaboration preserves partial insights and widens the sources of progress.</p>
+    <p class="ss"><span class="lbl shadow">Shadow</span>adversarial argument can reward winning over truth and exclude quieter voices; collaboration can turn conflict-averse and let bad ideas stand.</p>
+    <p class="cite">Moulton, "A Paradigm of Philosophy: The Adversary Method" (1983); Foss &amp; Griffin, "Beyond Persuasion: A Proposal for an Invitational Rhetoric" (1995).</p>
+  </div>
+
+  <h2>Where these styles live: tiers and domains</h2>
+  <p>The same survey that turned up pairs 7–11 also shows that styles are not evenly spread — they
+    cluster by <em>tier</em> of writing and by <em>domain</em>.</p>
+
+  <h3>Three tiers</h3>
+  <ul>
+    <li><strong>Popular</strong> (r/changemyview, comment threads, op-eds) leans <em>narrative</em>, <em>case-first</em>, and <em>bold</em>, and stacks <em>cable</em>-style lists of reasons. At its best it is <em>collaborative</em> — r/changemyview's culture of steelmanning and good-faith engagement is an explicit norm; at its worst it is purely <em>adversarial</em>.</li>
+    <li><strong>Semi-formal</strong> (<em>The Atlantic</em>, the <em>NYT</em>, longform journalism) blends a <em>narrative</em> lede with an <em>analytic</em> payoff. It tends <em>fox</em>-like and case-rich, with bold claims <em>qualified</em> for a general reader.</li>
+    <li><strong>Formal / academic</strong> leans <em>analytic</em>, <em>empirical</em>, method-explicit, and <em>cautious</em>. It foregrounds <em>chains</em>, fine <em>distinctions</em> (splitter), and heavy citation — itself an <em>ethos</em> move (see the note on appeals below).</li>
+  </ul>
+
+  <h3>Three domains</h3>
+  <ul>
+    <li><strong>Physical sciences</strong> — <em>empirical</em>, <em>quantitative</em>, and <em>mechanism</em>- and model-based; <em>bold conjecture</em> made <em>falsifiable</em>; the argument is often a <em>chain</em> from model to prediction tested against data.</li>
+    <li><strong>Social sciences</strong> — split internally on <em>quantitative vs. qualitative</em> and on <em>pattern vs. mechanism</em>; <em>cable</em> arguments and <em>case-first</em> reasoning are common. The qual/quant divide is itself a live, ongoing methodological argument.</li>
+    <li><strong>Humanities</strong> — <em>conceptual</em>, <em>qualitative</em>, <em>narrative</em>, and <em>case-first</em>; much <em>lumping and splitting</em> over categories; close reading of the telling instance; <em>bold</em> interpretive conjecture tempered by <em>qualification</em>.</li>
+  </ul>
+
+  <div class="note-tip">
+    <strong>A note on appeals.</strong> Cutting across all of this is the classical triad of
+    <em>ethos, pathos, logos</em> (Aristotle, <em>Rhetoric</em>): persuading by credibility, by emotion,
+    or by the argument itself. This is less a style than a set of levers every style pulls —
+    analytic↔logos, narrative↔pathos, citation-and-credential↔ethos — but it is worth naming so students
+    can see which lever a given piece is really using.
+  </div>
+
+  <h2>Higher-order families: which pairs are facets of one axis</h2>
+  <p>Several of the eleven pairs are surface expressions of a smaller number of deeper axes. (Collapsing
+    them like this is itself a <em>lumper's</em> move — good for seeing structure, at the risk of blurring
+    real differences; a <em>splitter</em> will rightly want them kept apart.)</p>
+  <div class="families">
+    <ul>
+      <li><strong>One vs. many — Integrator ↔ Discriminator.</strong> <em>Hedgehog/fox</em> and <em>lumper/splitter</em> are the same impulse aimed at different targets: one unifies <em>explanations</em>, the other unifies <em>categories</em>. Berlin's hedgehog is, precisely, a monist. Shared question: do you reach for the one, or honor the many?</li>
+      <li><strong>Top-down vs. bottom-up — Theory-led ↔ Ground-led.</strong> <em>Principle-first/case-first</em> and <em>empirical/conceptual</em> both ask where reasoning bottoms out: in a high commitment you bring to the case, or in the case (or the data) itself.</li>
+      <li><strong>Critical vs. constructive — Breaker ↔ Builder.</strong> <em>Refuter/builder</em> and <em>adversarial/collaborative</em> both concern stance — the first toward <em>ideas</em> (test by breaking vs. extend), the second toward <em>interlocutors</em> (contest vs. cooperate). They usually travel together but can come apart: you can refute a view in the most collaborative spirit.</li>
+      <li><strong>Logos vs. mythos — Formal ↔ Interpretive.</strong> <em>Narrative/analytic</em> and <em>quantitative/qualitative</em> both concern the <em>medium</em> the case is rendered in: number and proposition vs. story and meaning. <em>Mechanism/pattern</em> sits at the edge of this family (a causal story vs. a statistical regularity).</li>
+    </ul>
+    <p>Three pairs resist combination and hold their own axes:</p>
+    <ul>
+      <li><strong>Chain/cable</strong> — the <em>architecture</em> of support (serial vs. convergent).</li>
+      <li><strong>Bold/cautious</strong> — the level of <em>epistemic risk</em> (commit vs. hedge).</li>
+      <li><strong>Mechanism/pattern</strong> — the <em>form of explanation</em> (machinery vs. regularity), though it leans toward the logos/mythos family.</li>
+    </ul>
+    <p style="margin-bottom:0;">The payoff for teaching: styles tend to <em>co-occur</em>. A student who reads as a hedgehog will
+      often also read as a lumper, a principle-first reasoner, and a refuter — because these share the
+      deeper "integrate / start-from-the-top / break" temperament. Range-building is therefore not eleven
+      separate skills but a few deeper moves: learning to <strong>multiply</strong> where you unify, to
+      <strong>start from the ground</strong> where you start from the top, to <strong>build</strong> where
+      you break, and to <strong>tell</strong> where you formalize.</p>
+  </div>
+
+  <h2>Pedagogical upshot</h2>
+  <p>The "legitimate but different" framing turns self-recognition into range-building rather than
+    diagnosis.</p>
+  <div class="exercise">
+    <h3>Exercise</h3>
+    <p style="margin-bottom:0;">Take a position you hold. Argue it once in your home style, then re-argue
+      it in the style that is least comfortable. This is the argument-style analogue of asking a writer to
+      imitate a sentence rhythm that isn't theirs. For a sharper version, pick the <em>family</em> opposite
+      to your default (above): if you are an integrator, argue as a discriminator; if you are top-down,
+      argue from the ground up.</p>
+  </div>
+
+  <h2>References</h2>
+  <ul class="refs">
+    <li>Aristotle, <em>Nicomachean Ethics</em> (virtue as a mean); <em>Rhetoric</em> and <em>Topics</em> (dialectic, rhetoric, eristic; ethos/pathos/logos).</li>
+    <li>Berlin, Isaiah. <em>The Hedgehog and the Fox</em>. 1953.</li>
+    <li>Bruner, Jerome. <em>Actual Minds, Possible Worlds</em>. Harvard University Press, 1986.</li>
+    <li>Fisher, Walter R. <em>Human Communication as Narration: Toward a Philosophy of Reason, Value, and Action</em>. University of South Carolina Press, 1987.</li>
+    <li>Foss, Sonja K., and Cindy L. Griffin. "Beyond Persuasion: A Proposal for an Invitational Rhetoric." <em>Communication Monographs</em> 62 (1995): 2–18.</li>
+    <li>Jonsen, Albert R., and Stephen Toulmin. <em>The Abuse of Casuistry</em>. University of California Press, 1988.</li>
+    <li>King, Gary, Robert O. Keohane, and Sidney Verba. <em>Designing Social Inquiry: Scientific Inference in Qualitative Research</em>. Princeton University Press, 1994.</li>
+    <li>Lincoln, Yvonna S., and Egon G. Guba. <em>Naturalistic Inquiry</em>. Sage, 1985.</li>
+    <li>Lipton, Peter. <em>Inference to the Best Explanation</em>. 2nd ed. Routledge, 2004.</li>
+    <li>Machamer, Peter, Lindley Darden, and Carl F. Craver. "Thinking About Mechanisms." <em>Philosophy of Science</em> 67, no. 1 (2000): 1–25.</li>
+    <li>Moulton, Janice. "A Paradigm of Philosophy: The Adversary Method." In <em>Discovering Reality</em>, ed. Sandra Harding and Merrill B. Hintikka, 149–164. Reidel, 1983.</li>
+    <li>Newman, John Henry. <em>An Essay in Aid of a Grammar of Assent</em>. 1870.</li>
+    <li>Popper, Karl. <em>Conjectures and Refutations</em>. 1963.</li>
+    <li>Simpson, George Gaylord. "The Principles of Classification and a Classification of Mammals." <em>Bulletin of the AMNH</em>, 1945.</li>
+    <li>Tetlock, Philip E. <em>Expert Political Judgment</em>. Princeton University Press, 2005.</li>
+    <li>Toulmin, Stephen. <em>The Uses of Argument</em>. Cambridge University Press, 1958.</li>
+    <li>Vlastos, Gregory. <em>Socrates: Ironist and Moral Philosopher</em>. Cornell University Press, 1991.</li>
+    <li>Walton, Douglas, and Erik C. W. Krabbe. <em>Commitment in Dialogue</em>. SUNY Press, 1995.</li>
+    <li>Williamson, Timothy. <em>The Philosophy of Philosophy</em>. Blackwell, 2007.</li>
+  </ul>
+
+  <footer>
+    Try the tools: <a href="07-argument-style-diagnostic.html">Argument-Style Diagnostic</a> ·
+    <a href="08-argument-style-duel.html">Argument-Style Duel</a><br>
+    Phil 101 · Reasoning &amp; Critical Thinking · Charles Lassiter
+  </footer>
+
+</div>
+</body>
+</html>
