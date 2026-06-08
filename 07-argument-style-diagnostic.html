@@ -343,6 +343,10 @@
         No style is the right one to be: each is a virtue with a characteristic excess, good when used
         <em>at the right time and to the right degree</em> (Aristotle; Walton). Treat the result as a
         conversation-starter about your default voice — and a menu of moves you can borrow.
+        <br><br>
+        <strong>One piece won't show everything.</strong> A single sample of writing may not reflect all
+        eleven dimensions — different tasks call for different styles. Where a passage simply doesn't engage
+        a given pair, the tool will tell you so rather than force you onto the spectrum.
       </div>
     </div>
   </div>
@@ -383,7 +387,7 @@
 
 <script>
 // ════════════════════════════════════════════════════════════
-//  THE SIX SPECTRA
+//  THE ELEVEN SPECTRA
 //  Each dimension has a left pole and a right pole, each with a
 //  set of surface "cues" (regex-safe lowercase tokens / phrases).
 //  Scoring counts cue hits per pole, normalised by text length.
@@ -670,16 +674,16 @@ function renderResults(results, words) {
   // Summary
   const sb = document.getElementById('summary-body');
   if (top.length === 0) {
-    sb.innerHTML = `<p>Across all six dimensions your writing sits close to the middle: no single
+    sb.innerHTML = `<p>Across all eleven dimensions your writing sits close to the middle: no single
       temperament dominates the sample you gave. That can mean a genuinely flexible voice — or simply
       that this particular passage didn't lean hard enough for the signals to register. Try a more
-      argumentative piece, or read the six spectra below to see where you tilt.</p>`;
+      argumentative piece, or read the eleven spectra below to see where you tilt.</p>`;
   } else {
     const parts = top.map(r => {
       const p = r.position < 0 ? r.dim.left : r.dim.right;
       return `a <strong>${p.name.toLowerCase()}</strong> (${p.gloss})`;
     });
-    sb.innerHTML = `<p>Your strongest signal is ${parts.join(', and ')}. Below, all six dimensions are
+    sb.innerHTML = `<p>Your strongest signal is ${parts.join(', and ')}. Below, all eleven dimensions are
       laid out as spectra — each a pair of <em>legitimate</em> temperaments. Remember: the goal isn't to
       land in the "right" spot. It's to know your default, and to learn to borrow the opposite pole when
       the argument calls for it.</p>`;
@@ -723,15 +727,21 @@ function renderSpectrum(r) {
   // marker position: map -100..100 to 4%..96%
   const pct = 50 + (position / 100) * 46;
 
-  const leaning = Math.abs(position) < 12 || totalHits === 0
+  const leaning = (totalHits === 0 || Math.abs(position) < 12)
     ? null
     : (position < 0 ? dim.left : dim.right);
   const off    = leaning && (leaning === dim.left ? dim.right : dim.left);
 
   let leanHtml;
-  if (!leaning) {
-    leanHtml = `<div class="lean-text"><span class="verdict">Balanced.</span> This passage doesn't
-      lean clearly toward either pole — you draw on both as needed.</div>`;
+  if (totalHits === 0) {
+    leanHtml = `<div class="lean-text"><span class="verdict">Not reflected here.</span> This piece doesn't
+      reflect either side of this dichotomy — there are no clear signals of ${dim.left.name.toLowerCase()}
+      or ${dim.right.name.toLowerCase()} in what you wrote. A single piece of writing rarely exercises every
+      dimension, so this is most likely just not where this passage does its work.</div>`;
+  } else if (!leaning) {
+    leanHtml = `<div class="lean-text"><span class="verdict">Balanced.</span> This passage draws on both
+      ${dim.left.name.toLowerCase()} and ${dim.right.name.toLowerCase()} moves in roughly equal measure —
+      you use each as the argument needs it.</div>`;
   } else {
     const strength = Math.abs(position) > 55 ? 'a strong' : (Math.abs(position) > 30 ? 'a clear' : 'a slight');
     leanHtml = `<div class="lean-text"><span class="verdict">${strength} ${leaning.name.toLowerCase()} lean.</span>
