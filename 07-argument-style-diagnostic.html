@@ -317,7 +317,7 @@
     <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
     <h1>Argument-Style <em>Diagnostic</em></h1>
     <p class="subtitle">Paste a piece of your own argumentative writing and discover the
-      intellectual <em>temperament</em> it reveals — across six dimensions of legitimate, borrowable style.</p>
+      intellectual <em>temperament</em> it reveals — across eleven dimensions of legitimate, borrowable style.</p>
   </header>
 
   <!-- INPUT -->
@@ -489,6 +489,81 @@ const DIMENSIONS = [
                 'i suggest','this suggests','a framework','synthesis','combine','bring together','this supports','adds to',
                 'strengthen','strengthens','expand on','in support of','constructive','lay the groundwork','together this',
                 'taken further','this opens up']
+  },
+  {
+    key: 'narrative',
+    title: 'Narrative vs. Analytic',
+    citation: 'Bruner, Actual Minds, Possible Worlds (1986); Fisher, Human Communication as Narration (1987).',
+    left:  { name: 'Narrative', gloss: 'carries the case in a story',
+             strength: 'memorability and fidelity to experience', shadow: 'smuggling the conclusion past scrutiny' },
+    right: { name: 'Analytic', gloss: 'carries the case in explicit premises',
+             strength: 'explicitness and checkability', shadow: 'going bloodless and missing what moves people' },
+    leftCues: ['imagine','picture this','i remember','one day','years ago','growing up','that night','my friend',
+               'she told','he told','told me','felt like','when she','when he','a young','the story','her story',
+               'his story','meanwhile','suddenly','i watched','i once','reminds me','came home'],
+    rightCues: ['the argument','the claim','the thesis','by definition','in other words','that is to say','consider whether',
+                'the question is whether','premise','the conclusion','it follows','strictly speaking','formally',
+                'analytically','the concept of','define','definition','logically','entails','we can show']
+  },
+  {
+    key: 'empirical',
+    title: 'Empirical vs. Conceptual',
+    citation: 'The empiricist–rationalist tradition (Hume; Descartes); Williamson, The Philosophy of Philosophy (2007).',
+    left:  { name: 'Empirical', gloss: 'argues from observation and data',
+             strength: 'ties claims to evidence', shadow: 'measuring the measurable and ignoring the rest' },
+    right: { name: 'Conceptual', gloss: 'argues from concepts and intuitions',
+             strength: 'clarifies what is even being asked', shadow: 'spinning free of how things are' },
+    leftCues: ['evidence','the data','data show','studies','study found','research shows','experiment','observed',
+               'observation','measured','statistics','survey','sample','findings','empirical','the results','a trial',
+               'according to','percent','%'],
+    rightCues: ['by definition','the concept','conceptually','a priori','necessarily','thought experiment','conceivable',
+                'intuition','intuitively','what it means','the very idea','metaphysically','in principle','by its nature',
+                'definitionally','analytically','logically possible','essentially','the notion of','self-evident']
+  },
+  {
+    key: 'quantitative',
+    title: 'Quantitative vs. Qualitative',
+    citation: 'Lincoln & Guba, Naturalistic Inquiry (1985); King, Keohane & Verba, Designing Social Inquiry (1994).',
+    left:  { name: 'Quantitative', gloss: 'argues in numbers and models',
+             strength: 'precision and comparability', shadow: 'mistaking the countable for what matters' },
+    right: { name: 'Qualitative', gloss: 'argues in meaning and description',
+             strength: 'depth and context', shadow: 'over-reading a few cases' },
+    leftCues: ['percent','%','the number','numbers','statistic','statistics','average','the mean','median','the rate',
+               'ratio','correlation','regression','sample size','n =','measured','quantify','metric','significant',
+               'times more','the data show','figures'],
+    rightCues: ['interpret','interpretation','the meaning','lived experience','theme','themes','context','nuance',
+                'in-depth','case study','ethnographic','subjective','thick description','rich description','their voices',
+                'testimony','first-hand','qualitative','what it is like','sense of meaning']
+  },
+  {
+    key: 'mechanism',
+    title: 'Mechanism vs. Pattern',
+    citation: 'Machamer, Darden & Craver, "Thinking About Mechanisms" (2000); Lipton, Inference to the Best Explanation (2004).',
+    left:  { name: 'Mechanism', gloss: 'explains by the underlying machinery',
+             strength: 'understanding why; licenses intervention', shadow: 'a tidy causal story that outruns the evidence' },
+    right: { name: 'Pattern', gloss: 'explains by robust regularities',
+             strength: 'predictive traction', shadow: 'resting on correlation it cannot explain' },
+    leftCues: ['mechanism','how it works','the process','caused by','because the','brings about','produces','gives rise to',
+               'the underlying','step by step','operates','it triggers','the pathway','feedback loop','under the hood',
+               'explains how','the machinery','drives the','what causes','interact to'],
+    rightCues: ['pattern','correlation','correlated','trend','regularity','on average','associated with','linked to',
+                'predicts','reliable predictor','consistently','across cases','statistical','whenever','every time',
+                'tends to occur','holds across','the relationship holds','reproducible','robust regularity']
+  },
+  {
+    key: 'adversarial',
+    title: 'Adversarial vs. Collaborative',
+    citation: 'Moulton, "A Paradigm of Philosophy: The Adversary Method" (1983); Foss & Griffin, "Beyond Persuasion" (1995).',
+    left:  { name: 'Adversarial', gloss: 'advances by contesting and attacking',
+             strength: 'pressure-tests claims fast', shadow: 'rewarding winning over truth' },
+    right: { name: 'Collaborative', gloss: 'advances by cooperating and steelmanning',
+             strength: 'preserves partial insights', shadow: 'going conflict-averse and letting bad ideas stand' },
+    leftCues: ['refute','debunk','demolish','destroy the','the opponent','the other side','critics claim','this fails',
+               'fatal','devastating','win the argument','tear apart','the flaw in','prove them wrong','attack',
+               'a fallacy','misguided','cannot withstand','collapses under','beat the'],
+    rightCues: ['common ground','i agree','you are right','fair point','build on','steelman','charitably','in good faith',
+                'both sides','we can','i take your point','to be fair','i can see why','work together','let us',
+                'jointly','mutual','what we share','strongest version','help build']
   }
 ];
 

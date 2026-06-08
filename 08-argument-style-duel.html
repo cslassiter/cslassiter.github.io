@@ -192,17 +192,17 @@
   <header>
     <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
     <h1>Argument-Style <em>Duel</em></h1>
-    <p class="subtitle">Twelve rounds. Each pits two equally legitimate ways of making the same case.
-      Pick whichever <em>you</em> find more convincing — and discover the argument styles you’re drawn to.</p>
+    <p class="subtitle">Two arguments for the same conclusion, in opposite styles — across eleven pairs of
+      temperaments. Pick whichever <em>you</em> find more convincing, and discover the argument styles you’re drawn to.</p>
   </header>
 
   <!-- INTRO -->
   <div id="intro-screen">
     <div class="panel">
       <h2>How it works</h2>
-      <p class="lead">You’ll see <strong>twelve pairs of arguments</strong>. The two arguments in each pair
-        defend the <em>same</em> conclusion, but in different styles — one from each of the six pairs of
-        temperaments in this unit. Just choose the one that lands better for you. There are no right answers.</p>
+      <p class="lead">Each round shows <strong>two arguments for the same conclusion</strong>, written in
+        opposite styles — one from each of the <strong>eleven pairs</strong> of temperaments in this unit.
+        Just choose the one that lands better for you. There are no right answers.</p>
       <p class="lead">After each choice, you’ll see which style you picked and why it works. At the end you’ll
         get a profile of the styles you gravitate toward as a <em>reader</em> — your argumentative taste.</p>
       <div class="note">
@@ -212,8 +212,12 @@
         argument — it’s surfacing the moves you instinctively trust, so you can notice them and, later, borrow
         the others.
       </div>
-      <div style="margin-top:1.25rem; text-align:center;">
-        <button class="btn" onclick="startQuiz()">Begin the duel →</button>
+      <p class="lead" style="margin-top:1rem;"><strong>Two pilot formats.</strong> The <em>quick</em> duel
+        shows one round per pair (11 rounds) and reshuffles which argument you see when you retake it. The
+        <em>full</em> duel runs both rounds of all eleven pairs (22 rounds) for a sharper, more reliable read.</p>
+      <div style="margin-top:1.25rem; text-align:center; display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+        <button class="btn" onclick="startQuiz('quick')">Quick pilot — 11 rounds →</button>
+        <button class="btn btn-ghost" onclick="startQuiz('full')">Full pilot — 22 rounds →</button>
       </div>
     </div>
   </div>
@@ -302,7 +306,12 @@ const PAIRS = {
   principle: { title:'Principle-first vs. Case-first', left:'Principle-first', right:'Case-first' },
   lumper:    { title:'Lumper vs. Splitter',         left:'Lumper',    right:'Splitter' },
   bold:      { title:'Bold conjecture vs. Cautious qualification', left:'Bold conjecture', right:'Cautious qualification' },
-  refuter:   { title:'Refuter vs. Builder',         left:'Refuter',   right:'Builder' }
+  refuter:   { title:'Refuter vs. Builder',         left:'Refuter',   right:'Builder' },
+  narrative: { title:'Narrative vs. Analytic',       left:'Narrative', right:'Analytic' },
+  empirical: { title:'Empirical vs. Conceptual',     left:'Empirical', right:'Conceptual' },
+  quantitative: { title:'Quantitative vs. Qualitative', left:'Quantitative', right:'Qualitative' },
+  mechanism: { title:'Mechanism vs. Pattern',        left:'Mechanism', right:'Pattern' },
+  adversarial: { title:'Adversarial vs. Collaborative', left:'Adversarial', right:'Collaborative' }
 };
 
 // Each round: a shared topic/question, two arguments (A & B).
@@ -418,6 +427,101 @@ const ROUNDS = [
     optRight:{ side:'right', text:'Let’s build the better model rather than just attack the office. The real variable is task type: deep, independent work thrives remotely; fast, ambiguous, trust-building work benefits from being together. A deliberate hybrid — remote for focus, in-person for the messy human parts — captures the gains of both. That’s the arrangement worth designing toward.' },
     leftWhy:'A <strong>refuter</strong>: it advances by dismantling each opposing claim. Sharpening and clearing ground is its gift; leaving only rubble is its shadow.',
     rightWhy:'A <strong>builder</strong>: it constructs a positive hybrid model. Synthesis is its gift; waving away objections is its shadow.'
+  },
+
+  // ── 13. NARRATIVE vs ANALYTIC ──
+  {
+    dim:'narrative', topic:'On forgiveness',
+    question:'Is it worth forgiving someone who wronged you?',
+    optLeft:{  side:'left',  text:'My grandfather spent forty years refusing to speak to his brother over a disputed inheritance. At his funeral, the brother — frail now — stood weeping at the back, uninvited. Watching two old men robbed of a lifetime together by a grudge neither could quite remember the start of, I finally understood what bitterness costs. Forgiveness isn’t a gift to them; it’s what you do with the years you have left.' },
+    optRight:{ side:'right', text:'Consider what forgiveness is: the decision to release a justified claim to resentment. Sustained resentment harms its holder more than its target, who often feels nothing. So if the aim is your own well-being, releasing the claim is rational whenever holding it yields no protective benefit. Forgiveness, on this analysis, is simply the dominant strategy.' },
+    leftWhy:'This is <strong>narrative</strong>: it argues through a concrete human story, letting the scene do the persuading. Its gift is memorability and fidelity to lived experience; its shadow is that a moving story can smuggle its conclusion past scrutiny.',
+    rightWhy:'This is <strong>analytic</strong>: it argues by defining the term and drawing an explicit inference. Its gift is explicitness and checkability; its shadow is going bloodless and missing what actually moves people.'
+  },
+  // ── 14. NARRATIVE vs ANALYTIC ──
+  {
+    dim:'narrative', topic:'On staying put',
+    question:'Why do people stay in jobs they hate?',
+    optLeft:{  side:'left',  text:'A friend stayed nine years at a company she dreaded. Every Sunday a quiet dread set in; every Monday she swore she’d leave. What kept her wasn’t the salary — it was a photo on her desk of the team from her first good year, back when the work felt like it mattered. She wasn’t staying for the job. She was staying for a version of it that had already ended.' },
+    optRight:{ side:'right', text:'The puzzle dissolves once we separate two things people weigh: expected future value and sunk cost. Rationally, only the first should bear on the decision. But people systematically treat already-invested time as a reason to continue — the sunk-cost fallacy. Staying in a hated job is therefore not mysterious; it is a predictable output of a documented bias.' },
+    leftWhy:'<strong>Narrative</strong>: a single vivid case carries the point through character and detail. Its gift is motive force and lifelikeness; its shadow is resisting testing — one story proves nothing on its own.',
+    rightWhy:'<strong>Analytic</strong>: it names a mechanism in explicit, general terms (sunk-cost reasoning). Its gift is clarity and generality; its shadow is that the abstraction can feel cold and lose the human texture.'
+  },
+
+  // ── 15. EMPIRICAL vs CONCEPTUAL ──
+  {
+    dim:'empirical', topic:'On human nature',
+    question:'Are human beings basically selfish?',
+    optLeft:{  side:'left',  text:'Look at what the studies actually show. In dictator-game experiments most people hand money to strangers for no return. Toddlers help adults reach dropped objects before they’re old enough to be taught to. Across hundreds of trials the observed behavior is stubbornly cooperative. Whatever our armchair theory predicts, the data keep contradicting pure selfishness.' },
+    optRight:{ side:'right', text:'The question is confused until we fix the term. If “selfish” means “acts on one’s own desires,” then even the saint is selfish — she desires others’ good. If it means “disregards others,” it is plainly false of most people. So “humans are basically selfish” is either trivially true or obviously false depending on the definition; as stated, it asserts nothing.' },
+    leftWhy:'<strong>Empirical</strong>: it settles the question by appeal to observation and data. Its gift is tying the claim to evidence; its shadow is measuring the measurable and possibly missing the rest.',
+    rightWhy:'<strong>Conceptual</strong>: it works on the meaning of the terms before any evidence is gathered. Its gift is clarifying what is even being asked; its shadow is spinning frictionlessly, untethered from how people actually behave.'
+  },
+  // ── 16. EMPIRICAL vs CONCEPTUAL ──
+  {
+    dim:'empirical', topic:'On well-being',
+    question:'Does money buy happiness?',
+    optLeft:{  side:'left',  text:'The evidence gives the answer a clear shape. Surveys across dozens of countries show well-being rising with income but with sharply diminishing returns, largely flattening once basic security is met. We don’t have to speculate — the dose-response curve has been measured again and again. Money buys happiness, at a steeply falling exchange rate.' },
+    optRight:{ side:'right', text:'Before measuring anything, ask what “happiness” means. If it is momentary pleasure, money may buy little; if it is a life going well by one’s own lights, money is partly constitutive of it for anyone who values security or opportunity. The disagreement here is less about data than about which concept of happiness we are pricing.' },
+    leftWhy:'<strong>Empirical</strong>: the verdict rides on measured, replicated data. Its gift is evidential grounding; its shadow is treating the quantifiable proxy as the whole of the thing.',
+    rightWhy:'<strong>Conceptual</strong>: it shows the dispute turns on a definition, not a measurement. Its gift is exposing a hidden ambiguity; its shadow is stalling at the level of words while the empirical question goes unanswered.'
+  },
+
+  // ── 17. QUANTITATIVE vs QUALITATIVE ──
+  {
+    dim:'quantitative', topic:'On schools',
+    question:'How should we judge whether a school is good?',
+    optLeft:{  side:'left',  text:'Judge it by figures you can compare: year-over-year test-score growth, graduation and attendance rates, the share of students who go on to further study. None is perfect, but they’re measurable, comparable across schools, and hard to fake at scale. Without numbers, “good school” is just a feeling — and feelings track wealth and reputation more than learning.' },
+    optRight:{ side:'right', text:'Spend a week inside. Watch whether students argue about ideas in the hallway, whether a struggling kid gets noticed, whether teachers stay late because they want to. The things that make a school good — trust, curiosity, belonging — never show up in a spreadsheet, and schools that chase the metrics tend to hollow out exactly what matters. You have to see it to know it.' },
+    leftWhy:'<strong>Quantitative</strong>: it argues in the currency of measurement and comparison. Its gift is precision and reach across many cases; its shadow is mistaking what is countable for what matters.',
+    rightWhy:'<strong>Qualitative</strong>: it argues from meaning, context, and the observed particular. Its gift is depth and access to what numbers miss; its shadow is over-reading a few cases and resisting generalization.'
+  },
+  // ── 18. QUANTITATIVE vs QUALITATIVE ──
+  {
+    dim:'quantitative', topic:'On relationships',
+    question:'How can you tell if a marriage is healthy?',
+    optLeft:{  side:'left',  text:'There’s more signal in the numbers than people expect. Researchers predict divorce with surprising accuracy from measurable things: the ratio of positive to negative interactions, physiological stress during conflict, how often contempt appears per hour of conversation. Counting these outperforms a couple’s own rosy or gloomy self-reports.' },
+    optRight:{ side:'right', text:'A marriage is a shared world of meaning, and you can’t weigh it. What matters is how two people read each other — whether a silence registers as comfort or as threat, whether an old joke still lands. Two couples with identical “metrics” can inhabit completely different marriages. Understanding one means listening to its particular language, not scoring it.' },
+    leftWhy:'<strong>Quantitative</strong>: it trusts measured, comparable indicators over impressions. Its gift is rigor and predictive power; its shadow is reducing a relationship to the variables that happen to be countable.',
+    rightWhy:'<strong>Qualitative</strong>: it insists the phenomenon is constituted by meaning that resists measurement. Its gift is fidelity to the particular; its shadow is offering little that generalizes beyond the case.'
+  },
+
+  // ── 19. MECHANISM vs PATTERN ──
+  {
+    dim:'mechanism', topic:'On exercise',
+    question:'Should we believe that exercise improves mood?',
+    optLeft:{  side:'left',  text:'Yes, because we can say how it works. Exercise raises endorphins and BDNF, lowers the inflammatory markers tied to depression, and steadies sleep — each a plausible causal route from movement to mood. When you can trace the machinery from cause to effect, the claim is more than a coincidence; it is an explanation you can act on.' },
+    optRight:{ side:'right', text:'We can trust it without knowing the machinery. Across large populations, people who exercise report better mood; the link survives controlling for confounders; and mood improves when inactive people take it up. The exact pathway is still debated, but the regularity is robust and reproducible — and a reliable pattern is enough to act on.' },
+    leftWhy:'<strong>Mechanism</strong>: it explains by exhibiting the underlying causal machinery. Its gift is genuine understanding of why, which licenses intervention; its shadow is a tidy causal story that can outrun the evidence.',
+    rightWhy:'<strong>Pattern</strong>: it rests on a robust, replicated regularity rather than a mechanism. Its gift is predictive traction even where the cause is unknown; its shadow is leaning on a correlation it cannot fully explain.'
+  },
+  // ── 20. MECHANISM vs PATTERN ──
+  {
+    dim:'mechanism', topic:'On a new drug',
+    question:'What best justifies believing a new drug will help patients?',
+    optLeft:{  side:'left',  text:'Show the pathway: the drug binds the receptor, the receptor blocks the enzyme, the enzyme drives the disease. If each link is established, we understand why it should work — and can reason about who it will and won’t help, even beyond the patients already tested. Understanding the mechanism is what lets prediction travel.' },
+    optRight:{ side:'right', text:'What ultimately matters is the trial: in a large randomized sample, treated patients did reliably better than controls. We accept plenty of drugs whose mechanism is still murky — aspirin worked for decades before anyone knew why. A robust, replicated outcome is the real warrant, mechanism or no mechanism.' },
+    leftWhy:'<strong>Mechanism</strong>: warrant comes from the traced causal chain. Its gift is explanatory depth and extrapolation to untested cases; its shadow is trusting an elegant model over messy reality.',
+    rightWhy:'<strong>Pattern</strong>: warrant comes from the measured regularity in the data. Its gift is hard-nosed reliability; its shadow is accepting that something works while remaining unable to say why.'
+  },
+
+  // ── 21. ADVERSARIAL vs COLLABORATIVE ──
+  {
+    dim:'adversarial', topic:'On changing minds',
+    question:'What is the best way to change someone’s mind?',
+    optLeft:{  side:'left',  text:'Find the weakest link in their reasoning and break it. People hold beliefs until a clear contradiction makes the position untenable. A sharp counterexample they can’t answer does more than hours of agreeable talk — it forces the belief into the open and shows, undeniably, that it cannot stand. Comfort changes no one; pressure does.' },
+    optRight:{ side:'right', text:'Start by stating their view better than they can, so they know they’ve been understood. Find the part they’re right about and build from there. People don’t move when they’re cornered — they dig in. They move when they feel safe enough to think out loud, when changing their mind looks like joining you rather than surrendering to you.' },
+    leftWhy:'<strong>Adversarial</strong>: it advances by contest — pressing the hardest attack on the other view. Its gift is that it pressure-tests claims fast and exposes weak points; its shadow is rewarding winning over truth and hardening the other side.',
+    rightWhy:'<strong>Collaborative</strong>: it advances by cooperation — steelmanning and building on common ground. Its gift is preserving partial insight and lowering defenses; its shadow is going conflict-averse and letting a bad argument stand.'
+  },
+  // ── 22. ADVERSARIAL vs COLLABORATIVE ──
+  {
+    dim:'adversarial', topic:'On new theories',
+    question:'How should a research field treat a bold new theory?',
+    optLeft:{  side:'left',  text:'Attack it without mercy. A theory earns its place only by surviving the hardest objections the field can muster — colleagues’ job is to try to break it, not to nurture it. What cannot withstand a determined assault was never knowledge. The very ruthlessness of the criticism is what keeps the field honest.' },
+    optRight:{ side:'right', text:'Develop it before judging it. A new theory arrives half-formed; demolishing the first draft tells you nothing about what the mature version could do. Better for colleagues to help build it out, supply the missing pieces, and find its strongest form — then test that. Premature attack kills good ideas in the cradle.' },
+    leftWhy:'<strong>Adversarial</strong>: progress through trial by combat — only what survives attack counts. Its gift is rigor and honesty; its shadow is destroying promising ideas before they mature, and excluding those who argue less aggressively.',
+    rightWhy:'<strong>Collaborative</strong>: progress through joint construction — build the idea up before stress-testing it. Its gift is rescuing insights that an early assault would lose; its shadow is sheltering a theory from the criticism it ultimately needs.'
   }
 ];
 
@@ -428,15 +532,27 @@ let pos = 0;             // pointer into order
 let tally = {};
 let display = {};        // current round's A/B → option mapping
 
-function startQuiz() {
+let quizMode = 'quick';
+
+function startQuiz(mode) {
+  quizMode = mode || 'quick';
   document.getElementById('intro-screen').style.display = 'none';
   document.getElementById('quiz-screen').style.display = 'block';
-  order = shuffle([...Array(ROUNDS.length).keys()]);
+  order = buildOrder(quizMode);
   pos = 0;
   tally = {};
   Object.keys(PAIRS).forEach(k => tally[k] = { left: 0, right: 0 });
   showRound();
   window.scrollTo(0, 0);
+}
+
+function buildOrder(mode) {
+  if (mode === 'full') return shuffle([...Array(ROUNDS.length).keys()]);
+  // quick: one randomly-chosen round per dimension
+  const byDim = {};
+  ROUNDS.forEach((r, i) => { (byDim[r.dim] = byDim[r.dim] || []).push(i); });
+  const picks = Object.values(byDim).map(a => a[Math.floor(Math.random() * a.length)]);
+  return shuffle(picks);
 }
 
 function shuffle(a) {
@@ -450,8 +566,8 @@ function shuffle(a) {
 function showRound() {
   const r = ROUNDS[order[pos]];
 
-  document.getElementById('progress-text').textContent = `Round ${pos + 1} of ${ROUNDS.length}`;
-  document.getElementById('progress-fill').style.width = `${(pos / ROUNDS.length) * 100}%`;
+  document.getElementById('progress-text').textContent = `Round ${pos + 1} of ${order.length}`;
+  document.getElementById('progress-fill').style.width = `${(pos / order.length) * 100}%`;
   document.getElementById('round-topic').textContent = r.topic;
   document.getElementById('round-question').textContent = r.question;
 
@@ -496,7 +612,7 @@ function choose(which) {
   document.getElementById('reveal-body').innerHTML = display[which + 'Why'];
 
   document.getElementById('next-btn').textContent =
-    (pos === ROUNDS.length - 1) ? 'See my results →' : 'Next round →';
+    (pos === order.length - 1) ? 'See my results →' : 'Next round →';
 
   const rv = document.getElementById('reveal');
   rv.classList.add('show');
@@ -507,10 +623,10 @@ function skipRound() { advance(); }
 function nextRound() { advance(); }
 
 function advance() {
-  if (pos < ROUNDS.length - 1) {
+  if (pos < order.length - 1) {
     pos++;
     showRound();
-    document.getElementById('progress-fill').style.width = `${(pos / ROUNDS.length) * 100}%`;
+    document.getElementById('progress-fill').style.width = `${(pos / order.length) * 100}%`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     finish();
@@ -578,7 +694,7 @@ function renderResults() {
 
     let verdict;
     if (l.total === 0) {
-      verdict = `You skipped both rounds on this pair, so there’s nothing to report here.`;
+      verdict = `You didn’t record a preference on this pair, so there’s nothing to report here.`;
     } else if (l.net === 0) {
       verdict = `<span class="v">Evenly split.</span> You found the <em>${pair.left.toLowerCase()}</em> and
         the <em>${pair.right.toLowerCase()}</em> equally convincing — you take this pair case by case.`;
