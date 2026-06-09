@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolkit Glossary — Argument Styles — Phil 101</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f6f4ee;
+    --surface: #efeadf;
+    --border: #d8cdb6;
+    --ink: #14110a;
+    --muted: #756a55;
+    --indigo: #2e3a6b;
+    --teal: #1d6b63;
+    --rust: #9c3a1e;
+    --gold: #b07d12;
+    --shadow: 0 4px 22px rgba(20,17,10,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 2rem 1rem 4rem;
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  .toolbar-nav {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .toolbar-nav a {
+    font-size: 0.8rem; font-weight: 500; text-decoration: none;
+    color: var(--indigo); border: 1px solid var(--border); background: white;
+    padding: 0.4rem 0.9rem; border-radius: 20px; transition: all 0.15s;
+  }
+  .toolbar-nav a:hover { border-color: var(--indigo); background: var(--surface); }
+
+  header { text-align: center; margin-bottom: 2.5rem; }
+  .course-tag {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 300;
+    font-size: clamp(2rem, 5vw, 3rem); line-height: 1.08; margin-bottom: 0.5rem;
+  }
+  h1 em { font-style: italic; color: var(--indigo); }
+  .lede { color: var(--muted); font-size: 1rem; max-width: 600px; margin: 0.5rem auto 0; }
+
+  p.intro { font-size: 1rem; color: #2e2719; margin-bottom: 1.5rem; }
+  p.intro a { color: var(--indigo); }
+
+  dl.tk-glossary { margin: 0 0 1.5rem; }
+  dl.tk-glossary dt {
+    font-family: 'Fraunces', serif; font-weight: 500; color: var(--indigo);
+    margin-top: 1.3rem; font-size: 1.12rem; scroll-margin-top: 1rem;
+  }
+  dl.tk-glossary dt:first-of-type { margin-top: 0; }
+  dl.tk-glossary dt:target {
+    background: #f0f2fb; border-radius: 6px;
+    padding: 0.25rem 0.5rem; margin-left: -0.5rem;
+  }
+  dl.tk-glossary dd { margin: 0.25rem 0 0; font-size: 0.95rem; color: #2e2719; line-height: 1.65; }
+  dl.tk-glossary .cite { font-size: 0.78rem; font-style: italic; color: var(--muted); font-weight: 400; }
+
+  .cite { font-size: 0.84rem; font-style: italic; color: #3a3120; }
+
+  footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 0.85rem; color: var(--muted);
+  }
+  footer a { color: var(--indigo); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="toolbar-nav">
+    <a href="index.html">↪ Home</a>
+    <a href="argument-styles.html">↪ Argument Styles</a>
+    <a href="07-argument-style-diagnostic.html">↪ Diagnostic</a>
+    <a href="08-argument-style-duel.html">↪ Duel</a>
+  </nav>
+
+  <header>
+    <div class="course-tag">Phil 101 · Reasoning &amp; Critical Thinking</div>
+    <h1>Toolkit <em>Glossary</em></h1>
+    <p class="lede">Plain-language definitions of the philosophical concepts behind the eleven argument styles.</p>
+  </header>
+
+  <p class="intro">These are the concepts named in the
+    <a href="argument-styles.html#philosophical-toolkit">philosophical toolkit table</a> — many of them
+    tools from Baggini &amp; Fosl's <em>The Philosopher's Toolkit</em>. The concept terms in that table link
+    straight to the matching entry below.</p>
+
+  <dl class="tk-glossary">
+    <dt id="g-monism">Monism vs. pluralism <span class="cite">(Hedgehog/Fox)</span></dt>
+    <dd>A <em>monist</em> thinks one big idea can explain most of what matters; a <em>pluralist</em> thinks reality needs many separate explanations that don't reduce to one. The hedgehog is a monist by temperament; the fox, a pluralist.</dd>
+    <dt id="g-parsimony">Parsimony / Ockham's razor <span class="cite">(Hedgehog/Fox, Lumper/Splitter)</span></dt>
+    <dd>Other things equal, prefer the simpler explanation — don't invent more moving parts than you need. The splitter's worry is that "simpler" can mean "ignoring real differences."</dd>
+    <dt id="g-deduction-induction">Deduction vs. induction <span class="cite">(Chain/Cable)</span></dt>
+    <dd>A <em>deductive</em> argument, if its premises are true, <em>guarantees</em> its conclusion — but one false premise breaks it (the chain). An <em>inductive</em> argument makes its conclusion <em>likely</em> by piling up evidence; no single strand carries it (the cable).</dd>
+    <dt id="g-defeasible">Defeasible reasoning <span class="cite">(Chain/Cable)</span></dt>
+    <dd>A <em>defeasible</em> conclusion is one you accept now but would give up if new evidence came in. Cable-style arguments are defeasible by design — a feature, not a weakness.</dd>
+    <dt id="g-generalism">Generalism vs. particularism <span class="cite">(Principle/Case)</span></dt>
+    <dd>A <em>generalist</em> thinks good reasoning starts from general rules and applies them to cases. A <em>particularist</em> thinks the right call can depend so much on the details that no rule captures it — you have to read the case itself.</dd>
+    <dt id="g-reflective-equilibrium">Reflective equilibrium <span class="cite">(Principle/Case)</span></dt>
+    <dd>Going back and forth between your general principles and your gut judgments about specific cases, adjusting each until they fit. It's how principle-first and case-first reasoners can meet in the middle.</dd>
+    <dt id="g-natural-kinds">Carving nature at its joints / family resemblance <span class="cite">(Lumper/Splitter)</span></dt>
+    <dd>Plato's image: a good category cuts reality where it really divides, like a butcher finding the joint. Wittgenstein's rival idea: some categories (like "game") have no single defining feature — members just share overlapping <em>family resemblances</em>. Lumpers trust the joints; splitters doubt they are joints.</dd>
+    <dt id="g-sorites">The sorites ("heap") problem <span class="cite">(Lumper/Splitter)</span></dt>
+    <dd>One grain isn't a heap; adding one grain never seems to make a heap — yet somehow you get a heap. It shows how hard it is to say <em>exactly</em> where a vague category begins.</dd>
+    <dt id="g-falsifiability">Falsifiability <span class="cite">(Bold/Cautious)</span></dt>
+    <dd>A claim is <em>falsifiable</em> if there's some possible observation that would prove it wrong. Popper's point: a bold, falsifiable claim is valuable <em>because</em> it sticks its neck out and can be tested.</dd>
+    <dt id="g-believe-truth">Believe-truth vs. shun-error <span class="cite">(Bold/Cautious)</span></dt>
+    <dd>William James named two goals that pull apart: <em>get to the truth</em> and <em>avoid believing falsehoods</em>. Chase truth too hard and you'll believe rashly; avoid error too hard and you'll commit to nothing. Bold vs. cautious is which you weight.</dd>
+    <dt id="g-elenchus">Elenchus, counterexample, reductio <span class="cite">(Refuter/Builder)</span></dt>
+    <dd>Three ways to test a claim by attacking it: the <em>elenchus</em> is Socrates' cross-examining until a belief contradicts itself; a <em>counterexample</em> is a single case that breaks a generalization; a <em>reductio</em> assumes a claim and derives an absurdity from it.</dd>
+    <dt id="g-abduction">Abduction / inference to the best explanation <span class="cite">(Refuter/Builder, Mechanism/Pattern)</span></dt>
+    <dd>Reasoning from a puzzling fact to the hypothesis that would best explain it ("the best account of these tracks is that a deer passed"). The builder's engine — and the mechanism-hunter's.</dd>
+    <dt id="g-verstehen">Verstehen vs. Erklären <span class="cite">(Narrative/Analytic)</span></dt>
+    <dd>Two German words for two kinds of grasp: <em>Erklären</em> is to <em>explain</em> from the outside by causes and laws; <em>Verstehen</em> is to <em>understand</em> from the inside, by reconstructing what something means to the people involved. Analytic argument aims at the first; narrative at the second.</dd>
+    <dt id="g-acquaintance">Knowledge by acquaintance vs. by description <span class="cite">(Narrative/Analytic)</span></dt>
+    <dd>Russell's distinction: you can know <em>of</em> something by direct experience (acquaintance — what red looks like) or only through a description (knowing <em>that</em> 700nm light is "red"). Stories trade in acquaintance; analysis in description.</dd>
+    <dt id="g-apriori">A priori vs. a posteriori <span class="cite">(Empirical/Conceptual)</span></dt>
+    <dd><em>A priori</em> knowledge can be had by thinking alone, before experience (2+2=4); <em>a posteriori</em> knowledge requires observing the world (water boils at 100°C). The empirical style leans a posteriori, the conceptual style a priori.</dd>
+    <dt id="g-humes-fork">Hume's fork &amp; the analytic/synthetic distinction <span class="cite">(Empirical/Conceptual)</span></dt>
+    <dd>Hume split claims into <em>relations of ideas</em> (true by meaning — "all bachelors are unmarried") and <em>matters of fact</em> (true by how the world is). Kant's near-cousin: <em>analytic</em> truths unpack a concept; <em>synthetic</em> truths add information about the world. Quine later argued the line is blurrier than it looks.</dd>
+    <dt id="g-nomothetic">Nomothetic vs. idiographic <span class="cite">(Quantitative/Qualitative)</span></dt>
+    <dd><em>Nomothetic</em> inquiry looks for general laws across many cases (the quantitative impulse); <em>idiographic</em> inquiry tries to understand one particular case in its full richness (the qualitative impulse).</dd>
+    <dt id="g-thick-thin">Thick vs. thin concepts; thick description <span class="cite">(Quantitative/Qualitative)</span></dt>
+    <dd>A <em>thin</em> concept is bare and general ("good," "large"); a <em>thick</em> concept fuses description and evaluation ("cruel," "courageous"). <em>Thick description</em> (Geertz) reports a scene with enough meaning-laden detail that you grasp what it meant to the people in it.</dd>
+    <dt id="g-causation">Causation vs. constant conjunction <span class="cite">(Mechanism/Pattern)</span></dt>
+    <dd>Hume noted we never actually <em>see</em> one thing make another happen — only that they regularly occur together (<em>constant conjunction</em>). The pattern-thinker is content with the regularity; the mechanism-thinker insists there's hidden machinery doing the making.</dd>
+    <dt id="g-covering-law">Covering-law vs. mechanistic explanation <span class="cite">(Mechanism/Pattern)</span></dt>
+    <dd>One view says you've explained an event once you've shown it follows from a general law plus the conditions (the <em>covering-law</em> model); the rival says real explanation means displaying the <em>mechanism</em> — the parts and activities that produce it.</dd>
+    <dt id="g-underdetermination">Underdetermination <span class="cite">(Mechanism/Pattern)</span></dt>
+    <dd>When the same evidence is equally compatible with several explanations, the evidence <em>underdetermines</em> the theory. It's why a clean pattern can't, by itself, tell you which mechanism is behind it.</dd>
+    <dt id="g-dialectic">Dialectic vs. eristic <span class="cite">(Adversarial/Collaborative)</span></dt>
+    <dd>Aristotle's two kinds of argument: <em>dialectic</em> aims to reach the truth together through reasoned exchange; <em>eristic</em> aims only to win. Adversarial argument is healthy when dialectical, toxic when it slides into eristic.</dd>
+    <dt id="g-charity">Principle of charity / steelmanning <span class="cite">(Adversarial/Collaborative)</span></dt>
+    <dd>Interpret the other person's argument in its strongest, most reasonable form before you respond. It keeps an adversarial style honest and a collaborative style from going mushy — you beat (or join) the <em>best</em> version of the view, not a caricature.</dd>
+  </dl>
+
+  <p class="cite">Sources: Baggini &amp; Fosl, <em>The Philosopher's Toolkit</em> (2003);
+    Peirce (1868); Dancy, <em>Ethics Without Principles</em> (2004); Rawls (1971); Hume, <em>Enquiry</em> (1748);
+    Kant (1781); Quine, "Two Dogmas" (1951); Russell (1912); Ryle (1949); Windelband (1894); B. Williams (1985);
+    Geertz (1973); Hempel &amp; Oppenheim (1948); Salmon (1984); Mercier &amp; Sperber (2017); Longino (1990).</p>
+
+  <footer>
+    <a href="argument-styles.html#philosophical-toolkit">← Back to the toolkit table</a> ·
+    <a href="index.html">Home</a>
+  </footer>
+
+</div>
+</body>
+</html>

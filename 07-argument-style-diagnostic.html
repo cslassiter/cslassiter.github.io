@@ -289,6 +289,14 @@
   .cue-pill.left { color: var(--rust); border-color: #e3c4b8; }
   .cue-pill.right { color: var(--teal); border-color: #bcdbd5; }
 
+  .tool-line {
+    margin-top: 0.75rem; padding: 0.6rem 0.8rem;
+    background: var(--surface); border-left: 3px solid var(--indigo); border-radius: 0 8px 8px 0;
+    font-size: 0.8rem; line-height: 1.55; color: #4a4536;
+  }
+  .tool-line strong { color: var(--indigo); }
+  .tool-line a { color: var(--indigo); font-weight: 500; white-space: nowrap; }
+
   .strength-shadow {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -451,7 +459,7 @@ const DIMENSIONS = [
   {
     key: 'chain',
     title: 'Chain vs. Cable',
-    citation: 'Newman, An Essay in Aid of a Grammar of Assent (1870).',
+    citation: 'Peirce, "Some Consequences of Four Incapacities" (1868); Newman, Grammar of Assent (1870).',
     left:  { name: 'Chain', gloss: 'one tight deductive line',
              strength: 'rigour and transparency', shadow: 'being only as strong as the weakest premise' },
     right: { name: 'Cable', gloss: 'many independent strands converging',
@@ -484,7 +492,7 @@ const DIMENSIONS = [
   {
     key: 'lumper',
     title: 'Lumper vs. Splitter',
-    citation: 'Simpson, "The Principles of Classification…" (1945).',
+    citation: 'Darwin (coinage, 1857); Simpson, "The Principles of Classification…" (1945).',
     left:  { name: 'Lumper', gloss: 'reaches for the unifying category',
              strength: 'sees structure and parsimony', shadow: 'blurring real differences' },
     right: { name: 'Splitter', gloss: 'reaches for the fine distinction',
@@ -608,6 +616,23 @@ const DIMENSIONS = [
                 'jointly','mutual','what we share','strongest version','help build']
   }
 ];
+
+// ── PHILOSOPHICAL TOOLKIT — one concept per dimension ───────
+// Keyed by dimension id; rendered after each result and linked
+// to the toolkit table on the framework page.
+const CONCEPTS = {
+  hedgehog:     { tool:'Monism vs. pluralism', gloss:'one unifying idea vs. many irreducible ones (plus parsimony — Ockham’s razor).', anchor:'tk-hedgehog' },
+  chain:        { tool:'Deduction vs. induction', gloss:'a truth-preserving line vs. cumulative, defeasible support.', anchor:'tk-chain' },
+  principle:    { tool:'Generalism vs. particularism', gloss:'top-down rules vs. bottom-up paradigm cases.', anchor:'tk-principle' },
+  lumper:       { tool:'Natural kinds &amp; family resemblance', gloss:'carving nature at its joints vs. drawing fine distinctions.', anchor:'tk-lumper' },
+  bold:         { tool:'Falsifiability; believe-truth vs. shun-error', gloss:'courting refutation vs. minimizing the risk of error.', anchor:'tk-bold' },
+  refuter:      { tool:'Elenchus &amp; reductio vs. abduction', gloss:'testing a view by breaking it vs. building the best explanation.', anchor:'tk-refuter' },
+  narrative:    { tool:'Verstehen vs. Erklären', gloss:'understanding from the inside vs. explaining from the outside.', anchor:'tk-narrative' },
+  empirical:    { tool:'A priori vs. a posteriori (Hume’s fork)', gloss:'settle it by the concept vs. by the world.', anchor:'tk-empirical' },
+  quantitative: { tool:'Nomothetic vs. idiographic', gloss:'laws across many cases vs. thick description of the particular.', anchor:'tk-quantitative' },
+  mechanism:    { tool:'Causation vs. constant conjunction (Hume)', gloss:'the hidden machinery vs. the robust regularity.', anchor:'tk-mechanism' },
+  adversarial:  { tool:'Dialectic vs. eristic', gloss:'arguing to find truth together vs. arguing to win; the principle of charity.', anchor:'tk-adversarial' }
+};
 
 let lastResult = null;
 
@@ -778,6 +803,13 @@ function renderSpectrum(r) {
   const el = document.createElement('div');
   el.className = 'spectrum';
 
+  // philosophical tool for this dimension
+  const c = CONCEPTS[dim.key];
+  const toolHtml = c
+    ? `<div class="tool-line"><strong>Philosophical tool:</strong> ${c.tool} — ${c.gloss}
+       <a href="argument-styles.html#${c.anchor}">see the toolkit ↗</a></div>`
+    : '';
+
   // marker position: map -100..100 to 4%..96%
   const pct = 50 + (position / 100) * 46;
 
@@ -831,6 +863,7 @@ function renderSpectrum(r) {
     <div class="confidence">signal strength <span class="conf-dots">${dots}</span></div>
     ${leanHtml}
     ${cueHtml}
+    ${toolHtml}
     <div class="strength-shadow">
       <div class="ss-box ss-strength"><b>${dim.left.name}</b><span class="ss-row"><span class="ss-tag">Gift</span>${dim.left.strength}.</span><span class="ss-row"><span class="ss-tag">Shadow</span>${dim.left.shadow}.</span></div>
       <div class="ss-box ss-shadow"><b>${dim.right.name}</b><span class="ss-row"><span class="ss-tag">Gift</span>${dim.right.strength}.</span><span class="ss-row"><span class="ss-tag">Shadow</span>${dim.right.shadow}.</span></div>
