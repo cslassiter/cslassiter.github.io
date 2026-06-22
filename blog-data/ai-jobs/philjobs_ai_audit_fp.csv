@@ -1,0 +1,85 @@
+job_id,year,is_ai,fetch_ok,matched_terms
+1947,2013,True,True,artificial intelligence|natural language processing
+2033,2013,True,True,artificial intelligence
+2207,2013,True,True,artificial intelligence
+2208,2013,True,True,artificial intelligence
+2217,2013,True,True,robotics|artificial intelligence
+2218,2013,True,True,artificial intelligence
+3039,2014,True,True,ai
+3164,2014,False,True,
+3315,2014,True,True,artificial intelligence
+3397,2014,True,True,natural language processing
+3452,2014,True,True,robotics
+3534,2014,True,True,artificial intelligence
+3624,2015,True,True,machine learning
+3661,2015,True,True,artificial intelligence
+3681,2015,False,True,
+3917,2015,False,True,
+3953,2015,True,True,artificial intelligence
+4121,2015,False,True,
+5090,2016,False,True,
+5142,2016,True,True,artificial intelligence|ai
+5378,2016,True,True,artificial intelligence|ai
+6506,2016,True,True,artificial intelligence|ai
+6510,2016,True,True,robotics|artificial intelligence|ai
+6614,2016,False,True,
+7090,2017,True,True,artificial intelligence|ai
+7346,2017,True,True,artificial intelligence|ai
+7422,2017,True,True,robotics|artificial intelligence
+7430,2017,True,True,artificial intelligence
+7842,2017,True,True,artificial intelligence
+9166,2017,False,True,
+9686,2018,True,True,robotics|artificial intelligence|ai
+9718,2018,True,True,robotics|artificial intelligence
+9994,2018,True,True,artificial intelligence
+10586,2018,False,True,
+11274,2018,True,True,artificial intelligence
+11798,2018,False,True,
+12442,2019,True,True,artificial intelligence|ethics of ai|ai|machine learning
+13086,2019,False,True,
+14022,2019,True,True,artificial intelligence
+14166,2019,True,True,robotics|artificial intelligence|machine learning
+14362,2019,True,True,artificial intelligence|ai
+14382,2019,True,True,artificial intelligence|machine learning
+14806,2020,True,True,ai
+15078,2020,True,True,artificial intelligence
+15146,2020,True,True,artificial intelligence
+15486,2020,True,True,artificial intelligence|ai
+15638,2020,True,True,artificial intelligence|ethics of ai|ai|machine learning
+16098,2020,True,True,artificial intelligence|machine learning
+17078,2021,True,True,artificial intelligence|ai
+18086,2021,True,True,artificial intelligence
+18857,2021,True,True,robotics|artificial intelligence
+19033,2021,True,True,artificial intelligence
+19069,2021,True,True,ai governance|ai risk|ai|algorithmic bias
+19285,2021,False,True,
+19573,2022,True,True,artificial intelligence
+19613,2022,True,True,artificial intelligence|ai
+19754,2022,True,True,artificial intelligence
+19902,2022,True,True,artificial intelligence
+20550,2022,True,True,ai
+22578,2022,True,True,artificial intelligence|ai
+22865,2023,True,True,ai|natural language processing|machine learning|artificial intelligence|nlp
+24546,2023,True,True,artificial intelligence|ai
+24582,2023,True,True,ai
+24798,2023,True,True,artificial intelligence|ai
+25245,2023,True,True,artificial intelligence
+25489,2023,True,True,artificial intelligence
+25633,2024,True,True,ethics of ai|ai
+25970,2024,False,True,
+26130,2024,True,True,artificial intelligence|ai
+26806,2024,True,True,ai|ai ethics
+27266,2024,True,True,artificial intelligence|ai
+28138,2024,True,True,artificial intelligence|ai
+28602,2025,True,True,artificial intelligence|machine ethics|machine learning
+29013,2025,True,True,artificial intelligence
+29117,2025,True,True,ai|chatgpt|artificial intelligence
+29566,2025,True,True,artificial intelligence|ai
+29810,2025,True,True,artificial intelligence|ai
+30249,2025,True,True,artificial intelligence
+30921,2026,True,True,artificial intelligence
+30949,2026,True,True,artificial intelligence
+31157,2026,True,True,artificial intelligence|ai
+31185,2026,True,True,artificial intelligence|ai
+31277,2026,True,True,ai|artificial intelligence|ai ethics|machine learning
+31421,2026,True,True,ai|ethics of ai|ai ethics

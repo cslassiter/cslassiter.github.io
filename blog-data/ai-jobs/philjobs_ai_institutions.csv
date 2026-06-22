@@ -1,0 +1,290 @@
+rank,institution,ai_ads
+1,Wake Forest University,15
+2,Stanford University,14
+3,Eindhoven University of Technology,14
+4,Lingnan University,14
+5,Purdue University,11
+6,Utrecht University,10
+7,University of Amsterdam,10
+8,Tilburg University,9
+9,University of Florida,9
+10,University of Oxford,8
+11,Umea University,8
+12,University of Hong Kong,8
+13,Cambridge University,7
+14,Carnegie Mellon University,7
+15,University of Twente,6
+16,Australian National University,6
+17,York University,6
+18,Northeastern University,6
+19,California Institute of Technology,6
+20,University of Edinburgh,6
+21,University of Western Ontario,6
+22,Hong Kong Baptist University,6
+23,University of Connecticut,5
+24,"Cycorp, Inc.",5
+25,University of Toronto,5
+26,Illinois Institute of Technology,5
+27,Johns Hopkins University,4
+28,Western University,4
+29,Sweden,4
+30,University of Georgia,4
+31,National University of Singapore,4
+32,Universität Erlangen-Nürnberg,4
+33,University of Notre Dame,4
+34,Friedrich-Alexander-University,4
+35,Michigan State University,3
+36,Monash University,3
+37,University of Virginia,3
+38,Minerva Schools at KGI,3
+39,University of Western Australia,3
+40,Carleton College,3
+41,Skidmore College,3
+42,Georgia State University,3
+43,University of Texas at San Antonio,3
+44,Fudan University,3
+45,Massachusetts Institute of Technology,3
+46,Cornell Tech,3
+47,Oxford,3
+48,Sentience Institute,3
+49,University of Tuebingen,3
+50,Inland Norway University of Applied Sciences,3
+51,Boston,3
+52,University of Glasgow,3
+53,Universität Bonn,3
+54,London School of Economics and Political Science,3
+55,Oregon State University,3
+56,George Mason University,3
+57,TU Dortmund University,3
+58,London School of Economics,3
+59,University of Technology Nuremberg,3
+60,Urbana-Champaign,3
+61,University of Aarhus,2
+62,Ruhr-University Bochum,2
+63,University of Lorraine,2
+64,University of Warsaw,2
+65,Boston University,2
+66,University of Otago,2
+67,Harvard University,2
+68,University of Macau,2
+69,Dartmouth College,2
+70,Rensselaer Polytechnic Institute,2
+71,University of Guelph,2
+72,University of Cambridge and University of Bonn,2
+73,San Jose State University,2
+74,Omaha,2
+75,Santa Clara University,2
+76,San Diego,2
+77,University of Luxembourg,2
+78,University of Pittsburgh,2
+79,University of Canterbury,2
+80,Georgetown University,2
+81,Stanford University McCoy Family Center for Ethics in Society & the Institute for Human-Centered AI,2
+82,Rheinische Friedrich-Wilhelms-Universität Bonn,2
+83,National Yang Ming Chiao Tung University,2
+84,Howard University,2
+85,University of Bonn,2
+86,Georgia Institute of Technology,2
+87,University of Copenhagen,2
+88,Macquarie University,2
+89,Ruhr University Bochum,2
+90,American University,2
+91,Duke University,2
+92,Colby College,2
+93,Vanderbilt University,2
+94,Durham University,2
+95,Hamburg University of Technology,2
+96,University of Illinois at Chicago,2
+97,University of Pennsylvania,2
+98,University of Cincinnati,2
+99,Deep Springs College not BA-granting,2
+100,Rice University,2
+101,Madison,2
+102,University of Bristol,2
+103,Israel Institute of Technology,2
+104,Singapore University of Technology and Design,2
+105,University of North Carolina at Chapel Hill,2
+106,University of Central Florida,2
+107,New York University,2
+108,Bowdoin College,2
+109,University of South Dakota,2
+110,The Ohio State University,2
+111,Universidad de Murcia,1
+112,CNR (Italian National Research Council),1
+113,Beloit College,1
+114,Mount Holyoke College,1
+115,University of Victoria,1
+116,Raritan Valley Community College,1
+117,Cycorp,1
+118,MI,1
+119,Virginia Tech,1
+120,University of Dublin,1
+121,Geisinger Health System,1
+122,University of Oregon,1
+123,Merced,1
+124,Newark,1
+125,UNIVERSITE DE MONTREAL,1
+126,TU Delft,1
+127,Duke Kunshan University,1
+128,Denison University,1
+129,University of California at Davis,1
+130,Ontario,1
+131,Florida Atlantic University - FAU †,1
+132,Arizona State University,1
+133,Université du Québec à Trois-Rivières,1
+134,Stevens Institute of Technology,1
+135,West Virginia University,1
+136,University of Helsinki,1
+137,State University of New York at Geneseo,1
+138,University of Tartu,1
+139,Universiteit Utrecht,1
+140,Taiwan,1
+141,Jain Family Institute,1
+142,Hamilton College,1
+143,McGill University,1
+144,VADM Stockdale Center for Ethical Leadership,1
+145,University of York,1
+146,Norwegian University of Science and Technology,1
+147,Center for Applied Ethics,1
+148,University of Oxford in association with Corpus Christi College,1
+149,Real Talk Philosophy not BA-granting,1
+150,City University of Hong Kong,1
+151,University of San Diego,1
+152,Tufts University,1
+153,San Jose,1
+154,Università degli Studi dell'Aquila,1
+155,Simon Fraser University,1
+156,Florida Atlantic University †,1
+157,University of Waterloo,1
+158,SUNY Geneseo,1
+159,Stony Brook University,1
+160,Mount Mary University,1
+161,Dominican School of Philosophy & Theology not BA-granting,1
+162,Virginia Commonwealth University,1
+163,Cornell University,1
+164,Emory University,1
+165,University College London,1
+166,University of Montreal,1
+167,Harvard School of Public Health,1
+168,RWTH Aachen University,1
+169,Saint Peter's University,1
+170,University of Providence,1
+171,Adam Mickiewicz University,1
+172,Universität Hamburg,1
+173,The HOW Institute for Society,1
+174,Johannes Kepler University of Linz,1
+175,Center for AI Safety not BA-granting,1
+176,University of Illinois at Urbana-Champaign,1
+177,University of Stirling,1
+178,Okanagan,1
+179,University of South Florida St. Petersburg,1
+180,NYU Tandon School of Engineering not BA-granting,1
+181,NYU Tandon School of Engineering,1
+182,The University of Adelaide,1
+183,SUNY,1
+184,College Park,1
+185,Leibniz University Hannover,1
+186,Frankfurt School of Finance and Management gGmbH,1
+187,Princeton University,1
+188,Centre de recherche en éthique (CRÉ),1
+189,Lincoln,1
+190,William & Mary,1
+191,Grand Forks,1
+192,University of Rochester,1
+193,Knoxville,1
+194,Washington State University,1
+195,University of Utah,1
+196,University of Kentucky,1
+197,Ruhr-Universität Bochum,1
+198,University of Texas at El Paso,1
+199,University of Alberta,1
+200,Le Moyne College,1
+201,University of Oslo,1
+202,University of Arizona,1
+203,Bloomington,1
+204,Kansas State University,1
+205,Moravian University,1
+206,University of North Carolina - Wilmington,1
+207,North Carolina School of Science and Mathematics not BA-granting,1
+208,Rochester Institute of Technology,1
+209,Texas A&M University,1
+210,Muhlenberg College,1
+211,Mercyhurst University,1
+212,Aarhus University,1
+213,University of Puget Sound,1
+214,American Philosophical Association,1
+215,Milwaukee School of Engineering,1
+216,Augusta University,1
+217,Norway,1
+218,Universitat Autònoma de Barcelona,1
+219,University of West Georgia,1
+220,University of Southampton,1
+221,Florida Atlantic University,1
+222,Seton Hall University,1
+223,University of Rennes 1,1
+224,Pennsylvania State University,1
+225,Fordham University,1
+226,Oakland University,1
+227,Southern Oregon University,1
+228,Long Beach,1
+229,Dana and David Dornsife College,1
+230,Colorado Springs,1
+231,St. Louis,1
+232,The American University in Cairo,1
+233,Bentley University,1
+234,Sabanci University,1
+235,University of Texas at Arlington,1
+236,University of Delaware,1
+237,University of West Florida,1
+238,University of Maryland,1
+239,University of North Carolina at Charlotte,1
+240,Ramapo College,1
+241,Brown University,1
+242,Old Dominion University,1
+243,Broward College,1
+244,Case Western Reserve University,1
+245,Huaqiao University,1
+246,Southern Methodist University,1
+247,Pacific University,1
+248,Ahmedabad University,1
+249,University of London,1
+250,University College Dublin,1
+251,Smith College,1
+252,Iowa State University,1
+253,United States Military Academy at West Point,1
+254,Singapore Management University,1
+255,College of the Holy Cross,1
+256,University of Electronic Science and Technology of China,1
+257,Echosphere.io,1
+258,Union College,1
+259,Minnesota,1
+260,KIT - Karlsruher Institute of Technology,1
+261,University of Texas Rio Grande Valley,1
+262,City University of New York,1
+263,John Jay College of Criminal Justice,1
+264,University of Michigan,1
+265,Mellon Foundation,1
+266,University of South Carolina,1
+267,University of Calgary,1
+268,Central Connecticut State University,1
+269,University of Tampa,1
+270,City College of New York,1
+271,University of Miami,1
+272,University of Northern Iowa,1
+273,University of North Carolina Wilmington,1
+274,Institute of Global Value Inquiry,1
+275,Carnegie Mellon University not BA-granting,1
+276,University of Southern Denmark,1
+277,University of Mississippi,1
+278,Scarborough Campus,1
+279,UK,1
+280,University of Southern California,1
+281,University of Rochester School of Medicine and Dentistry,1
+282,Georgia College and State University,1
+283,University of Warwick,1
+284,Florida International University,1
+285,University of Melbourne,1
+286,University of Electronic Science and Technology of China not BA-granting,1
+287,UWA India,1
+288,Universität des Saarlandes,1
+289,University of Nebraska Omaha,1
