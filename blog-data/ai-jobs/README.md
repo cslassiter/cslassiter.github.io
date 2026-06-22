@@ -114,5 +114,41 @@ The Python scripts read and write their CSVs from their own folder
 - **Source.** PhilJobs.org (American Philosophical Association). The 2026 column
   is partial (through May 2026).
 
+---
+
+## Known discrepancies
+
+**Plot 1 counts vs. `philjobs_ai_by_year.csv`.** The headline AI-proportion chart
+(Plot 1, the "≈1% → 16%" figure in the post) is drawn from an annual table
+hard-coded in `philjobs_ai_plots.R` (the `annual` tribble near the top), *not*
+from `philjobs_ai_by_year.csv`. That hard-coded table reflects an earlier cut of
+the data, taken before the supplementary scrape and false-negative patch added a
+few more confirmed AI ads per year. The yearly **totals** agree; the **AI counts**
+in the CSV run a few higher than the plotted figures:
+
+| Year | `by_year.csv` AI ads | Plot 1 (hard-coded) AI ads |
+|------|----------------------|-----------------------------|
+| 2023 | 100 | 91 |
+| 2024 | 96  | 91 |
+| 2025 | 94  | 86 |
+| 2026 | 51  | 48 |
+
+Consequences:
+
+- Re-running `philjobs_ai_plots.R` reproduces the post's Plot 1 exactly, because
+  the numbers are baked into the script.
+- `philjobs_ai_by_year.csv` is the **final, post-audit** dataset and is the count
+  to cite; it implies a slightly higher 2025 share (94/536 ≈ 17.5%) than the
+  post's stated 16%.
+- The detailed dataset `philjobs_ai_jobs_detail.csv` (667 rows) is consistent with
+  the CSV annual counts, not with the hard-coded table.
+
+To make the plot read straight from the data, replace the `annual` tribble in
+`philjobs_ai_plots.R` with a `read_csv("philjobs_ai_by_year.csv")` of
+`year`, `total_jobs`, and `ai_jobs`; note this shifts Plot 1's later years upward
+and would warrant updating the "16%" / "1-in-6" phrasing in the post.
+
+---
+
 If you'd like to collaborate — especially on non-English job markets or cleaning
 the AOS field — please [get in touch](mailto:charles.lassiter@gmail.com).
