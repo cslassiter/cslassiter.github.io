@@ -117,6 +117,15 @@
   table.tk a:hover { border-bottom-style: solid; }
   .tk-adj { color: var(--rust); font-weight: 700; }
   table.tk .tk-move { display: block; font-weight: 400; font-style: normal; font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+  /* combined pairs + toolkit table */
+  table.tk.tk-combined td:first-child { width: 27%; }
+  .c-desc { display: block; font-weight: 400; font-style: italic; color: #3a3120; margin: 0.35rem 0; }
+  .c-cite { display: block; font-weight: 400; font-size: 0.78rem; font-style: italic; color: var(--muted); margin-top: 0.35rem; }
+  .c-row { display: block; margin-bottom: 0.45rem; }
+  .c-row:last-child { margin-bottom: 0; }
+  .lbl.concept { background: #eef0fa; color: var(--indigo); }
+  .lbl.tool    { background: #f6efdd; color: var(--gold); }
+  .lbl.why     { background: var(--surface); color: var(--muted); }
 
   .exercise {
     background: var(--surface); border: 1px dashed var(--gold); border-radius: 12px;
@@ -128,16 +137,37 @@
   .refs li { margin-bottom: 0.4rem; }
 
   .note-tip {
-    background: var(--surface); border-left: 4px solid var(--gold);
-    border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; font-size: 0.88rem;
-    color: #5a4a2c; margin: 1.25rem 0;
+    background: #fbe9c6; border: 1px solid var(--gold); border-left: 6px solid var(--gold);
+    border-radius: 8px; padding: 0.9rem 1.15rem; font-size: 0.94rem;
+    color: #5a4216; margin: 1.4rem 0; box-shadow: 0 2px 12px rgba(176,125,18,0.18);
   }
+  .note-tip strong { color: var(--rust); }
 
   footer {
     margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
     text-align: center; font-size: 0.85rem; color: var(--muted);
   }
   footer a { color: var(--indigo); }
+
+  /* hover/focus illustrative examples on each pole of a pair */
+  .pole { border-bottom: 1px dotted var(--gold); cursor: help; }
+  .pole:hover { border-bottom-style: solid; }
+  .pole:focus, .pole:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; border-radius: 2px; }
+  #pole-tip {
+    position: fixed; top: 0; left: 0; z-index: 300;
+    max-width: 300px; pointer-events: none;
+    background: var(--ink); color: #f4f1ea;
+    font-size: 0.82rem; line-height: 1.5; font-weight: 400;
+    padding: 0.6rem 0.8rem; border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(20,17,10,0.30);
+    opacity: 0; transform: translateY(3px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+  }
+  #pole-tip.show { opacity: 1; transform: translateY(0); }
+  #pole-tip .tip-pole { display: block; font-family: 'Fraunces', serif; font-weight: 600; color: var(--gold); margin-bottom: 0.25rem; }
+  #pole-tip .tip-ex { display: block; font-style: italic; color: #fff; margin-bottom: 0.3rem; }
+  #pole-tip .tip-why { display: block; font-size: 0.76rem; color: #cfc7b6; }
+  @media print { #pole-tip { display: none !important; } }
 </style>
 </head>
 <body>
@@ -147,7 +177,6 @@
     <a href="index.html">↪ Home</a>
     <a href="07-argument-style-diagnostic.html">↪ Argument-Style Diagnostic</a>
     <a href="08-argument-style-duel.html">↪ Argument-Style Duel</a>
-    <a href="#philosophical-toolkit">↪ Philosophical Toolkit</a>
     <a href="argument-styles-glossary.html">↪ Toolkit Glossary</a>
     <a href="teaching.html">↪ Teaching</a>
   </nav>
@@ -179,138 +208,80 @@
       <em>and</em> a menu of borrowable moves.</p>
   </div>
 
-  <h2>The pairs</h2>
-  <p>Each style is shown with what it does well (<strong>strength</strong>) and where it tips over
-    (<strong>shadow</strong>). The first six are the original core; pairs 7–11 were added after surveying
-    argumentative writing across three tiers (popular, semi-formal, formal) and three domains (the
-    physical sciences, social sciences, and humanities). Where a style clusters in a particular tier of
-    writing or domain, that is noted in its entry below, under <em>Where it shows up</em>.</p>
+  <h2 id="philosophical-toolkit">The eleven pairs &amp; their philosophical tools</h2>
+  <p>Each pair is shown with what it does well (<strong>strength</strong>), where it tips over
+    (<strong>shadow</strong>), and — where relevant — <em>where it shows up</em> across tiers of writing
+    (popular, semi-formal, formal) and domains (the physical sciences, social sciences, and humanities).
+    Concept terms link to their plain-language entries in the
+    <a href="argument-styles-glossary.html">Toolkit Glossary</a>. The
+    <a href="07-argument-style-diagnostic.html">diagnostic</a> and the
+    <a href="08-argument-style-duel.html">duel</a> link back to these rows after each result.</p>
 
-  <div class="pair">
-    <h3>1 · Hedgehog vs. Fox</h3>
-    <p class="desc">Unifying everything under one central idea vs. holding many small, loosely-linked models.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>hedgehog buys depth and explanatory reach; fox buys calibration and flexibility.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>hedgehog forces messy data to fit; fox can lack a through-line and dither.</p>
-    <p class="ss"><span class="lbl lives">Where</span>semi-formal journalism (<em>The Atlantic</em>, the <em>NYT</em>) tends <em>fox</em>-like — calibrated and case-rich for a general reader.</p>
-    <p class="cite">Berlin, The Hedgehog and the Fox (1953); Tetlock, Expert Political Judgment (2005).</p>
-  </div>
-
-  <div class="pair">
-    <h3>2 · Chain vs. Cable</h3>
-    <p class="desc">One tight deductive line vs. many independent strands converging on a probable conclusion.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>chain is rigorous and transparent; cable is robust and handles messiness.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>chain is only as strong as its weakest premise; cable can feel hand-wavy and resist pinning-down.</p>
-    <p class="ss"><span class="lbl lives">Where</span><em>chains</em> dominate formal/academic writing and the physical sciences (a chain from model to prediction tested against data); <em>cable</em>-style stacks of reasons are the staple of popular argument — op-eds, comment threads — and the social sciences.</p>
-    <p class="cite">Peirce, "Some Consequences of Four Incapacities" (1868) — origin of the chain/cable image; Newman, An Essay in Aid of a Grammar of Assent (1870).</p>
-  </div>
-
-  <div class="pair">
-    <h3>3 · Principle-first vs. Case-first</h3>
-    <p class="desc">Deriving from a top rule vs. reasoning outward from paradigm cases.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>principle-first gives consistency and generality; case-first gives practical sensitivity to particulars.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>principle-first risks rigidity and missing the morally relevant detail; case-first risks looking ad hoc.</p>
-    <p class="ss"><span class="lbl lives">Where</span><em>case-first</em> reasoning runs through nearly everything outside the formal sciences — popular argument, semi-formal journalism, the social sciences, and the humanities all reason outward from cases.</p>
-    <p class="cite">Jonsen &amp; Toulmin, The Abuse of Casuistry (1988).</p>
-  </div>
-
-  <div class="pair">
-    <h3>4 · Lumper vs. Splitter</h3>
-    <p class="desc">Reaching for the unifying category vs. the fine distinction.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>lumpers see structure and parsimony; splitters get precision.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>lumpers blur real differences; splitters lose the forest and stall in taxonomy.</p>
-    <p class="ss"><span class="lbl lives">Where</span>formal/academic writing prizes the <em>splitter</em>'s fine distinctions; the humanities run on both, with much <em>lumping and splitting</em> over categories.</p>
-    <p class="cite">Darwin coined "lumpers &amp; splitters" (letter to Hooker, 1857); Simpson, "The Principles of Classification and a Classification of Mammals" (1945).</p>
-  </div>
-
-  <div class="pair">
-    <h3>5 · Bold conjecture vs. Cautious qualification</h3>
-    <p class="desc">Stating a strong, testable claim and inviting refutation vs. hedging carefully.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>bold conjecture advances inquiry precisely by being falsifiable; qualification is honest about uncertainty.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>bold conjecture overclaims; qualification can dissolve into saying nothing pinnable.</p>
-    <p class="ss"><span class="lbl lives">Where</span>popular writing and the physical sciences favor the <em>bold</em> (a conjecture made <em>falsifiable</em>); formal/academic writing is <em>cautious</em>, and semi-formal journalism states bold claims but <em>qualifies</em> them for a general reader.</p>
-    <p class="cite">Popper, Conjectures and Refutations (1963); Toulmin, The Uses of Argument (1958), on qualifiers and rebuttals.</p>
-  </div>
-
-  <div class="pair">
-    <h3>6 · Refuter vs. Builder</h3>
-    <p class="desc">Testing a view by trying to break it vs. constructing and extending a position.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>the refuter sharpens and clears ground; the builder synthesizes.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>the refuter can leave only rubble; the builder can wave away genuine objections.</p>
-    <p class="cite">On the Socratic elenchus: Vlastos, Socrates: Ironist and Moral Philosopher (1991).</p>
-  </div>
-
-  <div class="pair">
-    <h3>7 · Narrative vs. Analytic</h3>
-    <p class="desc">Carrying the argument in a story — agents, motives, scene, sequence — vs. in explicit premises and inferences.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>narrative buys memorability, motive force, and fidelity to lived experience; analytic buys explicitness and checkability.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>narrative can smuggle its conclusion past scrutiny and resist testing; analytic can go bloodless and miss what actually moves people.</p>
-    <p class="ss"><span class="lbl lives">Where</span><em>narrative</em> drives popular writing and the humanities and opens many semi-formal pieces (a narrative lede); the <em>analytic</em> mode is the payoff of semi-formal journalism and the default of formal/academic writing.</p>
-    <p class="cite">Bruner, Actual Minds, Possible Worlds (1986), on the narrative vs. paradigmatic modes of thought; Fisher, Human Communication as Narration (1987), on the narrative vs. the rational-world paradigm.</p>
-  </div>
-
-  <div class="pair">
-    <h3>8 · Empirical vs. Conceptual</h3>
-    <p class="desc">Settling the question by appeal to observation, data, and experiment vs. by appeal to concepts, definitions, intuitions, and thought experiments.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>empirical ties claims to the world and exposes them to evidence; conceptual clarifies what is even being asked and what would count as an answer.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>empirical can measure the measurable and ignore the rest; conceptual can spin frictionlessly, untethered from how things actually are.</p>
-    <p class="ss"><span class="lbl lives">Where</span>the <em>empirical</em> style rules the physical sciences and formal/academic writing; the <em>conceptual</em> style is the home idiom of the humanities.</p>
-    <p class="cite">The empiricist–rationalist tradition (Hume; Descartes); Williamson, The Philosophy of Philosophy (2007), on a priori / "armchair" method.</p>
-  </div>
-
-  <div class="pair">
-    <h3>9 · Quantitative vs. Qualitative</h3>
-    <p class="desc">Making the case in the currency of measurement — number, statistic, formal model — vs. the currency of meaning — interpretation, thick description, the telling instance.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>quantitative buys precision, comparability, and reach across many cases; qualitative buys depth, context, and access to meaning.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>quantitative can mistake what is countable for what matters; qualitative can over-read a handful of cases and resist generalization.</p>
-    <p class="ss"><span class="lbl lives">Where</span><em>quantitative</em> in the physical sciences, <em>qualitative</em> in the humanities — and the social sciences are split internally between them, a live methodological argument.</p>
-    <p class="cite">Lincoln &amp; Guba, Naturalistic Inquiry (1985); King, Keohane &amp; Verba, Designing Social Inquiry (1994).</p>
-  </div>
-
-  <div class="pair">
-    <h3>10 · Mechanism vs. Pattern</h3>
-    <p class="desc">Explaining by exhibiting the underlying machinery — the entities and activities that produce a phenomenon — vs. by establishing a robust regularity or correlation in the data.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>mechanism buys understanding of <em>why</em> and licenses intervention; pattern buys predictive traction even where the mechanism is unknown.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>mechanism can tell a tidy causal story that outruns the evidence; pattern can rest on a correlation it can neither explain nor trust.</p>
-    <p class="ss"><span class="lbl lives">Where</span>the physical sciences lean <em>mechanism</em>- and model-based; the social sciences are split between <em>mechanism</em> and <em>pattern</em>.</p>
-    <p class="cite">Machamer, Darden &amp; Craver, "Thinking About Mechanisms" (2000); Lipton, Inference to the Best Explanation (2004).</p>
-  </div>
-
-  <div class="pair">
-    <h3>11 · Adversarial vs. Collaborative</h3>
-    <p class="desc">Advancing inquiry by contest — pressing the strongest attack on a view — vs. by cooperation — steelmanning, building on what an interlocutor gets right, seeking joint gains.</p>
-    <p class="ss"><span class="lbl strength">Strength</span>adversarial pressure quickly exposes weak points; collaboration preserves partial insights and widens the sources of progress.</p>
-    <p class="ss"><span class="lbl shadow">Shadow</span>adversarial argument can reward winning over truth and exclude quieter voices; collaboration can turn conflict-averse and let bad ideas stand.</p>
-    <p class="ss"><span class="lbl lives">Where</span>popular argument runs the whole range — at its best <em>collaborative</em> (r/changemyview's steelmanning norm), at its worst purely <em>adversarial</em>.</p>
-    <p class="cite">Moulton, "A Paradigm of Philosophy: The Adversary Method" (1983); Foss &amp; Griffin, "Beyond Persuasion: A Proposal for an Invitational Rhetoric" (1995).</p>
-  </div>
-
-  <h2 id="philosophical-toolkit">A philosophical toolkit for the eleven pairs</h2>
-  <p>Each pair has a home in the philosophical literature — a concept or distinction that names what is
-    really at stake. Many are entries in Baggini &amp; Fosl's <em>The Philosopher's Toolkit</em> (the "tools"
-    of analytic philosophy); others are standard distinctions from epistemology and the philosophy of science.
-    Find the concept behind a style in the table; each concept term links to its plain-language entry in the
-    <a href="argument-styles-glossary.html">Toolkit Glossary</a>.
-    Entries marked <span class="tk-adj">*</span> are <em>adjacent</em> to the Toolkit — standard tools, but not
-    a literal entry in that book. The <a href="07-argument-style-diagnostic.html">diagnostic</a> and the
-    <a href="08-argument-style-duel.html">duel</a> link back here after each result.</p>
+  <p class="note-tip">💡 <strong>Tip:</strong> click, tap, or hover over any <strong>style name</strong> in
+    the first column (e.g. <em>Hedgehog</em> or <em>Fox</em>) for a short example and an explanation of how
+    it exemplifies that temperament.</p>
 
   <div class="toolkit">
-    <table class="tk">
+    <table class="tk tk-combined">
       <thead>
-        <tr><th>Pair</th><th>Lead concept(s)</th><th>Toolkit tool</th><th>Why it fits</th></tr>
+        <tr><th>Pair</th><th>Style profile</th><th>Philosophical tool</th></tr>
       </thead>
       <tbody>
-        <tr id="tk-hedgehog"><td>Hedgehog / Fox</td><td><a href="argument-styles-glossary.html#g-monism">Monism vs. pluralism</a>; <a href="argument-styles-glossary.html#g-parsimony">parsimony</a></td><td><em>Alternative explanations</em>; Ockham's razor <span class="tk-adj">*</span></td><td>One unifying idea vs. many models = monist vs. pluralist; the hedgehog risks forcing the data to fit.</td></tr>
-        <tr id="tk-chain"><td>Chain / Cable</td><td><a href="argument-styles-glossary.html#g-deduction-induction">Deduction vs. induction</a>; serial vs. convergent support</td><td><em>Deduction</em>; <em>Induction</em>; <a href="argument-styles-glossary.html#g-defeasible"><em>Defeasible / indefeasible</em></a></td><td>A truth-preserving but fragile line vs. cumulative, defeasible strands (Peirce's own image).</td></tr>
-        <tr id="tk-principle"><td>Principle-first / Case-first</td><td><a href="argument-styles-glossary.html#g-generalism">Generalism vs. particularism</a>; top-down vs. bottom-up justification</td><td><em>Necessary &amp; sufficient conditions</em>; particularism <span class="tk-adj">*</span></td><td>Derive from a rule (seek defining conditions) vs. reason outward from paradigm cases.</td></tr>
-        <tr id="tk-lumper"><td>Lumper / Splitter</td><td><a href="argument-styles-glossary.html#g-natural-kinds">Natural kinds</a>, "carving at the joints," family resemblance, <a href="argument-styles-glossary.html#g-sorites">vagueness</a></td><td><em>Ambiguity</em>; <em>Category mistakes</em>; Ockham's razor <span class="tk-adj">*</span></td><td>How finely do nature's joints run? The lumper unifies, the splitter distinguishes.</td></tr>
-        <tr id="tk-bold"><td>Bold / Cautious</td><td><a href="argument-styles-glossary.html#g-falsifiability">Falsifiability</a>; "<a href="argument-styles-glossary.html#g-believe-truth">believe truth vs. shun error</a>"; epistemic risk</td><td><em>Testability</em>; <em>Certainty and probability</em></td><td>The bold court refutation to gain content; the cautious minimize the risk of error.</td></tr>
-        <tr id="tk-refuter"><td>Refuter / Builder</td><td><a href="argument-styles-glossary.html#g-elenchus">Elenchus, counterexample, reductio</a> vs. <a href="argument-styles-glossary.html#g-abduction">abduction</a> / synthesis</td><td><em>Refutation</em>; <em>Counterexamples</em>; <em>Reductios</em>; <em>Abduction</em></td><td>Test a view by breaking it vs. construct the best explanation and extend it.</td></tr>
-        <tr id="tk-narrative"><td>Narrative / Analytic</td><td><a href="argument-styles-glossary.html#g-verstehen">Verstehen vs. Erklären</a>; <a href="argument-styles-glossary.html#g-acquaintance">acquaintance vs. description</a></td><td><em>Thought experiments</em>; <em>Intuition pumps</em>; <em>Knowledge by acquaintance / description</em></td><td>A story conveys the what-it's-like; analysis conveys checkable propositions.</td></tr>
-        <tr id="tk-empirical"><td>Empirical / Conceptual</td><td><a href="argument-styles-glossary.html#g-apriori">A priori vs. a posteriori</a>; analytic / synthetic; <a href="argument-styles-glossary.html#g-humes-fork">Hume's fork</a></td><td><em>A priori / a posteriori</em>; <em>Analytic / synthetic</em></td><td>Settle the question by the world vs. by the concept. (The a priori/a posteriori instinct lives here.)</td></tr>
-        <tr id="tk-quantitative"><td>Quantitative / Qualitative</td><td><a href="argument-styles-glossary.html#g-nomothetic">Nomothetic vs. idiographic</a>; <a href="argument-styles-glossary.html#g-thick-thin">thick vs. thin concepts</a></td><td><em>Thick / thin concepts</em>; <em>Objective / subjective</em>; <em>Criteria</em></td><td>The currency of measurement vs. the currency of meaning.</td></tr>
-        <tr id="tk-mechanism"><td>Mechanism / Pattern</td><td><a href="argument-styles-glossary.html#g-causation">Causation vs. constant conjunction</a> (Hume); <a href="argument-styles-glossary.html#g-covering-law">covering-law vs. mechanism</a></td><td><em>Alternative explanations</em>; <em>Abduction</em>; <a href="argument-styles-glossary.html#g-underdetermination"><em>Underdetermination</em></a></td><td>The hidden machinery vs. the robust regularity.</td></tr>
-        <tr id="tk-adversarial"><td>Adversarial / Collaborative</td><td><a href="argument-styles-glossary.html#g-dialectic">Dialectic vs. eristic</a>; <a href="argument-styles-glossary.html#g-charity">principle of charity / steelmanning</a></td><td><em>Dialectic</em>; <em>Principle of charity</em>; <em>Fallacies</em> (ad hominem, straw man)</td><td>Contest to win vs. cooperate to find truth; charity is the hinge.</td></tr>
+        <tr id="tk-hedgehog">
+          <td><strong>1 · <span class="pole" data-pair="hedgehog" data-pole="left">Hedgehog</span> vs. <span class="pole" data-pair="hedgehog" data-pole="right">Fox</span></strong><span class="c-desc">Unifying everything under one central idea vs. holding many small, loosely-linked models.</span><span class="c-cite">Berlin, The Hedgehog and the Fox (1953); Tetlock, Expert Political Judgment (2005).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>hedgehog buys depth and explanatory reach; fox buys calibration and flexibility.</span><span class="c-row"><span class="lbl shadow">Shadow</span>hedgehog forces messy data to fit; fox can lack a through-line and dither.</span><span class="c-row"><span class="lbl lives">Where</span>semi-formal journalism (<em>The Atlantic</em>, the <em>NYT</em>) tends <em>fox</em>-like — calibrated and case-rich for a general reader.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-monism">Monism vs. pluralism</a>; <a href="argument-styles-glossary.html#g-parsimony">parsimony</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-alternative-explanations"><em>Alternative explanations</em></a>; <a href="argument-styles-glossary.html#g-parsimony">Ockham's razor</a></span><span class="c-row"><span class="lbl why">Why</span>One unifying idea vs. many models = monist vs. pluralist; the hedgehog risks forcing the data to fit.</span></td>
+        </tr>
+        <tr id="tk-chain">
+          <td><strong>2 · <span class="pole" data-pair="chain" data-pole="left">Chain</span> vs. <span class="pole" data-pair="chain" data-pole="right">Cable</span></strong><span class="c-desc">One tight deductive line vs. many independent strands converging on a probable conclusion.</span><span class="c-cite">Peirce, "Some Consequences of Four Incapacities" (1868) — origin of the chain/cable image; Newman, An Essay in Aid of a Grammar of Assent (1870).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>chain is rigorous and transparent; cable is robust and handles messiness.</span><span class="c-row"><span class="lbl shadow">Shadow</span>chain is only as strong as its weakest premise; cable can feel hand-wavy and resist pinning-down.</span><span class="c-row"><span class="lbl lives">Where</span><em>chains</em> dominate formal/academic writing and the physical sciences (a chain from model to prediction tested against data); <em>cable</em>-style stacks of reasons are the staple of popular argument — op-eds, comment threads — and the social sciences.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-deduction-induction">Deduction vs. induction</a>; <a href="argument-styles-glossary.html#g-serial-convergent">serial vs. convergent support</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-deduction-induction"><em>Deduction</em></a>; <a href="argument-styles-glossary.html#g-deduction-induction"><em>Induction</em></a>; <a href="argument-styles-glossary.html#g-defeasible"><em>Defeasible / indefeasible</em></a></span><span class="c-row"><span class="lbl why">Why</span>A truth-preserving but fragile line vs. cumulative, defeasible strands (Peirce's own image).</span></td>
+        </tr>
+        <tr id="tk-principle">
+          <td><strong>3 · <span class="pole" data-pair="principle" data-pole="left">Principle-first</span> vs. <span class="pole" data-pair="principle" data-pole="right">Case-first</span></strong><span class="c-desc">Deriving from a top rule vs. reasoning outward from paradigm cases.</span><span class="c-cite">Jonsen &amp; Toulmin, The Abuse of Casuistry (1988).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>principle-first gives consistency and generality; case-first gives practical sensitivity to particulars.</span><span class="c-row"><span class="lbl shadow">Shadow</span>principle-first risks rigidity and missing the morally relevant detail; case-first risks looking ad hoc.</span><span class="c-row"><span class="lbl lives">Where</span><em>case-first</em> reasoning runs through nearly everything outside the formal sciences — popular argument, semi-formal journalism, the social sciences, and the humanities all reason outward from cases.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-generalism">Generalism vs. particularism</a>; <a href="argument-styles-glossary.html#g-generalism">top-down vs. bottom-up justification</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-necessary-sufficient"><em>Necessary &amp; sufficient conditions</em></a>; <a href="argument-styles-glossary.html#g-generalism">particularism</a></span><span class="c-row"><span class="lbl why">Why</span>Derive from a rule (seek defining conditions) vs. reason outward from paradigm cases.</span></td>
+        </tr>
+        <tr id="tk-lumper">
+          <td><strong>4 · <span class="pole" data-pair="lumper" data-pole="left">Lumper</span> vs. <span class="pole" data-pair="lumper" data-pole="right">Splitter</span></strong><span class="c-desc">Reaching for the unifying category vs. the fine distinction.</span><span class="c-cite">Darwin coined "lumpers &amp; splitters" (letter to Hooker, 1857); Simpson, "The Principles of Classification and a Classification of Mammals" (1945).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>lumpers see structure and parsimony; splitters get precision.</span><span class="c-row"><span class="lbl shadow">Shadow</span>lumpers blur real differences; splitters lose the forest and stall in taxonomy.</span><span class="c-row"><span class="lbl lives">Where</span>formal/academic writing prizes the <em>splitter</em>'s fine distinctions; the humanities run on both, with much <em>lumping and splitting</em> over categories.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-natural-kinds">Natural kinds</a>, <a href="argument-styles-glossary.html#g-natural-kinds">"carving at the joints"</a>, <a href="argument-styles-glossary.html#g-natural-kinds">family resemblance</a>, <a href="argument-styles-glossary.html#g-sorites">vagueness</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-ambiguity"><em>Ambiguity</em></a>; <a href="argument-styles-glossary.html#g-category-mistake"><em>Category mistakes</em></a>; <a href="argument-styles-glossary.html#g-parsimony">Ockham's razor</a></span><span class="c-row"><span class="lbl why">Why</span>How finely do nature's joints run? The lumper unifies, the splitter distinguishes.</span></td>
+        </tr>
+        <tr id="tk-bold">
+          <td><strong>5 · <span class="pole" data-pair="bold" data-pole="left">Bold conjecture</span> vs. <span class="pole" data-pair="bold" data-pole="right">Cautious qualification</span></strong><span class="c-desc">Stating a strong, testable claim and inviting refutation vs. hedging carefully.</span><span class="c-cite">Popper, Conjectures and Refutations (1963); Toulmin, The Uses of Argument (1958), on qualifiers and rebuttals.</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>bold conjecture advances inquiry precisely by being falsifiable; qualification is honest about uncertainty.</span><span class="c-row"><span class="lbl shadow">Shadow</span>bold conjecture overclaims; qualification can dissolve into saying nothing pinnable.</span><span class="c-row"><span class="lbl lives">Where</span>popular writing and the physical sciences favor the <em>bold</em> (a conjecture made <em>falsifiable</em>); formal/academic writing is <em>cautious</em>, and semi-formal journalism states bold claims but <em>qualifies</em> them for a general reader.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-falsifiability">Falsifiability</a>; "<a href="argument-styles-glossary.html#g-believe-truth">believe truth vs. shun error</a>"; <a href="argument-styles-glossary.html#g-believe-truth">epistemic risk</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-falsifiability"><em>Testability</em></a>; <a href="argument-styles-glossary.html#g-certainty-probability"><em>Certainty and probability</em></a></span><span class="c-row"><span class="lbl why">Why</span>The bold court refutation to gain content; the cautious minimize the risk of error.</span></td>
+        </tr>
+        <tr id="tk-refuter">
+          <td><strong>6 · <span class="pole" data-pair="refuter" data-pole="left">Refuter</span> vs. <span class="pole" data-pair="refuter" data-pole="right">Builder</span></strong><span class="c-desc">Testing a view by trying to break it vs. constructing and extending a position.</span><span class="c-cite">On the Socratic elenchus: Vlastos, Socrates: Ironist and Moral Philosopher (1991).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>the refuter sharpens and clears ground; the builder synthesizes.</span><span class="c-row"><span class="lbl shadow">Shadow</span>the refuter can leave only rubble; the builder can wave away genuine objections.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-elenchus">Elenchus, counterexample, reductio</a> vs. <a href="argument-styles-glossary.html#g-abduction">abduction</a> / synthesis</span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-elenchus"><em>Refutation</em></a>; <a href="argument-styles-glossary.html#g-elenchus"><em>Counterexamples</em></a>; <a href="argument-styles-glossary.html#g-elenchus"><em>Reductios</em></a>; <a href="argument-styles-glossary.html#g-abduction"><em>Abduction</em></a></span><span class="c-row"><span class="lbl why">Why</span>Test a view by breaking it vs. construct the best explanation and extend it.</span></td>
+        </tr>
+        <tr id="tk-narrative">
+          <td><strong>7 · <span class="pole" data-pair="narrative" data-pole="left">Narrative</span> vs. <span class="pole" data-pair="narrative" data-pole="right">Analytic</span></strong><span class="c-desc">Carrying the argument in a story — agents, motives, scene, sequence — vs. in explicit premises and inferences.</span><span class="c-cite">Bruner, Actual Minds, Possible Worlds (1986), on the narrative vs. paradigmatic modes of thought; Fisher, Human Communication as Narration (1987), on the narrative vs. the rational-world paradigm.</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>narrative buys memorability, motive force, and fidelity to lived experience; analytic buys explicitness and checkability.</span><span class="c-row"><span class="lbl shadow">Shadow</span>narrative can smuggle its conclusion past scrutiny and resist testing; analytic can go bloodless and miss what actually moves people.</span><span class="c-row"><span class="lbl lives">Where</span><em>narrative</em> drives popular writing and the humanities and opens many semi-formal pieces (a narrative lede); the <em>analytic</em> mode is the payoff of semi-formal journalism and the default of formal/academic writing.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-verstehen">Verstehen vs. Erklären</a>; <a href="argument-styles-glossary.html#g-acquaintance">acquaintance vs. description</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-thought-experiment"><em>Thought experiments</em></a>; <a href="argument-styles-glossary.html#g-intuition-pump"><em>Intuition pumps</em></a>; <a href="argument-styles-glossary.html#g-acquaintance"><em>Knowledge by acquaintance / description</em></a></span><span class="c-row"><span class="lbl why">Why</span>A story conveys the what-it's-like; analysis conveys checkable propositions.</span></td>
+        </tr>
+        <tr id="tk-empirical">
+          <td><strong>8 · <span class="pole" data-pair="empirical" data-pole="left">Empirical</span> vs. <span class="pole" data-pair="empirical" data-pole="right">Conceptual</span></strong><span class="c-desc">Settling the question by appeal to observation, data, and experiment vs. by appeal to concepts, definitions, intuitions, and thought experiments.</span><span class="c-cite">The empiricist–rationalist tradition (Hume; Descartes); Williamson, The Philosophy of Philosophy (2007), on a priori / "armchair" method.</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>empirical ties claims to the world and exposes them to evidence; conceptual clarifies what is even being asked and what would count as an answer.</span><span class="c-row"><span class="lbl shadow">Shadow</span>empirical can measure the measurable and ignore the rest; conceptual can spin frictionlessly, untethered from how things actually are.</span><span class="c-row"><span class="lbl lives">Where</span>the <em>empirical</em> style rules the physical sciences and formal/academic writing; the <em>conceptual</em> style is the home idiom of the humanities.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-apriori">A priori vs. a posteriori</a>; <a href="argument-styles-glossary.html#g-humes-fork">analytic / synthetic</a>;<a href="argument-styles-glossary.html#g-humes-fork">Hume's fork</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-apriori"><em>A priori / a posteriori</em></a>; <a href="argument-styles-glossary.html#g-humes-fork"><em>Analytic / synthetic</em></a></span><span class="c-row"><span class="lbl why">Why</span>Settle the question by the world vs. by the concept. (The a priori/a posteriori instinct lives here.)</span></td>
+        </tr>
+        <tr id="tk-quantitative">
+          <td><strong>9 · <span class="pole" data-pair="quantitative" data-pole="left">Quantitative</span> vs. <span class="pole" data-pair="quantitative" data-pole="right">Qualitative</span></strong><span class="c-desc">Making the case in the currency of measurement — number, statistic, formal model — vs. the currency of meaning — interpretation, thick description, the telling instance.</span><span class="c-cite">Lincoln &amp; Guba, Naturalistic Inquiry (1985); King, Keohane &amp; Verba, Designing Social Inquiry (1994).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>quantitative buys precision, comparability, and reach across many cases; qualitative buys depth, context, and access to meaning.</span><span class="c-row"><span class="lbl shadow">Shadow</span>quantitative can mistake what is countable for what matters; qualitative can over-read a handful of cases and resist generalization.</span><span class="c-row"><span class="lbl lives">Where</span><em>quantitative</em> in the physical sciences, <em>qualitative</em> in the humanities — and the social sciences are split internally between them, a live methodological argument.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-nomothetic">Nomothetic vs. idiographic</a>; <a href="argument-styles-glossary.html#g-thick-thin">thick vs. thin concepts</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-thick-thin"><em>Thick / thin concepts</em></a>; <a href="argument-styles-glossary.html#g-objective-subjective"><em>Objective / subjective</em></a>; <a href="argument-styles-glossary.html#g-criteria"><em>Criteria</em></a></span><span class="c-row"><span class="lbl why">Why</span>The currency of measurement vs. the currency of meaning.</span></td>
+        </tr>
+        <tr id="tk-mechanism">
+          <td><strong>10 · <span class="pole" data-pair="mechanism" data-pole="left">Mechanism</span> vs. <span class="pole" data-pair="mechanism" data-pole="right">Pattern</span></strong><span class="c-desc">Explaining by exhibiting the underlying machinery — the entities and activities that produce a phenomenon — vs. by establishing a robust regularity or correlation in the data.</span><span class="c-cite">Machamer, Darden &amp; Craver, "Thinking About Mechanisms" (2000); Lipton, Inference to the Best Explanation (2004).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>mechanism buys understanding of <em>why</em> and licenses intervention; pattern buys predictive traction even where the mechanism is unknown.</span><span class="c-row"><span class="lbl shadow">Shadow</span>mechanism can tell a tidy causal story that outruns the evidence; pattern can rest on a correlation it can neither explain nor trust.</span><span class="c-row"><span class="lbl lives">Where</span>the physical sciences lean <em>mechanism</em>- and model-based; the social sciences are split between <em>mechanism</em> and <em>pattern</em>.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-causation">Causation vs. constant conjunction</a> (Hume); <a href="argument-styles-glossary.html#g-covering-law">covering-law vs. mechanism</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-alternative-explanations"><em>Alternative explanations</em></a>; <a href="argument-styles-glossary.html#g-abduction"><em>Abduction</em></a>; <a href="argument-styles-glossary.html#g-underdetermination"><em>Underdetermination</em></a></span><span class="c-row"><span class="lbl why">Why</span>The hidden machinery vs. the robust regularity.</span></td>
+        </tr>
+        <tr id="tk-adversarial">
+          <td><strong>11 · <span class="pole" data-pair="adversarial" data-pole="left">Adversarial</span> vs. <span class="pole" data-pair="adversarial" data-pole="right">Collaborative</span></strong><span class="c-desc">Advancing inquiry by contest — pressing the strongest attack on a view — vs. by cooperation — steelmanning, building on what an interlocutor gets right, seeking joint gains.</span><span class="c-cite">Moulton, "A Paradigm of Philosophy: The Adversary Method" (1983); Foss &amp; Griffin, "Beyond Persuasion: A Proposal for an Invitational Rhetoric" (1995).</span></td>
+          <td><span class="c-row"><span class="lbl strength">Strength</span>adversarial pressure quickly exposes weak points; collaboration preserves partial insights and widens the sources of progress.</span><span class="c-row"><span class="lbl shadow">Shadow</span>adversarial argument can reward winning over truth and exclude quieter voices; collaboration can turn conflict-averse and let bad ideas stand.</span><span class="c-row"><span class="lbl lives">Where</span>popular argument runs the whole range — at its best <em>collaborative</em> (r/changemyview's steelmanning norm), at its worst purely <em>adversarial</em>.</span></td>
+          <td><span class="c-row"><span class="lbl concept">Concept</span><a href="argument-styles-glossary.html#g-dialectic">Dialectic vs. eristic</a>; <a href="argument-styles-glossary.html#g-charity">principle of charity / steelmanning</a></span><span class="c-row"><span class="lbl tool">Tool</span><a href="argument-styles-glossary.html#g-dialectic"><em>Dialectic</em></a>; <a href="argument-styles-glossary.html#g-charity"><em>Principle of charity</em></a>; <a href="argument-styles-glossary.html#g-fallacies"><em>Fallacies</em> (ad hominem, straw man)</a></span><span class="c-row"><span class="lbl why">Why</span>Contest to win vs. cooperate to find truth; charity is the hinge.</span></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -423,5 +394,97 @@
   </footer>
 
 </div>
+
+<div id="pole-tip" role="tooltip" aria-hidden="true"></div>
+<script>
+(function(){
+  const POLE_EXAMPLES = {
+    hedgehog: {
+      left:  { ex: "Every one of these conflicts — trade, migration, war — is at bottom a single struggle over who controls scarce resources.", why: "Drives diverse cases under one master explanation — the hedgehog's single big idea." },
+      right: { ex: "Trade disputes follow one logic, migration another, and wars a third; I'd resist forcing them into a single story.", why: "Holds several small, independent models rather than one unifying key — the fox's pluralism." }
+    },
+    chain: {
+      left:  { ex: "If consciousness is physical, and every physical state is in principle measurable, then consciousness is in principle measurable.", why: "One tight deductive line where each step forces the next — the chain." },
+      right: { ex: "The manuscript is likely 12th-century: the script, the parchment, the dialect, and the binding each point that way on their own.", why: "Many independent strands converge on a probable conclusion — the cable." }
+    },
+    principle: {
+      left:  { ex: "Lying treats a rational agent merely as a means, and that is always wrong; so even this harmless lie is wrong.", why: "Derives the verdict from a top rule applied downward — principle-first." },
+      right: { ex: "Start with the lie that turns a murderer from the door — then ask what rule could possibly survive that case.", why: "Reasons outward from a paradigm case rather than a rule — case-first." }
+    },
+    lumper: {
+      left:  { ex: "Jealousy, envy, and resentment are really one thing: the pain of measuring yourself against someone else.", why: "Reaches for the unifying category, merging distinct items — the lumper." },
+      right: { ex: "Keep envy and jealousy apart: one is wanting what another has, the other is fearing to lose what is already yours.", why: "Insists on the fine distinction the lump would erase — the splitter." }
+    },
+    bold: {
+      left:  { ex: "No society has ever sustained democracy without a free press — full stop. Show me the counterexample.", why: "States a strong, falsifiable claim and dares refutation — bold conjecture." },
+      right: { ex: "A free press may, under some conditions and within limits, tend to support democratic stability.", why: "Hedges scope and strength to stay safe from error — cautious qualification." }
+    },
+    refuter: {
+      left:  { ex: "Your theory predicts X, but here is a clear case of not-X; so it cannot be right as it stands.", why: "Tests a view by trying to break it with a counterexample — the refuter." },
+      right: { ex: "There is something right here; let me develop the view so it also handles the case you raised.", why: "Constructs and extends a position rather than dismantling it — the builder." }
+    },
+    narrative: {
+      left:  { ex: "She kept the line open all through the strike — and that freezing winter is when she finally understood what loyalty costs.", why: "Carries the point in a story — agents, scene, sequence — the narrative mode." },
+      right: { ex: "Loyalty is a disposition to favor an associate's interests; the question is whether that disposition is ever obligatory.", why: "Carries the point in explicit premises and definitions — the analytic mode." }
+    },
+    empirical: {
+      left:  { ex: "Whether the policy deters crime is settled by the data: compare offense rates before and after it took effect.", why: "Settles the question by observation and evidence — the empirical style." },
+      right: { ex: "Before we count anything, we need to settle what 'deterrence' even means — a change in intentions, in capabilities, or just in observed behavior? The dispute is conceptual, not statistical.", why: "Settles the question by analyzing what the concept itself requires, before any data could be relevant — the conceptual style." }
+    },
+    quantitative: {
+      left:  { ex: "Reading scores rose 0.4 standard deviations (p < .01) across the twelve-thousand-student sample.", why: "Makes the case in number, statistic, and measurement — the quantitative style." },
+      right: { ex: "Sitting in those classrooms, you could feel what the scores miss — what learning to read had come to mean to them.", why: "Makes the case in meaning and thick description — the qualitative style." }
+    },
+    mechanism: {
+      left:  { ex: "Smoking causes cancer because the carcinogens in tar damage DNA in bronchial cells, triggering uncontrolled division.", why: "Explains by exhibiting the underlying machinery — the mechanism style." },
+      right: { ex: "Across every cohort we have measured, more smoking reliably tracks more cancer — the regularity simply does not break.", why: "Rests on a robust regularity rather than hidden machinery — the pattern style." }
+    },
+    adversarial: {
+      left:  { ex: "I will take the strongest version of your argument and show you exactly where it collapses.", why: "Advances inquiry by contest — pressing the hardest attack — the adversarial style." },
+      right: { ex: "You are right about the first half; let's build on that and see how far the two of us can take it.", why: "Advances inquiry by cooperation and joint gains — the collaborative style." }
+    }
+  };
+
+  const tip = document.getElementById('pole-tip');
+  if (!tip) return;
+  // make each pole keyboard-focusable + screen-reader labelled
+  document.querySelectorAll('.pole[data-pair]').forEach(el => {
+    el.tabIndex = 0;
+    el.setAttribute('aria-label', el.textContent + ' — see an illustrative example');
+  });
+
+  let current = null;
+  function position(el){
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = r.left + r.width / 2 - tw / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+    let top = r.top - th - 8;
+    if (top < 8) top = r.bottom + 8;            // flip below if no room above
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function show(el){
+    const data = (POLE_EXAMPLES[el.getAttribute('data-pair')] || {})[el.getAttribute('data-pole')];
+    if (!data){ hide(); return; }
+    tip.innerHTML = '';
+    const t = document.createElement('span'); t.className = 'tip-pole'; t.textContent = el.textContent; tip.appendChild(t);
+    const e = document.createElement('span'); e.className = 'tip-ex'; e.textContent = '“' + data.ex + '”'; tip.appendChild(e);
+    const w = document.createElement('span'); w.className = 'tip-why'; w.textContent = data.why; tip.appendChild(w);
+    tip.classList.add('show'); tip.setAttribute('aria-hidden', 'false');
+    current = el; position(el);
+  }
+  function hide(){ tip.classList.remove('show'); tip.setAttribute('aria-hidden', 'true'); current = null; }
+
+  document.addEventListener('mouseover', e => { const el = e.target.closest('.pole[data-pair]'); if (el && el !== current) show(el); });
+  document.addEventListener('mouseout',  e => { const el = e.target.closest('.pole[data-pair]'); if (el){ const to = e.relatedTarget; if (!to || !el.contains(to)) hide(); } });
+  document.addEventListener('focusin',   e => { const el = e.target.closest('.pole[data-pair]'); if (el) show(el); });
+  document.addEventListener('focusout',  e => { const el = e.target.closest('.pole[data-pair]'); if (el) hide(); });
+  document.addEventListener('keydown',   e => { if (e.key === 'Escape') hide(); });
+  window.addEventListener('scroll', () => { if (current) position(current); }, true);
+  window.addEventListener('resize', () => { if (current) position(current); });
+})();
+</script>
+<script src="section-toc.js" defer></script>
 </body>
 </html>
