@@ -128,6 +128,16 @@
         if (top <= marker && top > bestTop) { bestTop = top; best = item; }
       });
       if (!best) best = links[0];
+      // A short final section can't bring its heading up to the marker line at
+      // maximum scroll, so the loop above would keep the previous section
+      // highlighted. Once the viewport reaches the end of a scrollable document,
+      // force-select the last entry. The scrollHeight > innerHeight guard keeps
+      // this from firing on a page that doesn't scroll (where the viewport is
+      // technically "at the bottom" while the reader is still at the top).
+      var doc = document.documentElement;
+      var atBottom = doc.scrollHeight > window.innerHeight &&
+        window.innerHeight + window.scrollY >= doc.scrollHeight - 2;
+      if (atBottom) best = links[links.length - 1];
       links.forEach(function (item) {
         item.a.classList.toggle('active', item === best);
       });
