@@ -1,1 +1,0 @@
-In the folder C:\Users\lassiter\vscode101\cslassiter.github.io, there is code and materials you used to build my website cslassiter.github.io. Please go to my Google Scholar page and add entries for any publications found there that are not on the research page of my website. Ask clarifying questions where needed.
