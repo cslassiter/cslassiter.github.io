@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """
 encrypt_jester.py -- put a short video, a picture, or a text note behind the
-password gate at https://cslassiter.github.io/jester/
+password gate at https://cslassiter.github.io/rr/
 
 How the gate works
 ------------------
-The page ../jester/index.html decrypts in the browser with Web Crypto:
+The page ../rr/index.html decrypts in the browser with Web Crypto:
   * PBKDF2-HMAC-SHA256 (600,000 iterations, random 16-byte salt) turns the
     password into a 256-bit key;
   * AES-256-GCM (random 12-byte nonce) encrypts the content, so a wrong
     password simply fails to decrypt -- there is no stored password hash.
 Content up to about 1 MB (encrypted) is embedded in index.html; anything
-larger is written next to it as jester/payload-<hash>.bin, which the page
+larger is written next to it as rr/payload-<hash>.bin, which the page
 downloads and decrypts. The scripts never write the password anywhere: it
 comes from the JESTER_PASSPHRASE environment variable if set, otherwise a
 hidden prompt. The encrypted file is public, so a short password can be
 guessed at offline; a longer passphrase is safer.
 
-Usage (run from anywhere; the page path defaults to ../jester/index.html)
+Usage (run from anywhere; the page path defaults to ../rr/index.html)
 -------------------------------------------------------------------------
   python encrypt_jester.py C:\\path\\to\\clip.mp4
   python encrypt_jester.py C:\\path\\to\\clip.mp4 --caption "A line under it"
@@ -41,7 +41,7 @@ Use --keep-original to embed the file bytes untouched. Animated GIFs are
 always kept as-is.
 
 Afterwards, from the site repo:
-  git add jester
+  git add rr
   git commit -m "Update jester"
   git push
 The page is live about a minute later. The R script encrypt_jester.R does the
@@ -70,12 +70,12 @@ INLINE_MAX = 1_000_000      # encrypted bytes; above this the content goes to a 
 WARN_SIZE = 30_000_000      # bytes; warn that the page will be slow on phones
 GITHUB_MAX = 95_000_000     # GitHub rejects files over 100 MB
 HERE = Path(__file__).resolve().parent
-DEFAULT_HTML = HERE.parent / "jester" / "index.html"
+DEFAULT_HTML = HERE.parent / "rr" / "index.html"
 PAYLOAD_RE = re.compile(r'(<script id="payload" type="application/json">)(.*?)(</script>)', re.S)
 SIDECAR_GLOB = "payload-*.bin"
 VIDEO_MIME = {".mp4": "video/mp4", ".m4v": "video/mp4", ".mov": "video/quicktime", ".webm": "video/webm"}
 BROWSER_SHY = {"image/heic", "image/heif", "image/tiff"}   # Safari-only image formats
-NEXT_STEPS = 'Next, from the site repo:\n  git add jester\n  git commit -m "Update jester"\n  git push'
+NEXT_STEPS = 'Next, from the site repo:\n  git add rr\n  git commit -m "Update jester"\n  git push'
 
 
 # ---------------------------------------------------------------- crypto ----

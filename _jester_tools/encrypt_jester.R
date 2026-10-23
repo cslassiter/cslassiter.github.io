@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # encrypt_jester.R -- R twin of encrypt_jester.py: put a short video, a picture,
-# or a text note behind the password gate at https://cslassiter.github.io/jester/
+# or a text note behind the password gate at https://cslassiter.github.io/rr/
 #
 # Same payload format and the same command line as the Python script:
 #   Rscript encrypt_jester.R C:\path\to\clip.mp4
@@ -20,7 +20,7 @@
 # page the browser would not reproduce. The script never writes the password.
 #
 # Content up to about 1 MB (encrypted) is embedded in index.html; anything
-# larger is written next to it as jester/payload-<hash>.bin for the page to fetch.
+# larger is written next to it as rr/payload-<hash>.bin for the page to fetch.
 #
 # Differences from the Python script:
 #   * No image re-encoding: file bytes are embedded as they are (no resize,
@@ -41,13 +41,13 @@ ITERS <- 600000L
 INLINE_MAX <- 1e6        # encrypted bytes; above this the content goes to a sidecar .bin
 WARN_SIZE <- 30e6
 GITHUB_MAX <- 95e6
-NEXT_STEPS <- 'Next, from the site repo:\n  git add jester\n  git commit -m "Update jester"\n  git push\n'
+NEXT_STEPS <- 'Next, from the site repo:\n  git add rr\n  git commit -m "Update jester"\n  git push\n'
 
 script_dir <- function() {
   f <- sub("^--file=", "", grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE))
   if (length(f)) dirname(normalizePath(f[1], winslash = "/")) else getwd()
 }
-DEFAULT_HTML <- file.path(dirname(script_dir()), "jester", "index.html")
+DEFAULT_HTML <- file.path(dirname(script_dir()), "rr", "index.html")
 
 ## ---- password ---------------------------------------------------------------
 

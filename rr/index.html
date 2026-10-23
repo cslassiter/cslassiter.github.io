@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Jester</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Web fonts load without blocking the page: it works and looks fine in Georgia/Arial meanwhile. -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap"></noscript>
+  <style>
+    :root { --ink: #1c1c1c; --paper: #f4f3ef; --card: #fff; --navy: #1a1a2e; --red: #8B0000; --muted: #666; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html, body { min-height: 100%; }
+    body {
+      font-family: "EB Garamond", Georgia, serif; font-size: 1.1rem; line-height: 1.6;
+      color: var(--ink); background: var(--paper);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 1.5rem 1rem;
+    }
+    .card {
+      background: var(--card); border-radius: 3px; border-top: 3px solid var(--red);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 2rem 2rem 1.75rem; width: 100%; max-width: 380px;
+      transition: max-width 0.3s ease;
+    }
+    .card.open { max-width: 900px; }
+    h1 { font-weight: 400; font-size: 2rem; letter-spacing: 0.04em; color: var(--navy); margin-bottom: 0.15rem; }
+    .lead { color: var(--muted); font-style: italic; margin-bottom: 1.1rem; }
+    input[type="password"] {
+      width: 100%; font: inherit; font-size: 1.05rem; padding: 0.6rem 0.75rem;
+      border: 1px solid #c9c7c0; border-radius: 3px; background: #fbfaf7; color: var(--ink);
+    }
+    input[type="password"]:focus { outline: 2px solid var(--navy); outline-offset: 1px; }
+    button.primary {
+      margin-top: 0.75rem; width: 100%; padding: 0.7rem; border: 0; border-radius: 3px;
+      font-family: "Inter", Arial, sans-serif; font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--navy); color: #fff; cursor: pointer;
+    }
+    button.primary:hover { background: var(--red); }
+    button.primary:disabled { opacity: 0.6; cursor: wait; }
+    .status, .err, .nocrypto { font-family: "Inter", Arial, sans-serif; font-size: 0.85rem; margin-top: 0.75rem; }
+    .status { color: var(--muted); min-height: 1.3em; }
+    .err { color: var(--red); }
+    .err a { color: var(--red); }
+    .nocrypto { color: #8a5a00; }
+    #reveal:focus { outline: none; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 3px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+    figure video {
+      display: block; max-width: 100%; max-height: 80vh; width: auto; height: auto; margin: 0 auto;
+      background: #000; border-radius: 3px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    figcaption { margin-top: 0.75rem; color: var(--muted); font-style: italic; text-align: center; }
+    .note { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1.25rem; text-align: center; padding: 1.5rem 0.5rem; }
+    .meta { margin-top: 1rem; text-align: right; }
+    .linkish {
+      background: none; border: 0; cursor: pointer; color: var(--muted);
+      padding: 0.6rem 0.25rem; margin: -0.6rem -0.25rem;
+      font-family: "Inter", Arial, sans-serif; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .linkish:hover { color: var(--red); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (max-width: 480px) { .card { padding: 1.5rem 1.25rem; } h1 { font-size: 1.7rem; } }
+  </style>
+</head>
+<body>
+  <main class="card" id="card">
+    <form id="gform" autocomplete="off">
+      <h1>Jester</h1>
+      <p class="lead">Password, please.</p>
+      <noscript><p class="nocrypto">This page needs JavaScript to unlock.</p><style>#pass, #go { display: none; }</style></noscript>
+      <input class="sr-only" type="text" name="username" value="jester" autocomplete="username" readonly tabindex="-1" aria-hidden="true">
+      <label class="sr-only" for="pass">Password</label>
+      <input id="pass" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" autofocus>
+      <button type="submit" id="go" class="primary">Unlock</button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <p id="err" class="err" role="alert" hidden></p>
+      <p id="nocrypto" class="nocrypto" hidden>This browser can&rsquo;t decrypt here: open the page over https (the published site) or at http://localhost, not over a plain http address.</p>
+    </form>
+    <section id="reveal" tabindex="-1" hidden>
+      <figure id="fig" hidden>
+        <img id="pic" alt="" hidden>
+        <video id="vid" controls playsinline preload="auto" hidden></video>
+        <figcaption id="cap" hidden></figcaption>
+      </figure>
+      <p id="playerr" class="err" hidden></p>
+      <p id="note" class="note" hidden></p>
+      <p class="meta"><button type="button" id="lock" class="linkish">Lock</button></p>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var KEYNAME = 'jester_pass';
+    var WRONG = 'That’s not it. Try again.';
+    var NOLOAD = 'Couldn’t load the content. Reload the page and try again.';
+    var BROKE = 'Something went wrong while unlocking. Reload the page and try again.';
+    var STALL_MS = 30000;
+    function $(id) { return document.getElementById(id); }
+    var form = $('gform'), pass = $('pass'), go = $('go'), status = $('status'), err = $('err');
+
+    if (!(window.crypto && crypto.subtle && window.TextDecoder && window.Blob && window.URL && URL.createObjectURL && window.Promise)) {
+      $('nocrypto').hidden = false; go.disabled = true; pass.disabled = true; return;
+    }
+
+    // The payload block sits at the end of the page; wait for it if someone submits early.
+    var ready = new Promise(function (resolve) {
+      if (document.readyState !== 'loading') { resolve(); }
+      else { document.addEventListener('DOMContentLoaded', function () { resolve(); }); }
+    });
+
+    var payloadCache = null, fetched = null, busy = false, lastPct = -1;
+    function payload() {
+      if (!payloadCache) { payloadCache = JSON.parse($('payload').textContent); }
+      return payloadCache;
+    }
+    function b64(s) {
+      var bin = atob(s), a = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) { a[i] = bin.charCodeAt(i); }
+      return a;
+    }
+    function setStatus(text) { if (busy) { status.textContent = text; } }
+    function dlError(msg) { var e = new Error('download failed: ' + msg); e.download = true; return e; }
+
+    // Large content lives in a separate encrypted file next to this page; stream it with
+    // progress, give up after 30 s without a byte, and report every failure as a download problem.
+    function download(src, total) {
+      if (!window.fetch) { return Promise.reject(dlError('no fetch')); }
+      var ctl = window.AbortController ? new AbortController() : null, timer = null;
+      function arm() { clearTimeout(timer); timer = setTimeout(function () { if (ctl) { ctl.abort(); } }, STALL_MS); }
+      arm();
+      lastPct = -1;
+      return fetch(src, ctl ? { signal: ctl.signal } : undefined).then(function (r) {
+        if (!r.ok) { throw dlError('HTTP ' + r.status); }
+        var len = total || +(r.headers.get('Content-Length') || 0);
+        if (!(r.body && r.body.getReader)) {
+          return r.arrayBuffer().then(function (b) { return new Uint8Array(b); });
+        }
+        var reader = r.body.getReader(), out = len ? new Uint8Array(len) : null, chunks = [], got = 0;
+        return reader.read().then(function step(res) {
+          if (res.done) {
+            if (len && got !== len) { throw dlError('short read ' + got + '/' + len); }
+            if (out) { return out; }
+            var all = new Uint8Array(got), off = 0;
+            for (var i = 0; i < chunks.length; i++) { all.set(chunks[i], off); off += chunks[i].length; }
+            return all;
+          }
+          arm();
+          if (out) {
+            if (got + res.value.length > len) { throw dlError('overrun'); }
+            out.set(res.value, got);
+          } else { chunks.push(res.value); }
+          got += res.value.length;
+          if (len) {
+            var pct = Math.min(99, Math.floor(100 * got / len / 5) * 5);
+            if (pct !== lastPct) { lastPct = pct; setStatus('Downloading… ' + pct + '%'); }
+          } else if (lastPct < 0) { lastPct = 0; setStatus('Downloading…'); }
+          return reader.read().then(step);
+        });
+      }).then(function (bytes) { clearTimeout(timer); return bytes; },
+              function (e) { clearTimeout(timer); throw (e && e.download) ? e : dlError(e && e.message); });
+    }
+    function ciphertext() {
+      var p = payload();
+      if (!p.src) { return Promise.resolve(b64(p.ct)); }
+      if (!fetched) {
+        fetched = download(p.src, p.bytes).catch(function (e) { fetched = null; throw e; });
+      }
+      return fetched;
+    }
+
+    // PBKDF2-HMAC-SHA256 -> AES-256-GCM. A wrong password fails the GCM authentication check.
+    function deriveKey(pw) {
+      var p = payload(), enc = new TextEncoder();
+      return crypto.subtle.importKey('raw', enc.encode(pw), { name: 'PBKDF2' }, false, ['deriveKey'])
+        .then(function (km) {
+          return crypto.subtle.deriveKey(
+            { name: 'PBKDF2', salt: b64(p.salt), iterations: p.iters, hash: 'SHA-256' },
+            km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+        });
+    }
+    function decryptWith(pw) {
+      return Promise.all([ciphertext(), deriveKey(pw)])
+        .then(function (r) {
+          setStatus('Unlocking…');
+          return crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(payload().iv) }, r[1], r[0]);
+        })
+        .then(function (buf) {
+          // Plaintext = one JSON header line, a newline, then the content bytes.
+          var bytes = new Uint8Array(buf), nl = bytes.indexOf(10);
+          if (nl < 0) { throw new Error('bad envelope'); }
+          var header = JSON.parse(new TextDecoder('utf-8').decode(bytes.subarray(0, nl)));
+          return { header: header, body: bytes.subarray(nl + 1) };
+        });
+    }
+
+    var objectUrl = null;
+    function show(content) {
+      var h = content.header, fig = $('fig'), note = $('note'), img = $('pic'), vid = $('vid'), cap = $('cap');
+      if (h.type === 'image' || h.type === 'video') {
+        if (objectUrl) { URL.revokeObjectURL(objectUrl); }
+        objectUrl = URL.createObjectURL(new Blob([content.body], { type: h.mime || '' }));
+        if (h.type === 'video') {
+          img.hidden = true; vid.hidden = false;
+          vid.setAttribute('aria-label', h.caption || 'The video');
+          vid.onerror = function () {
+            var p = $('playerr'), a = document.createElement('a');
+            p.textContent = 'Unlocked, but this browser can’t play the clip. Try Safari, or ';
+            a.href = objectUrl; a.download = h.name || 'clip'; a.textContent = 'save it';
+            p.appendChild(a); p.appendChild(document.createTextNode(' and watch it from your phone’s files.'));
+            p.hidden = false;
+          };
+          vid.src = objectUrl;
+          var playing = vid.play();
+          if (playing && playing.catch) { playing.catch(function () {}); }
+        } else {
+          vid.hidden = true; img.hidden = false;
+          img.alt = h.alt || h.caption || 'The picture';
+          img.src = objectUrl;
+        }
+        cap.textContent = h.caption || '';
+        cap.hidden = !h.caption;
+        fig.hidden = false; note.hidden = true;
+      } else {
+        note.textContent = new TextDecoder('utf-8').decode(content.body);
+        note.hidden = false; fig.hidden = true;
+      }
+      form.hidden = true;
+      $('reveal').hidden = false;
+      $('card').classList.add('open');
+      (h.type === 'video' ? vid : $('reveal')).focus();
+    }
+
+    function setBusy(on) {
+      busy = on; go.disabled = on; pass.disabled = on;
+      status.textContent = on ? 'Unlocking…' : '';
+    }
+
+    function attempt(pw, fromStorage) {
+      err.hidden = true; setBusy(true);
+      ready.then(function () { return decryptWith(pw); }).then(function (content) {
+        try { sessionStorage.setItem(KEYNAME, pw); } catch (e) {}
+        fetched = null;   // let the ciphertext be collected
+        setBusy(false); show(content);
+      }).catch(function (e) {
+        setBusy(false);
+        if (e && e.download) {
+          if (fromStorage) { pass.value = pw; }   // keep the remembered password so Unlock can retry
+          err.textContent = NOLOAD; err.hidden = false; go.focus(); return;
+        }
+        // Web Crypto failures (a wrong password fails the GCM check) are DOMExceptions; anything
+        // else is a bug or an exhausted phone, and deserves a different message.
+        var wrong = !!(e && ((window.DOMException && e instanceof DOMException) || e.name === 'OperationError'));
+        if (fromStorage) {
+          try { sessionStorage.removeItem(KEYNAME); } catch (e2) {}
+          if (wrong) { return; }   // the password changed since it was remembered: just show the form
+        }
+        err.textContent = wrong ? WRONG : BROKE; err.hidden = false;
+        if (wrong) { pass.value = ''; }
+        pass.focus();
+      });
+    }
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (pass.value) { attempt(pass.value, false); }
+    });
+    $('lock').addEventListener('click', function () {
+      try { sessionStorage.removeItem(KEYNAME); } catch (e) {}
+      location.reload();
+    });
+
+    // Start fetching a separate payload file right away so it is there by the time the password is typed.
+    ready.then(function () { if (payload().src) { ciphertext().catch(function () {}); } });
+
+    var saved = null;
+    try { saved = sessionStorage.getItem(KEYNAME); } catch (e) {}
+    if (saved) { attempt(saved, true); }
+  })();
+  </script>
+  <script id="payload" type="application/json">{"v":2,"kdf":"PBKDF2-HMAC-SHA256","iters":600000,"cipher":"AES-256-GCM","salt":"tcrRR5RvJzhPe5rr1G/ZgA==","iv":"CTySvHTdzhwHtjN/","src":"payload-6b7e3b46392d.bin","bytes":33804156}</script>
+</body>
+</html>

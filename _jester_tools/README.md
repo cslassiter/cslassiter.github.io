@@ -1,6 +1,6 @@
 # Jester page tools
 
-`https://cslassiter.github.io/jester/` is a password-gated page. Everything
+`https://cslassiter.github.io/rr/` is a password-gated page. Everything
 behind the gate is encrypted; the visitor's browser decrypts it after the
 password is typed (Web Crypto: PBKDF2-HMAC-SHA256 with 600,000 rounds, then
 AES-256-GCM). There is no server and no stored password; a wrong password
@@ -13,9 +13,9 @@ can guess passwords at it offline for as long as they like; a long passphrase
 the site never serves this folder, but it is browsable on github.com, so
 never put the password or anything private in here.
 
-Small content (a text note, a picture) is embedded in `jester/index.html`.
+Small content (a text note, a picture) is embedded in `rr/index.html`.
 Anything larger, such as a video, is stored next to it as
-`jester/payload-<hash>.bin`, which the page downloads and decrypts.
+`rr/payload-<hash>.bin`, which the page downloads and decrypts.
 
 ## Put the video up
 
@@ -43,19 +43,19 @@ Anything larger, such as a video, is stored next to it as
    python -m http.server 8000 --bind 127.0.0.1
    ```
 
-   then open http://localhost:8000/jester/ in Firefox and enter the password.
+   then open http://localhost:8000/rr/ in Firefox and enter the password.
    (A page with only a note or a picture inside can be opened directly as a
    file. A phone on the same Wi-Fi cannot test it this way: browsers only
    allow the decryption code over https or localhost.)
 4. Publish:
 
    ```
-   git add jester
+   git add rr
    git commit -m "Update jester"
    git push
    ```
 
-   Live about a minute later at https://cslassiter.github.io/jester/. A
+   Live about a minute later at https://cslassiter.github.io/rr/. A
    browser that visited before may keep the old page for up to ten minutes;
    if it says it couldn't load the content right after an update, reload.
    A push warning about a file over 50 MB is expected and harmless below 100 MB.
@@ -93,7 +93,7 @@ Anything larger, such as a video, is stored next to it as
 
 ## Format notes
 
-- `<script id="payload" type="application/json">` in `jester/index.html` holds
+- `<script id="payload" type="application/json">` in `rr/index.html` holds
   `{v, kdf, iters, cipher, salt, iv}` plus either `ct` (base64 ciphertext,
   inline) or `src` + `bytes` (the sidecar file's name and size). The
   ciphertext ends with the 16-byte GCM tag, as Web Crypto expects. The scripts
